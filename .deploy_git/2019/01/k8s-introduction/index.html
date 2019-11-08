@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>k8s 介绍 | Runner的小站</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="KubernetesKubernetes是一个开源的_用于管理云平台中多个主机上的容器化的应用_Kubernetes的目标是让部署容器化的应用简单并且高效powerful__Kubernetes提供了应用部署规划_更新_维护的一种机制 架构 集群中的机器划分为一个Master 节点和一群工作节点(Node) Master 节点，由三个紧密协作的独立组件组合而成，它们分别是负责 API 服务的 ku">
+<meta name="keywords" content="k8s,docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s 介绍">
+<meta property="og:url" content="http://airzhe.github.io/2019/01/k8s-introduction/index.html">
+<meta property="og:site_name" content="Runner的小站">
+<meta property="og:description" content="KubernetesKubernetes是一个开源的_用于管理云平台中多个主机上的容器化的应用_Kubernetes的目标是让部署容器化的应用简单并且高效powerful__Kubernetes提供了应用部署规划_更新_维护的一种机制 架构 集群中的机器划分为一个Master 节点和一群工作节点(Node) Master 节点，由三个紧密协作的独立组件组合而成，它们分别是负责 API 服务的 ku">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://airzhe.github.io/img/k8s/1.png">
+<meta property="og:image" content="http://airzhe.github.io/img/k8s/2.png">
+<meta property="og:image" content="http://airzhe.github.io/img/k8s/3.jpg">
+<meta property="og:image" content="http://airzhe.github.io/img/k8s/4.png">
+<meta property="og:updated_time" content="2019-11-08T12:30:34.588Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="k8s 介绍">
+<meta name="twitter:description" content="KubernetesKubernetes是一个开源的_用于管理云平台中多个主机上的容器化的应用_Kubernetes的目标是让部署容器化的应用简单并且高效powerful__Kubernetes提供了应用部署规划_更新_维护的一种机制 架构 集群中的机器划分为一个Master 节点和一群工作节点(Node) Master 节点，由三个紧密协作的独立组件组合而成，它们分别是负责 API 服务的 ku">
+<meta name="twitter:image" content="http://airzhe.github.io/img/k8s/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Runner的小站" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Runner的小站</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://airzhe.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-k8s-introduction" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/k8s-introduction/" class="article-date">
+  <time datetime="2019-01-31T00:00:00.000Z" itemprop="datePublished">2019-01-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      k8s 介绍
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Kubernetes"><a href="#Kubernetes" class="headerlink" title="Kubernetes"></a>Kubernetes</h2><p>Kubernetes是一个开源的_用于管理云平台中多个主机上的容器化的应用_Kubernetes的目标是让部署容器化的应用简单并且高效<em>powerful__Kubernetes提供了应用部署</em>规划_更新_维护的一种机制</p>
+<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p><img src="/img/k8s/1.png" alt="image"></p>
+<p>集群中的机器划分为一个Master 节点和一群工作节点(Node)</p>
+<p>Master 节点，由三个紧密协作的独立组件组合而成，它们分别是负责 API 服务的 <strong>kube-apiserver</strong>、负责调度的 <strong>kube-scheduler</strong>，以及负责容器编排的 <strong>kube-controller-manager</strong>。整个集群的持久化数据，则由 kube-apiserver 处理后保存在 <strong>Ectd</strong> 中。</p>
+<p>node上运行着 kubelet、kube-proxy服务进程，负责pod的创建、启动、监控、重启、销毁、以及实现软件模式的负载均衡器。</p>
+<p>在 Kubernetes 项目中，kubelet 主要负责同容器运行时（比如 Docker 项目）打交道，只要你的这个容器运行时能够运行标准的容器镜像，它就可以通过实现 <strong>CRI</strong> 接入到 Kubernetes 项目当中。(比如 rkt)</p>
+<p>而kubelet 的另一个重要功能，则是调用网络插件和存储插件为容器配置网络和持久化存储。<br><a id="more"></a></p>
+<h4 id="kubernetes-核心概念"><a href="#kubernetes-核心概念" class="headerlink" title="kubernetes 核心概念"></a>kubernetes 核心概念</h4><p><img src="/img/k8s/2.png" alt="image"></p>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h2 id="Namespace"><a href="#Namespace" class="headerlink" title="Namespace"></a>Namespace</h2><p>Namespace 通过将系统内部的对象“分配”到不同的Namespace中，形成逻辑上分组的不同项目、小组或用户组，便于不同的分组在共享使用整个集群的资源的同时还能被分别管理</p>
+<p><strong>ResourceQuota</strong></p>
+<p>Resource Quotas（资源配额，简称quota）是对namespace进行资源配额，限制资源使用的一种策略.</p>
+<table>
+<thead>
+<tr>
+<th>字符串</th>
+<th>API对象</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>“pods”</td>
+<td>Pod</td>
+</tr>
+<tr>
+<td>“services</td>
+<td>Service</td>
+</tr>
+<tr>
+<td>“replicationcontrollers”</td>
+<td>ReplicationController</td>
+</tr>
+<tr>
+<td>“resourcequotas”</td>
+<td>ResourceQuota</td>
+</tr>
+<tr>
+<td>“secrets”</td>
+<td>Secret</td>
+</tr>
+<tr>
+<td>“configmaps”</td>
+<td>ConfigMap</td>
+</tr>
+<tr>
+<td>“persistentvolumeclaims”</td>
+<td>PersistentVolumeClaim</td>
+</tr>
+<tr>
+<td>“services.nodeports”</td>
+<td>NodePort类型的Service</td>
+</tr>
+<tr>
+<td>“services.loadbalancers”</td>
+<td>LoadBalancer类型的Service</td>
+</tr>
+</tbody>
+</table>
+<h2 id="label"><a href="#label" class="headerlink" title="label"></a>label</h2><p>label 和 labelSelctor 是 k8s 中的只要分组机制</p>
+<p>Kubernetes目前支持两种类型的Label Selector：</p>
+<ul>
+<li>基于等式的Selector（Equality-based）</li>
+<li>基于集合的Selector（Set-based）</li>
+</ul>
+<h2 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a>Pod</h2><p>Pod是k8s的最基本的操作单元，包含一个或多个紧密相关的容器，类似于豌豆荚的概念。</p>
+<p>为什么k8s使用Pod在容器之上再封装一层呢？</p>
+<h4 id="Pod-中几个重要字段的含义和用法"><a href="#Pod-中几个重要字段的含义和用法" class="headerlink" title="Pod 中几个重要字段的含义和用法"></a>Pod 中几个重要字段的含义和用法</h4><ol>
+<li>NodeSelector： 是一个供用户将 Pod 与 Node 进行绑定的字段</li>
+<li>NodeName：一旦 Pod 的这个字段被赋值，Kubernetes 项目就会被认为这个 Pod 已经经过了调度</li>
+<li>HostAliases：定义了 Pod 的 hosts</li>
+<li>ImagePullPolicy： 的值默认是 Always，即每次创建 Pod 都重新拉取一次镜像，而如果它的值被定义为 Never 或者 IfNotPresent，则意味着 Pod 永远不会主动拉取这个镜像，或者只在宿主机上不存在这个镜像时才拉取。</li>
+<li>Lifecycle 字段。它定义的是 Container Lifecycle Hooks 是在容器状态发生变化时触发一系列“钩子。</li>
+</ol>
+<h4 id="Pod-具体的创建步骤包括："><a href="#Pod-具体的创建步骤包括：" class="headerlink" title="Pod 具体的创建步骤包括："></a>Pod 具体的创建步骤包括：</h4><p><img src="/img/k8s/3.jpg" alt="images"></p>
+<ol>
+<li>客户端提交创建请求，可以通过API Server的Restful API，也可以使用kubectl命令行工具。支持的数据类型包括JSON和YAML。</li>
+<li>API Server处理用户请求，存储Pod数据到etcd。</li>
+<li>调度器通过API Server查看未绑定的Pod。尝试为Pod分配主机。</li>
+<li>过滤主机 (调度预选)：调度器用一组规则过滤掉不符合要求的主机。比如Pod指定了所需要的资源量，那么可用资源比Pod需要的资源量少的主机会被过滤掉。</li>
+<li>主机打分(调度优选)：对第一步筛选出的符合要求的主机进行打分，在主机打分阶段，调度器会考虑一些整体优化策略，比如把容一个Replication Controller的副本分布到不同的主机上，使用最低负载的主机等。</li>
+<li>选择主机：选择打分最高的主机，进行binding操作，结果存储到etcd中。</li>
+<li>kubelet根据调度结果执行Pod创建操作： 绑定成功后，scheduler会调用APIServer的API在etcd中创建一个boundpod对象，描述在一个工作节点上绑定运行的所有pod信息。运行在每个工作节点上的kubelet也会定期与etcd同步boundpod信息，一旦发现应该在该工作节点上运行的boundpod对象没有更新，则调用Docker API创建并启动pod内的容器。<br>​</li>
+</ol>
+<p>Pod模板是pod规范，包含在其他对象中，例如 <a href="https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/" target="_blank" rel="noopener">Replication Controllers</a>，<a href="https://kubernetes.io/docs/concepts/jobs/run-to-completion-finite-workloads/" target="_blank" rel="noopener">Jobs</a>和 <a href="https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/" target="_blank" rel="noopener">DaemonSet</a></p>
+<p>pod 也支持host网络的设置，如spec-&gt;hostNetwork=true</p>
+<p><strong>Pause Container</strong></p>
+<p>每个pod 里运行着一个特殊的被称为<br>Pause 的容器(业务无关且不容易死亡)，其他容器则为业务容器，业务容器共享 Pause 容器的网络栈和Volume挂载卷，创建pod 会自动创建 pause容器。每个pod 都被分配一个唯一的ip地址。</p>
+<p>可以通过api手动管理pod，也可以委托给控制器来管理pod。</p>
+<p><strong>Init Container</strong></p>
+<p>在 Pod 中，所有 Init Container 定义的容器，都会比 spec.containers 定义的用户容器先启动。</p>
+<p>比如，在我们的这个应用 Pod 中，Tomcat 容器是我们要使用的主容器，而 WAR 包容器的存在，只是为了给它提供一个 WAR 包而已。所以，我们用 Init Container 的方式优先运行 WAR 包容器，扮演了一个 sidecar 的角色</p>
+<h2 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h2><p>一个service 对象拥有如下关键特征<br>拥有一个虚拟ip(Cluster ip 、Service ip 或 Vip)和端口号</p>
+<p>通过 label selector 筛选关联 pod</p>
+<p>创建好service 后集群中其他新创建的pod就可以通过service 的Cluster ip+端口号来连接和访问它了</p>
+<p>spec<br>type=NodePort 和nodePort=30001的两个属性，表明service开启了NodePort方式的外网访问模式</p>
+<p>port<br>targetPort 默认与pord 相同</p>
+<h2 id="API-Server"><a href="#API-Server" class="headerlink" title="API Server"></a>API Server</h2><p>kubernets Api Server 本身也是一个Service，它的名字就是  ”kubernets“.</p>
+<p>组件之间的所有操作和通信均由API Server处理的REST API调用.</p>
+<p>API Server 负责和 /etcd 交互（其他组件不会直接操作 etcd，只有 API Server 这么做），是整个 kubernetes 集群的数据中心，所有的交互都是以 API Server 为核心的。简单来说，API Server 提供了一下的功能：</p>
+<ul>
+<li>整个集群管理的 API 接口：所有对集群进行的查询和管理都要通过 API 来进行</li>
+<li>集群内部各个模块之间通信的枢纽：所有模块之前并不会之间互相调用，而是通过和 API Server 打交道来完成自己那部分的工作</li>
+<li>集群安全控制：API Server 提供的验证和授权保证了整个集群的安全</li>
+</ul>
+<p><strong>kubectl客户端</strong></p>
+<p>命令行工具kubectl客户端，通过命令行参数转换为对API Server的REST API调用，并将调用结果输出。</p>
+<p><strong>kubelet与API Server交互</strong></p>
+<p>每个Node节点上的kubelet定期就会调用API Server的REST接口报告自身状态，API Server接收这些信息后，将节点状态信息更新到etcd中。kubelet也通过API Server的Watch接口监听Pod信息，从而对Node机器上的POD进行管理。</p>
+<table>
+<thead>
+<tr>
+<th>监听信息</th>
+<th>kubelet动作</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>新的POD副本被调度绑定到本节点</td>
+<td>执行POD对应的容器的创建和启动逻辑</td>
+<td>-</td>
+</tr>
+<tr>
+<td>POD对象被删除</td>
+<td>删除本节点上相应的POD容器</td>
+<td>-</td>
+</tr>
+<tr>
+<td>修改POD信息</td>
+<td>修改本节点的POD容器</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>kube-controller-manager与API Server交互</strong></p>
+<p>kube-controller-manager中的Node Controller模块通过API Server提供的Watch接口，实时监控Node的信息，并做相应处理。</p>
+<p><strong>kube-scheduler与API Server交互</strong></p>
+<p>Scheduler通过API Server的Watch接口监听到新建Pod副本的信息后，它会检索所有符合该Pod要求的Node列表，开始执行Pod调度逻辑。调度成功后将Pod绑定到目标节点上</p>
+<p><strong>Watch API</strong></p>
+<p>Watch API其实就是一种GET请求，只是在query参数里面加了watch。kube-apiserver那边接受到用户的client请求后，可以通过两种方式发送watch event，一种是通过websocket协议发送，另一种就是通过Transfer-Encoding=chunked的方式建立一个长连接，然后发送watch event</p>
+<h2 id="Controller-Manager"><a href="#Controller-Manager" class="headerlink" title="Controller Manager"></a>Controller Manager</h2><p>controller manager是集群内部控制中心，负责集群内的node，pod，服务端点，服务，资源配额，命名空间，服务账号等资源的管理、自动化部署健康监测，异常修复，确保个资源始终处于预期的工作状态。<br>controller manager 是一个控制器集合包含：rc，node controller，resourcequota controller，namespace conttoller，token<br>controller，service controller，endpoint controller，serviceaccount controller。</p>
+<p>控制器核心工作原理是，每个控制器通过api服务器来查看系统运行状态，并尝试从将系统状态从“现有状态”修正到“期望状态”</p>
+<h4 id="k8s-RC-Replication-Controller"><a href="#k8s-RC-Replication-Controller" class="headerlink" title="k8s RC(Replication Controller)"></a>k8s RC(Replication Controller)</h4><p>RC 的定义包含如下几个部分：<br>pod 期待的副本数<br>用于筛选目标pod的 Label Selector<br>当pod副本数小于预期时，用于创建新pod的pod模板</p>
+<p> Replica Set</p>
+<p>官方解释为“下一代的RC”<br>唯一区别是Replica Sets支持基于集合的Label selector 而RC 只支持基于等式的</p>
+<p>Replica Set 很少单独使用，主要被Deployment 这个更高级的资源对象所使用</p>
+<p>Replica Set 和 Deployment 逐步替换了之前RC 的作用</p>
+<h4 id="Deployment-Controller"><a href="#Deployment-Controller" class="headerlink" title="Deployment Controller"></a>Deployment Controller</h4><p>扩容:</p>
+<p><strong>使用场景</strong>：</p>
+<ol>
+<li>重新调度</li>
+<li>弹性伸缩</li>
+<li>滚动更新</li>
+</ol>
+<p>使用场景有以下几个：<br>创建Deployment对象来生产对应 Replica Set 并完成 Pod 副本的创建过程<br>检查Deployment 的状态来看部署是否完成(pod数量是否达到预期值)<br>更新Deployment 以创建新pod 比如镜像升级<br>回滚早先 Deployment 版本<br>暂停修改<br>查看Deployment的状态，以此作为发布是否成功的指标</p>
+<h4 id="ResourceQuota-Controller"><a href="#ResourceQuota-Controller" class="headerlink" title="ResourceQuota Controller"></a>ResourceQuota Controller</h4><p>目前 k8s 支持 三个层次的资源配额管理</p>
+<ol>
+<li><p>容器级别 ，可以对 cpu ，memory 进行限制</p>
+</li>
+<li><p>Pod 级别，对pod内所有容器进行资源限制</p>
+</li>
+<li><p>Namespace 级别，对Namespace(多租户)级别的资源限制，包括：</p>
+<ul>
+<li>pod 数量</li>
+<li>service 数量</li>
+<li>resourceQuota 数量 等</li>
+</ul>
+</li>
+</ol>
+<p><strong>Endpoints Controller</strong> 检测到pod的事件，则会更新对应Service 的Endpoints</p>
+<h4 id="Job-Controller-amp-amp-CronJob-Controller"><a href="#Job-Controller-amp-amp-CronJob-Controller" class="headerlink" title="Job Controller &amp;&amp; CronJob Controller"></a>Job Controller &amp;&amp; CronJob Controller</h4><p>Job Controller 控制的对象，直接就是 Pod。</p>
+<h4 id="DeamonSet-controller"><a href="#DeamonSet-controller" class="headerlink" title="DeamonSet controller"></a>DeamonSet controller</h4><h2 id="Scheduler"><a href="#Scheduler" class="headerlink" title="Scheduler"></a>Scheduler</h2><p>scheduler 的作用是将待调度的 pod（新建的pod，rs为补足副本而创建的pod等）按照待定的调度算法和调度策略绑定（Binding)到集群中的某个合适的Node上，并将绑定信息写入 etcd。</p>
+<p>整个过程涉及三个对象：<strong>待调度pod列表</strong>(podQueue)，<strong>可用node列表</strong>，以及<strong>调度算法和调度策略</strong>.</p>
+<p><img src="/img/k8s/4.png" alt="image"></p>
+<p>1）通过调度算法为待调度Pod列表的每个Pod从Node列表中选择一个最适合的Node，并将信息写入etcd中</p>
+<p>2）kubelet通过API Server监听到kubernetes Scheduler产生的Pod绑定信息，然后获取对应的Pod清单，下载Image，并启动容器。</p>
+<h4 id="调度资源监听"><a href="#调度资源监听" class="headerlink" title="调度资源监听"></a>调度资源监听</h4><p><code>kube-apiserver</code> 提供了一套 <code>Watch</code> 机制给 <code>kubelet</code>、<code>kube-controller-manager</code>、 <code>kube-scheduler</code> 等组件用来监控各种资源(Pod、Node、Service等)的变化，类似于消息中间件里的发布-订阅模式（Push）， <code>kube-apiserver</code> 能够<strong>主动通知</strong>这些组件。</p>
+<h4 id="调度节点分配："><a href="#调度节点分配：" class="headerlink" title="调度节点分配："></a>调度节点分配：</h4><p>调度分为几个部分：首先是过滤掉不满足条件的节点，这个过程称为预选（ predicate）；然后对通过的节点按照优先级排序，这个是优选（ priority）；最后从中选择优先级最高的节点。如果中间任何一步骤有错误，就直接返回错误。</p>
+<p>predicate 有一系列的算法可以使用：</p>
+<ul>
+<li><code>PodFitsResources</code>：节点上剩余的资源是否大于 pod 请求的资源</li>
+<li><code>PodFitsHost</code>：如果 pod 指定了 NodeName，检查节点名称是否和 NodeName 匹配</li>
+<li><code>PodFitsHostPorts</code>：节点上已经使用的 port 是否和 pod 申请的 port 冲突</li>
+<li><code>PodSelectorMatches</code>：过滤掉和 pod 指定的 label 不匹配的节点</li>
+<li><code>NoDiskConflict</code>：已经 mount 的 volume 和 pod 指定的 volume 不冲突，除非它们都是只读</li>
+</ul>
+<p>如果在 predicate 过程中没有合适的节点，pod 会一直在 <code>pending</code> 状态，不断重试调度，直到有节点满足条件。经过这个步骤，如果有多个节点满足条件，就继续 priorities 过程：<br>按照优先级大小对节点排序。</p>
+<p>优选（ priority)</p>
+<p>优先级由一系列键值对组成，键是该优先级项的名称，值是它的权重（该项的重要性）。这些优先级选项包括：</p>
+<ul>
+<li><code>LeastRequestedPriority</code>：通过计算 CPU 和 Memory 的使用率来决定权重，使用率越低权重越高。换句话说，这个优先级指标倾向于资源使用比例更低的节点</li>
+<li><code>ImageLocalityPriority</code>：倾向于已经有要使用镜像的节点，镜像总大小值越大，权重越高</li>
+</ul>
+<p>通过算法对所有的优先级项目和权重进行计算，得出最终的结果。为待调度的 Pod 分配一个 Node ，同时将分配结果通过 <code>kube-apiserver</code> 写入 <code>etcd</code>；</p>
+<h4 id="调度策略"><a href="#调度策略" class="headerlink" title="调度策略"></a>调度策略</h4><p><strong>NodeSelector</strong></p>
+<p><code>nodeSelector</code> 是最简单的控制方式。 <code>nodeSelector</code> 是 PodSpec 中的一个字段，它指定了键-值对的映射。如果想要 pod 能够运行在某个 node 上，那么这个 node 必须具有所有指定的键-值对的标签（node 也能拥有其它标签）。</p>
+<p>列出 node 的时候指定 <code>--show-labels</code> 参数就能查看 node 都添加了哪些 label：</p>
+<p>除了自己定义的 label 之外，kubernetes 还会自动给集群中的节点添加一些 label，比如：</p>
+<ul>
+<li><code>kubernetes.io/hostname</code>：节点的 hostname 名称</li>
+<li><code>beta.kubernetes.io/os</code>： 节点安装的操作系统</li>
+<li><code>beta.kubernetes.io/arch</code>：节点的架构类型</li>
+</ul>
+<p>除了设置Node Selector之外，还可以通过Node Name 直接指定Node，但还是<strong>建议使用Node Selector</strong>，label进行选择是一种弱绑定，直接指定Node Name是强绑定，Node失效时会导致Pod无法调度。</p>
+<p><strong>亲和性</strong>特性包含了两种类型的亲和性，”node 亲和性” 和 “pod 间的亲和性/反亲和性”，Pod 间以 pod 标签作为约束。</p>
+<p><strong>亲和性调度（Affinity）</strong></p>
+<p>Node Affinity</p>
+<ul>
+<li>硬亲和性：requiredDuringSchedulingIgnoredDuringExecution</li>
+<li>软亲和性：preferredDuringSchedulingIgnoredDuringExecution <ul>
+<li>如果一个 node 的标签在运行时发生改变，从而导致 pod 的亲和性规则不再被满足时，pod 也仍然会继续运行在 node 上。</li>
+</ul>
+</li>
+</ul>
+<p>Pod Affinity</p>
+<ul>
+<li>硬亲和性：requiredDuringSchedulingIgnoredDuringExecution </li>
+<li>preferredDuringSchedulingIgnoredDuringExecution</li>
+</ul>
+<p><strong>反亲和性（Anti-affinity）</strong></p>
+<p><strong>Taint 和 toleration</strong> （比如label idc=idc1,比如GPU资源）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#添加一个 taint</span><br><span class="line">kubectl taint nodes node1 key=value:NoSchedule</span><br><span class="line">#这个 taint 的 key 为 key 且 value 为 value，并且这个 taint 的作用是 NoSchedule</span><br></pre></td></tr></table></figure>
+<p>PodSpec 指定一个 toleration</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tolerations: </span><br><span class="line">- key: key</span><br><span class="line">  operator: Exists</span><br><span class="line">  value: value</span><br><span class="line">  effect: NoSchedule</span><br></pre></td></tr></table></figure>
+<p>PreferNoSchedule （软亲和性）</p>
+<h2 id="kubelet"><a href="#kubelet" class="headerlink" title="kubelet"></a>kubelet</h2><p>在kubernetes集群中，每个Node节点都会启动kubelet进程，用来处理Master节点下发到本节点的任务，管理Pod和其中的容器。kubelet会在API Server上注册节点信息，定期向Master汇报节点资源使用情况，并通过cAdvisor监控容器和节点资源。可以把kubelet理解成【Server-Agent】架构中的agent，是Node上的pod管家。</p>
+<p><strong>容器健康检查</strong></p>
+<p>提供Probe 机制，以更精确的判断Pod和容器：<br><strong>Liveness Prode</strong> ：用于容器的自定义健康检查，如果检查失败，将杀死容器，然后根据pod的重启策略了来决定是否重启容器。还可以指定initialDelaySeconds，用于确定状态检查的宽限期，以便容器执行必要的初始化。<br><strong>Readiness Probe</strong> ：如果检查失败，会将该pod 从服务代理的分发后端去除，不再发送请求给pod。</p>
+<p>目前有三种类型检查方式<br>Http 健康检查 ：返回200～399认为成功<br>Container Exec：容器内执行命令，状态0退出，则视为成功<br>Tcp：如果可以建立连接则认为成功，否则失败。</p>
+<p><strong>资源上报</strong></p>
+<p>继承 cAdvisor 定时上报节点信息</p>
+<p>健康检查监视器由kubelet 代理</p>
+<h4 id="kube-proxy"><a href="#kube-proxy" class="headerlink" title="kube-proxy"></a>kube-proxy</h4><p>Service 在很多情况下知识一个概念，而真正将Service 的作用落实的是背后的 kube-proxy服务进程。</p>
+<p>在k8s 集群的每个Node上都会运行一个 kube-proxy 服务进程，可以看作Service 的透明代理兼负载均衡器，核心是讲到某个 service 的访问请求转移到后端的多个pod 实例上。</p>
+<p>由于iptables 机制针对的是本都的kube-proxy端口，所以每个Node上都要运行 kube-proxy 组件，这样，在集群内部，我们可以再任意Node上发起对 Service 的访问请求。</p>
+<p>kube-proxy  更新iptables 会在本机的 <strong>Iptables</strong> 的NAT表中添加4条规则链路。</p>
+<ol>
+<li>从容器中通过 serviceClusterIp 和端口访问Service 的请求</li>
+<li>从主机中通过ServiceClusterIp和端口访问Service的请求</li>
+<li>从容器中通过 Service 的NodePort 端口访问Service的请求</li>
+<li>从主机中通过Service 的NodePort 端口号访问Service的请求</li>
+</ol>
+<p>运行在每个Node 上的kube-proxy进程其实就是一个智能的软件负载均衡器。</p>
+<p>简单的网络代理和负载均衡器，负责Service的实现：实现从Pod到Service，以及NodePort向Service的访问。</p>
+<p>采用 iptables 来实现LB<br>实现方式：<br>kube-proxy 监控服务/端点增删改，对每个服务配置ipitables规则，捕获Service 的ClusterIp 和端口的流量，并将流量重定向到服务的后端之一。默认后端的选择是随机的,可以设置基于客户端ip的会话关联。</p>
+<p>默认通过iptables来配置对应的NAT转发，自身不再参与转发过程。</p>
+<h2 id="yaml配置"><a href="#yaml配置" class="headerlink" title="yaml配置"></a>yaml配置</h2><p>Deployment yaml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: apps/v1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-deployment</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: nginx</span><br><span class="line">  replicas: 2</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: nginx</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: nginx</span><br><span class="line">        image: nginx:1.7.9</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 80</span><br><span class="line">        resources:</span><br><span class="line">           requests:</span><br><span class="line">             cpu: 0.05</span><br><span class="line">             memory: 16Mi</span><br></pre></td></tr></table></figure>
+<p>Service yaml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-svc</span><br><span class="line">spec:</span><br><span class="line">  type: NodePort</span><br><span class="line">  selector:</span><br><span class="line">      app: nginx</span><br><span class="line">  ports:</span><br><span class="line">      - protocol: TCP</span><br><span class="line">        port: 8881</span><br><span class="line">        targetPort: 80</span><br></pre></td></tr></table></figure>
+<h4 id="部分命令"><a href="#部分命令" class="headerlink" title="部分命令"></a>部分命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">kubectl get  all  --all-namespaces=true</span><br><span class="line">kubectl describe ***</span><br><span class="line">kubectl get pods -n kube-system</span><br><span class="line">kubectl apply -f  *.yaml</span><br><span class="line">kubectl get *** -o yaml</span><br><span class="line">kubectl edit deployment.apps/nginx-deployment</span><br><span class="line">kubectl exec $&#123;POD_NAME&#125; -c $&#123;CONTAINER_NAME&#125; -- $&#123;CMD&#125; $&#123;ARG1&#125; $&#123;ARG2&#125; ... $&#123;ARGN&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/01/k8s-introduction/" data-id="ck2q5szte000a0oov76ry9q0b" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/02/k8s-notes/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          k8s 笔记
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/b树/">b树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/charts/">charts</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coredns/">coredns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/">grafana</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/">helm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/laravel/">laravel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loki/">loki</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openresty/">openresty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/promtal/">promtal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/报警/">报警</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控/">监控</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/b树/" style="font-size: 10px;">b树</a> <a href="/tags/charts/" style="font-size: 10px;">charts</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/grafana/" style="font-size: 16.67px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 13.33px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 10px;">jenkins</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/laravel/" style="font-size: 10px;">laravel</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/loki/" style="font-size: 13.33px;">loki</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/pipeline/" style="font-size: 10px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 13.33px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 13.33px;">promtal</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/k8s-migration-1/"> 测试服务迁移到新k8s集群记录（一）</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/hexo/">使用hexo管理博客</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/grafana-variables/">grafana 模板变量配置</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/loki/">使用Loki查询日志</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/core-dns/">core-dns使用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 air_zhe@163.com<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

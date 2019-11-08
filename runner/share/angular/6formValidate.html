@@ -1,0 +1,42 @@
+<html ng-app='test'>
+<head>
+	<meta charset="utf-8">
+	<title>form validate</title>
+</head>
+<body ng-controller="TestController">
+
+	 <form name="myForm">
+		    User name: <input type="text" name="userName" ng-model="user.name" required>
+		    <span class="error" ng-show="myForm.userName.$error.required">
+		      Required!</span><br>
+		    Last name: <input type="text" name="lastName" ng-model="user.last"
+		      ng-minlength="3" ng-maxlength="10">
+		    <span class="error" ng-show="myForm.lastName.$error.minlength">
+		      Too short!</span>
+		    <span class="error" ng-show="myForm.lastName.$error.maxlength">
+		      Too long!</span><br>
+		     <button ng-disabled="!myForm.$valid" ng-click="submit(myForm.$valid)">提交</button>
+	 </form>
+	  <hr>
+	  <tt>user = {{user}}</tt><br/>
+	  <tt>myForm.userName.$valid = {{myForm.userName.$valid}}</tt><br>
+	  <tt>myForm.userName.$error = {{myForm.userName.$error}}</tt><br>
+	  <tt>myForm.lastName.$valid = {{myForm.lastName.$valid}}</tt><br>
+	  <tt>myForm.lastName.$error = {{myForm.lastName.$error}}</tt><br>
+	  <tt>myForm.$valid = {{myForm.$valid}}</tt><br>
+	  <tt>myForm.$error.required = {{!!myForm.$error.required}}</tt><br>
+	  <tt>myForm.$error.minlength = {{!!myForm.$error.minlength}}</tt><br>
+	  <tt>myForm.$error.maxlength = {{!!myForm.$error.maxlength}}</tt><br>
+	
+	
+	<script type="text/javascript" src="angular.min.js"></script>
+	<script type="text/javascript">
+		var app = angular.module('test',[]);
+		app.controller('TestController',['$scope',function($scope){
+			$scope.submit = function($valid){
+				console.log($valid);
+			}
+		}])	
+	</script>
+</body>
+</html>

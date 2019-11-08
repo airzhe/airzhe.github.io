@@ -1,0 +1,80 @@
+<html ng-app='test'>
+<head>
+	<meta charset="utf-8">
+	<title>mvvm</title>
+	<style type="text/css">
+		body{padding: 20px;}
+		strong{padding:5px;color:red;}
+		img{vertical-align:middle;margin-right: 5px;width:40px;height: 40px;}
+	</style>
+</head>
+<body ng-controller="TestController">
+	
+	<p><img src="img/loading_m.gif"/ style="margin-right:20px;"><a href="" ng-click="sort='distance';reverse = !reverse">按距离</a>&nbsp;&nbsp;<a href="" ng-click="sort='praise';reverse = !reverse">按好评率</a></p>
+
+
+	<p ng-repeat="item in driverList  |  orderBy:sort:reverse">
+		<img ng-src="./img/{{item.img}}" width=50px;height=50px; style="border-radius:50%"><strong>{{item.name}}</strong>, 车型:<strong>{{item.carBrand}}</strong>, 距您<strong>{{item.distance}}</strong>公里, 好评率<strong>{{item.praise}}%</strong>
+	</p>
+
+
+	<!-- <hr> -->
+	<!-- <p>{{driverList}}</p> -->
+
+
+	
+	<script type="text/javascript" src="angular.min.js"></script>
+	<script type="text/javascript">
+		var app = angular.module('test',[]);
+		app.controller('TestController',['$scope',function($scope){
+		var data = [
+			{
+				'name':'魏师傅',
+				'carBrand':'宝马',
+				'distance':10,
+				'praise':80,
+				'img':'1.jpg'
+			},
+			{
+				'name':'杨师傅',
+				'carBrand':'奔驰',
+				'distance':1,
+				'praise':70,
+				'img':'2.jpg'
+			},
+			{
+				'name':'杜师傅',
+				'carBrand':'奥迪',
+				'distance':15,
+				'praise':90,
+				'img':'3.jpg'
+			},
+			{
+				'name':'李师傅',
+				'carBrand':'特斯拉',
+				'distance':8,
+				'praise':100,
+				'img':'4.jpg'
+			}
+		];
+
+		var driver;
+		var driverList = [];
+
+		var timer = setInterval(function(){
+			driver = data.pop();
+			driverList.push(driver);
+			$scope.$apply(function(){
+				$scope.driverList = driverList;
+			})
+			if(data.length == 0){
+				clearInterval(timer);
+				console.log('end...')
+			}
+		},2000)
+
+		$scope.reverse = true;
+		}])
+	</script>
+</body>
+</html>

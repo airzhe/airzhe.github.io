@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>JS Bin</title>
+</head>
+<body ng-app='test'>
+<script type="text/javascript" src="angular.min.js"></script>
+<script>
+  var app = angular.module('test',[]);
+  app.controller('TestController',['$scope',function($scope){
+    
+  var sData = {
+    id:'',
+    num:''
+  }
+  
+ 
+  $scope.data = [];
+
+  var data = $scope.data;
+  data.push(angular.copy(sData));
+    
+  $scope.addItem = function(){
+    data.push(angular.copy(sData));
+  }
+    
+  }])
+</script>
+  
+ <section ng-controller="TestController">
+   <p ng-repeat="item in data">
+     id : <input type="text" ng-model="item.id">
+     num : <input type="text" ng-model="item.num">
+     <button ng-click="addItem()"> + </button>
+      <!--<button ng-click="removeItem()"> - </button>-->
+   </p>
+   <!--{{data|json}}-->
+ </section>
+  
+</body>
+</html>

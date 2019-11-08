@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>tab</title>
+    <style type="text/css">
+    *{margin:0;padding:0;}
+    body{
+        width:900px;
+        margin:0 auto;
+    }
+
+    #tab1{
+        width: 300px;
+        height: 100px;
+    }
+    #tab1 span{
+        display: inline-block;
+        width: 40px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        border-bottom: 1px solid #fff;
+    }
+    #tab1 span:hover{
+        border-bottom: 1px solid red;
+        color:red;
+    }
+    #tab1>div{
+        border:1px solid #ccc;
+        height: 120px;
+    }
+    #tab1>div>div{
+        width: 120px;
+        background: #fff;
+    }
+    .tab span:hover{
+         cursor: pointer;
+    }
+    .tab>div{
+         position: relative;
+    }
+    .tab>div>div{
+        display: none;
+        position:absolute;
+    }
+    .tab>div>div:first-of-type{
+       display: block;
+    }
+
+    #focus{
+        margin-top:200px;
+        width: 500px;
+        height: 245px;
+        background: red;
+        position: relative;
+        z-index: 999;
+    }
+    #focus p{
+        position: absolute;
+        bottom: 10px;
+        left:55%;
+        opacity: .8;
+    }
+    #focus p span{
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        background: #333;
+        color: #fff;
+        border-radius: 50%;
+        text-align: center;
+    }
+    #focus p span:hover,#focus p span.activite{
+        background: #fff;
+        color:#333;
+    }
+    #focus div div{
+        z-index: -1;
+    }
+    </style>
+</head>
+<body>
+    <div id="tab1" class="tab">
+        <p>
+            <span>a</span>
+            <span>b</span>
+            <span>c</span>
+        </p>
+        <div>
+            <div>content 1</div>
+            <div>content 2</div>
+            <div>content 3</div>
+        </div>
+    </div>
+
+    <div id="focus" class="tab" >
+        <p>
+            <span>a</span>
+            <span>b</span>
+            <span>c</span>
+        </p>
+        <div>
+            <div><img src="images/1.jpeg" width="600px;"></div>
+            <div><img src="images/2.jpeg" width="600px;"></div>
+            <div><img src="images/3.jpeg" width="600px;"></div>
+        </div>
+    </div>
+    <script type="text/javascript" src="zepto.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function(){
+
+        // $('.tab span').on('mouseenter',function(){
+        //   var index = $(this).index();
+        //   $(this).parents('.tab').children('div').find('div').hide().eq(index).show();
+        // })
+
+        // function funTab(obj,event,autoplay){
+        //     event = arguments[1] || 'hover';
+        //     $(obj + ' span').on(event,function(ev){
+        //         $(this).addClass('activite').siblings().removeClass('activite');
+        //         var index = $(this).index();
+        //         $(this).parents('.tab').children('div').find('div').hide().eq(index).show();
+        //     })
+
+        //     autoplay = arguments[2] || false;
+        //     if(autoplay){
+        //         var index = 0;
+        //         var timer =  setInterval(function(){
+        //             index++;
+        //             if(index == $(obj).find('span').length){
+        //                 index = 0;
+        //             }
+        //             $(obj).find('span').eq(index).trigger(event);
+        //         },2000)
+        //     }
+
+        // }
+        // funTab('#tab1','click');
+        // funTab('#focus','hover',true);
+        
+        
+        function Tab(obj,event){
+            this.obj = obj;
+            this.event =  event ? event : 'hover';
+            this.intervaTime = 2000;
+            $( this.obj  + ' span').on(this.event,function(ev){
+                $(this).addClass('activite').siblings().removeClass('activite');
+                var index = $(this).index();
+                $(this).parents('.tab').children('div').find('div').hide().eq(index).show();
+            })
+        }
+
+       Tab.prototype.autoplay = function(){
+             var This =  this;  //注意this指向
+             var index = 0;
+             var timer =  setInterval(function(){
+                    index++;
+                    if(index == $(This.obj).find('span').length){
+                        index = 0;
+                    }
+                    $(This.obj).find('span').eq(index).trigger(This.event);             
+              },This.intervaTime)
+        }
+
+        // var tab1 = new Tab('#tab1','click');
+        
+        var tab2 = new Tab('#focus','hover');
+        // tab2.intervaTime = 5000;
+        tab2.autoplay();
+        
+    })
+    </script>
+</body>
+</html>

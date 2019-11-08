@@ -1,0 +1,46 @@
+<html ng-app='test'>
+<head>
+	<meta charset="utf-8">
+	<title>Function</title>
+</head>
+<body ng-controller="TestController">
+	<!--  ng-repeat ng-if -->
+	<details open>
+		<summary>1</summary>
+		<input value="{{time | date:'yyyy-MM-dd HH:mm:ss'}}">
+
+		
+	</details>
+
+	<!-- http://testing.be.yongche.org/driver/createdriverandcar -->
+	<details open>
+		<summary>2</summary>
+		<input ng-model="searchTest">
+		<ul ng-show="searchTest">
+			<li ng-repeat="item in data | filter:searchTest" data-id="{{item.value}}">{{item.name}}</li>
+		</ul>
+	</details>
+
+
+
+	<script type="text/javascript" src="angular.min.js"></script>
+	<script type="text/javascript">
+		var app = angular.module('test',[]);
+		app.controller('TestController',['$scope',function($scope){
+
+			$scope.time = '1288323623006';
+			
+			$scope.data = [
+				{'value':1,'name':'南方创业（北京）科'},
+				{'value':2,'name':'友来汽车租赁（北京）有限公司'},
+				{'value':3,'name':'北京源丰通国际旅行社有限公司'},
+				{'value':4,'name':'河北视汽车租赁有限公司'},
+				{'value':5,'name':'上海海鑫新汽车租赁有限公司'},
+				{'value':6,'name':'上海沃浦森经贸有限公司'},
+			];
+			
+			$scope.searchTest = '上海';
+		}])
+	</script>
+</body>
+</html>

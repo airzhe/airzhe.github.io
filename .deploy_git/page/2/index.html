@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Runner的小站</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Runner的小站">
+<meta property="og:url" content="http://airzhe.github.io/page/2/index.html">
+<meta property="og:site_name" content="Runner的小站">
+<meta property="og:locale" content="default">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Runner的小站">
+  
+    <link rel="alternate" href="/atom.xml" title="Runner的小站" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Runner的小站</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://airzhe.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-laravel" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/laravel/" class="article-date">
+  <time datetime="2019-02-27T00:00:00.000Z" itemprop="datePublished">2019-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/laravel/">laravel 学习</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="config"><a href="#config" class="headerlink" title="config"></a>config</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">php artisan config:cache</span><br><span class="line">php artisan config:clear</span><br></pre></td></tr></table></figure>
+<h4 id="维护模式"><a href="#维护模式" class="headerlink" title="[维护模式]"></a>[维护模式]</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan down --message=&quot;Upgrading Database&quot; --retry=60</span><br></pre></td></tr></table></figure>
+<p>要查看所有有效的命令，可以在终端中运行<code>php artisan list make</code>命令。</p>
+<p><strong>Events</strong>  事件类</p>
+<p><strong>Jobs</strong>  任务队列</p>
+<p><strong>Listeners</strong> 事件监听</p>
+<p><strong>Mail</strong> 发邮件</p>
+<p><strong>Notifications</strong> 发送通知</p>
+<p><strong>Policies</strong> 授权策略</p>
+<p><strong>Database </strong> 目录包含了数据迁移及填充文件，如果你喜欢的话还可以将其作为 SQLite 数据库存放目录；</p>
+<p>Eloquent 是 Laravel 的 ‘ORM’，即 ‘Object Relational Mapping’，对象关系映射。ORM 的出现是为了帮我们把对数据库的操作变得更加地方便。</p>
+<p>php artisan make:model Model/Test</p>
+<p>包含被软删除的模型  Test::withTrashed()-&gt;find(1);</p>
+<p>php artisan vendor:publish </p>
+        
+          <p class="article-more-link">
+            <a href="/2019/02/laravel/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/02/laravel/" data-id="ck2q5sztl000g0oovb6tttgag" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/laravel/">laravel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-tcp" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/tcp/" class="article-date">
+  <time datetime="2019-02-27T00:00:00.000Z" itemprop="datePublished">2019-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/tcp/">Linux高性能服务器编程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Linux高性能服务器编程"><a href="#Linux高性能服务器编程" class="headerlink" title="Linux高性能服务器编程"></a>Linux高性能服务器编程</h2><p>网络层使用IP地址寻址一台机器，而数据链路层使用物理地址寻址一台机器，因此网络层必须先将目标机器的IP地址转换成其物理地址，才能使用数据链路层提供的服务，这就是 ARP 协议的用途。</p>
+<p>封装和分用</p>
+<p>经过TCP封装后的数据称为TCP报文段(TCP message segment)</p>
+<p>UDP无需为应用层数据保存副本，因此它提供的服务是不可靠的，当一个UDP数据报被成功发送之后，UDP内核缓冲区中的该数据报就被丢弃了，如果应用程序检测到该数据报未能正确接收，则需要从用户控件将该数据报拷贝到 UDP 内核发送缓冲区中。</p>
+<p>经过 IP 封装后的数据成为 IP 数据报（IP datagram）,IP数据报也包括头部信息和数据部分，其中数据部分就是一个 TCP 报文段，UDP报文段或ICMP报文。</p>
+<p>经过数据链路层封装的数据成为帧（frame)，以太网上传输的是以太网帧（ethernet frame），令牌环网络上传输的是令牌环帧(token ring frame)。</p>
+<p>帧的最大传输单位（MTU),即帧最多能携带多少上层协议数据（比如IP数据报），同程收到网络网络类型的限制，如果所示 以太网帧的MTU是1500字节，正因为如此，过长的IP数据可能需要被分片（fragment) 传输。</p>
+<p>以太网帧使用2字节的类型字段来标识上层协议，如果帧类型字段值为 0x800,则为 IP数据报，0x806为ARP请求或应答报文，0x835 帧的类型部分为 RARP 请求或者应答报文。</p>
+<p>因为ICMP 、TCP 和 UDP 都是用ip协议，所以 IP数据报的头部采用16位协议字段来区分它们。</p>
+<p>TCP 报文段和UDP数据报通过其头部中的16位端口号来区分上层应用</p>
+<p>帧通过上述分用步骤后，最终将封装前的原始数据送至目标服务，这样在顶层目标服务看来，封装和分用似乎没有发生过。</p>
+<p>arp -a  查看 arp 缓存</p>
+<p>即使是同一台机器上的两个进程通信，也要考虑字节序的问题</p>
+<p>inet_addr把点分十进制字符串的ipv4地址转换为网络字节序煮熟表示的 ipv4 地址。 inet_aton 相反</p>
+<p>pipe 函数的参数是一个包含两个 int 型整数的数组指针，该函数成功返回0，并将一对打开的文件描述符值填入其参数指向的数组。失败返回 -1</p>
+<p>自linux2.6.11内核起，管道容量的大小默认是 65536 字节</p>
+<p>sendfile 函数在两个文件描述符之间直接传递数据（完全在内核中操作），从而避免额内核缓冲区和用户缓冲区之间的数据拷贝，sendfile 几乎是专门为在网络上传输文件而设计的。</p>
+<p>大部分后台进程都在 /var/log 目录下用于自己的目录日志</p>
+<p>lsof 是一个列出当前系统打开的文件描述符的工具 -i 显示 socket 文件描述符</p>
+<p>字节流服务和数据报服务的区别，实际编程中体现为通信双方是否必须执行相同次数的读、写操作。</p>
+<p>当发送端应用程序连续执行多次写操作时，TCP模块先将哲学数据放入TCP发送缓冲区中。当TCP模块真正开始发送数据时，发送缓冲区中这些等待发送的数据可能被封装成一个或多个TCP报文段发出。因此，TCP模块发送出的TCP报文段的个数和应用程序执行的写操作次数之间没有固定的数量关系。</p>
+<p>当接收端收到一个或多个TCP报文段后，TCP模块将它们携带的应用程序数据按照TCP报文段的序号依次放入TCP接收缓冲区中，并通知应用程序读取数据。接收端应用程序可以一次性将TCP接收缓冲区中的数据全部读出，也可以分多次读取，这取决于用户指定的应用程序读取缓冲区的大小。因此，应用程序执行的读操作次数和TCP模块接收到的TCP报文段个数之间也没有固定的数量关系。</p>
+<p>发送端执行的写操作和接收端执行的读操作之间没有任何数量关系，这就是字节流的概念；应用程序对数据的发送和接收是没有边界线制的。UDP则不然。发送端应用程序每执行一次写操作，UDP模块就要将其分装成一个 UDP 数据报并发送之。接收端必须及时针对每一个 UDP 数据报执行读操作，否则就会丢包。并且，如果用户没有指定足够的应用程序缓冲区来读取UDP数据，则UDP数据将被截断。</p>
+<p>TCP 协议采用超时重传机制，发送端在发送出一个TCP报文段之后启动定时器，如果在定时时间内未收到应答，它将重发该把文段。TCP协议还会对接收到的TCP报文段重排、整理，再交付给应用层。</p>
+<p><strong>TCP头部结构如下：</strong></p>
+<p>16位源端口号、16位目的端口号</p>
+<p>32位序号</p>
+<p>32位确认号</p>
+<p>4位头部长度、6位保留、URG、ACK、PSH、RST、SYN、FIN、16位窗口大小</p>
+<p>16位校验和、16位紧急指针</p>
+<p>选项，最多40字节</p>
+<p>16位窗口大小：是TCP流量控制的一个手段。这里说的窗口，指的是接收通告窗口。它告诉对方本端的TCP接收缓冲区还能容纳多少字节的数据，这样对方就可以控制发送数据的速度。</p>
+<p>我们一共抓取到了6个TCP报文段，它们是同步报文段，并且具有相同的序号值，这说明后面5个同步报文段都是超时重连接报文段。它们间隔时间分别为1s,2s,4s,8s和16s</p>
+<p>服务器通过listen系统调用进入LISTEN状态，被动等待客户端连接，因此执行的是所谓的被动打开。服务器一旦监听到某个连接请求（收到同步报文段），就将该连接放入内核等待队列中，并向客户端发送带 SYN 标志的确认报文段。此时该连接处于 SYN_REVD 状态。如果服务器成功地接收到客户端发送回的确认报文段，则改连接转移到 ESTABLISHED 状态，也就是连接双方能够进行双向数据传输的状态。<br>当客户端主动关闭连接时，服务器通过返回确认报文段使连接进入 CLOSE_WAIT 状态。服务器检测到客户端关闭连接后，也会立即给客户端发送一个结束报文段来关闭连接。这将使连接装移到 LAST_ACK 状态。</p>
+<p><strong>扩大因子</strong></p>
+<p>TCP 紧急数据成为带外数据，仅支持一个字节。</p>
+<p>在某些特殊条件下，TCP连接的一端回会向另一端发送携带RST标志的报文段，即复位报文段，以通知对方关闭连接或重新建立连接。</p>
+<p>由于服务器程序已经被中断，所以对客户端发送的数据回应了一个复位报文段 </p>
+<p>带外数据比普通数据（也成为带内数据）有更高的优先级，它应该总是立即发送，而不论发送缓冲区中是否有排队等待发送的普通数据。带外数据的使用很少见，已知的仅有telnet、ftp等远程非活跃程序。</p>
+<p>发送端一次发送的多字节的带外数据中只有最后一个字节被当作带外数据，其他数据被当成了普通数据。</p>
+<p>ftp命令用使带 外 数据 来中断一个件文的输传。</p>
+<p>16位紧急指针，它是配合 URG 标志位一起使用的，言外之意就是这个字段只有在URG被置位时才有意义。因为只有一个紧急指针，这也意味着它只能表示一个字节的数据。这个指针指向了紧急数据最后一个自己的下一个字节。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/02/tcp/" data-id="ck2q5szts000p0oovqusz6ujw" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-jenkins-introduction" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/jenkins-introduction/" class="article-date">
+  <time datetime="2019-02-12T00:00:00.000Z" itemprop="datePublished">2019-02-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/jenkins-introduction/">jenkins pipeline 入门</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Jenkins-特点："><a href="#Jenkins-特点：" class="headerlink" title="Jenkins 特点："></a>Jenkins 特点：</h3><p>开源免费；<br>跨平台，支持所有的平台；<br>master/slave 支持分布式的 build；<br>web 形式的可视化的管理页面；</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker pull jenkins/jenkins:2.138.2</span><br><span class="line">docker run -p 9090:8080 -p 50000:50000 -v /User/user/jenkins:/var/jenkins_home jenkins</span><br><span class="line"></span><br><span class="line">docker run --rm --name jenkins -p 9090:8080 -p 50000:50000 --user root -v /var/run/docker.sock:/var/run/docker.sock -v $(which docker):/usr/bin/docker -v /Users/user/jenkins:/var/jenkins_home jenkins/jenkins:2.138.2</span><br></pre></td></tr></table></figure>
+<h3 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Go</span><br><span class="line"></span><br><span class="line">CloudBees Docker Build and Publish:</span><br></pre></td></tr></table></figure>
+<h3 id="全局工具配置"><a href="#全局工具配置" class="headerlink" title="全局工具配置"></a>全局工具配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Go 安装</span><br><span class="line">安装目录：/var/jenkins_home/go</span><br></pre></td></tr></table></figure>
+<h3 id="证书"><a href="#证书" class="headerlink" title="证书"></a>证书</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">配置访问git证书 SSH Username with private key</span><br><span class="line">harbor jenkins  密码</span><br></pre></td></tr></table></figure>
+<h3 id="项目配置"><a href="#项目配置" class="headerlink" title="项目配置"></a>项目配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">构建环境</span><br><span class="line">Set up Go programming language tools</span><br><span class="line">构建：</span><br><span class="line">Docker Build and Publish</span><br><span class="line">Docker Host URI 配置 unix:///var/run/docker.sock 或者 tcp://127.0.0.1:2375</span><br></pre></td></tr></table></figure>
+<h3 id="Pipeline"><a href="#Pipeline" class="headerlink" title="Pipeline"></a>Pipeline</h3><p>Pipeline的几个基本概念：</p>
+<ul>
+<li>Stage: 阶段，一个Pipeline可以划分为若干个Stage，每个Stage代表一组操作。注意，Stage是一个逻辑分组的概念，可以跨多个Node。</li>
+<li>Node: 节点，一个Node就是一个Jenkins节点，或者是Master，或者是Agent，是执行Step的具体运行期环境。</li>
+<li>Step: 步骤，Step是最基本的操作单元，小到创建一个目录，大到构建一个Docker镜像，由各类Jenkins Plugin提供。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">pipeline &#123;</span><br><span class="line">    agent &#123; label &apos;master&apos; &#125;</span><br><span class="line">    tools &#123;</span><br><span class="line">       maven &apos;maven_1&apos;</span><br><span class="line">    &#125;</span><br><span class="line">     stages &#123;</span><br><span class="line">        stage(&apos;Build&apos;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                checkout([$class: &apos;GitSCM&apos;, branches: [[name: &apos;*/master&apos;]], </span><br><span class="line">                doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], </span><br><span class="line">                userRemoteConfigs: [[url: &apos;https://github.com/airzhe/demo-junit&apos;]]])</span><br><span class="line">                sh &apos;mvn -version&apos;</span><br><span class="line">                sh &apos;mvn package -DskipTests&apos;</span><br><span class="line">            &#125;             </span><br><span class="line">        &#125;</span><br><span class="line">        stage(&apos;Build docker image&apos;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                //sh &apos;docker login --username airzhe  --password ×××&apos;</span><br><span class="line">                sh &apos;docker build -t airzhe/test:$&#123;imageversion&#125; .&apos;</span><br><span class="line">                sh &apos;docker push airzhe/test:$&#123;imageversion&#125;&apos;</span><br><span class="line">            &#125;             </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    post &#123; </span><br><span class="line">            failure &#123; </span><br><span class="line">                echo &apos;fail !&apos;</span><br><span class="line">            &#125;</span><br><span class="line">            success&#123;</span><br><span class="line">                echo &apos;success !&apos;</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>go 插件安装：<br><a href="https://blog.csdn.net/aixiaoyang168/article/details/82965854" target="_blank" rel="noopener">https://blog.csdn.net/aixiaoyang168/article/details/82965854</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/02/jenkins-introduction/" data-id="ck2q5sztc00080oovsy2a6l95" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pipeline/">pipeline</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-prometheus" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/prometheus/" class="article-date">
+  <time datetime="2019-02-01T19:46:10.000Z" itemprop="datePublished">2019-02-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/prometheus/">Prometheus入门</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h3><p><strong>时序索引 </strong> 名称+标签</p>
+<p><strong>时序样本</strong>  float64 值</p>
+<p><strong>格式</strong>: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;metric name&gt;&#123;&lt;label name&gt;=&lt;label value&gt;, ...&#125;</span><br></pre></td></tr></table></figure>
+<p>Prometheus 时序数据分为 <a href="https://prometheus.io/docs/concepts/metric_types/#counter" target="_blank" rel="noopener">Counter</a>, <a href="https://prometheus.io/docs/concepts/metric_types/#gauge" target="_blank" rel="noopener">Gauge</a>, <a href="https://prometheus.io/docs/concepts/metric_types/#histogram" target="_blank" rel="noopener">Histogram</a>, <a href="https://prometheus.io/docs/concepts/metric_types/#summary" target="_blank" rel="noopener">Summary</a> 四种类型。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">metric_name [</span><br><span class="line">  &quot;&#123;&quot; label_name &quot;=&quot; `&quot;` label_value `&quot;` &#123; &quot;,&quot; label_name &quot;=&quot; `&quot;` label_value `&quot;` &#125; [ &quot;,&quot; ] &quot;&#125;&quot;</span><br><span class="line">] value [ timestamp ]</span><br></pre></td></tr></table></figure>
+<p>contab 每天凌晨清空</p>
+<p>统计：下单总数、成功支付总数</p>
+<p>每秒总数 counter</p>
+<p><strong>Counter</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 不同时间获取不同值，图形上按时间增量展示，如果后面时间戳不写，就使用当前时间，如果获取不到，就为空，图像表示为中间断了如图:   _- -</span><br><span class="line"># HELP sample_http_requests_total The total number of HTTP requests.</span><br><span class="line"># TYPE sample_http_requests_total counter</span><br><span class="line">sample_http_requests_total&#123;method=&quot;post&quot;,code=&quot;200&quot;&#125; 1027 1568018567000</span><br><span class="line">sample_http_requests_total&#123;method=&quot;post&quot;,code=&quot;400&quot;&#125;    3 1568018567000</span><br><span class="line">idelta(sample_http_requests_total[1m]) 获取和一分钟前的差距</span><br></pre></td></tr></table></figure>
+<p><strong>Gauge</strong></p>
+<p>Gauge不能解决并发问题</p>
+<p><strong>向量</strong></p>
+<p>一个向量就是一列数，这些数是有序排列的。用过次序中的索引，我们可以确定每个单独的数。通常会赋予向量粗体的小写名称。当我们需要明确表示向量中的元素时，我们会将元素排列成一个方括号包围的纵柱：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/12621529-a47a2a3008428942.jpg?imageMogr2/auto-orient/strip|imageView2/2/w/134/format/webp" alt="img"></p>
+<p>我们可以把向量看作空间中的点，每个元素是不同的坐标轴上的坐标。</p>
+<p>时间戳根据时区不同，会转换成不同的日期时间.</p>
+<p><strong>PromQL</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">#CPU 个数</span><br><span class="line">count(count(node_cpu_seconds_total&#123;instance=&quot;172.16.101.209:9100&quot;,mode=&quot;system&quot;&#125;) by (cpu))</span><br><span class="line">#内存使用率</span><br><span class="line">(1 - (node_memory_MemAvailable_bytes&#123;instance=~&quot;$node&quot;&#125; / (node_memory_MemTotal_bytes&#123;instance=~&quot;$node&quot;&#125;)))* 100</span><br><span class="line">#cpu空闲率</span><br><span class="line">avg(rate(node_cpu_seconds_total&#123;mode=&quot;idle&quot;&#125;[2m])) by (instance)</span><br><span class="line">#offset25 一分钟前后值差异</span><br><span class="line">delta(sample_http_requests_total&#123;code=&quot;200&quot;&#125; [1m] offset 25m ) </span><br><span class="line"></span><br><span class="line">gauge</span><br><span class="line">sum without(device, fstype, mountpoint)(node_filesystem_size_bytes)</span><br><span class="line">max without(device, fstype, mountpoint)(node_filesystem_size_bytes)</span><br><span class="line">avg without(instance, job)(process_open_fds)</span><br><span class="line"></span><br><span class="line">counter</span><br><span class="line">#要计算每秒接收的网络流量，可以使用：返回值将是最近5分钟的平均值</span><br><span class="line">rate(node_network_receive_bytes_total[5m])</span><br><span class="line">The output of rate is a gauge, so the same aggregations apply as for gauges.</span><br><span class="line">sum without(device)(rate(node_network_receive_bytes_total[5m]))</span><br><span class="line"></span><br><span class="line">//通过rate()函数获取HTTP请求量的增长率</span><br><span class="line">rate(http_requests_total[5m])</span><br><span class="line">//查询当前系统中，访问量前10的HTTP地址</span><br><span class="line">topk(10, http_requests_total)</span><br><span class="line"></span><br><span class="line">count without(instance)(process_open_fds &gt; 10)</span><br></pre></td></tr></table></figure>
+<p><strong>CPU 参数</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type就是CPU的不同状态值</span><br><span class="line">idle, nice, user (default), system (default for Windows), iowait, interrupt, softirq, steal</span><br><span class="line">其中idle表示空闲，user表示用户使用</span><br></pre></td></tr></table></figure>
+<p><strong>prometheus rules</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">groups:</span><br><span class="line">- name: container-restart</span><br><span class="line">  rules:</span><br><span class="line">  - alert: Containers Restarts (Last 30 Minutes)</span><br><span class="line">    expr: |</span><br><span class="line">      delta(kube_pod_container_status_restarts_total&#123;&#125;[30m])&gt;0  </span><br><span class="line">    for: 5m</span><br><span class="line">    labels:</span><br><span class="line">      severity: warning</span><br><span class="line">      team: DevOps</span><br><span class="line">    annotations:</span><br><span class="line">      summary: &quot;Instance &#123;&#123; $labels.instance &#125;&#125; down&quot;</span><br><span class="line">      description: &quot;&#123;&#123;$labels.namespace&#125;&#125;/&#123;&#123;$labels.pod&#125;&#125; has many containers restarts in last 30 minutes&quot;</span><br></pre></td></tr></table></figure>
+<p><strong>alertManager</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">global:</span><br><span class="line">  smtp_smarthost: &apos;smtp.qq.com:465&apos;</span><br><span class="line">  smtp_from: &apos;532499602@qq.com&apos;</span><br><span class="line">  smtp_auth_username: &apos;weihaozhe@nicetuan.net&apos;</span><br><span class="line">  smtp_auth_password: &apos;745632Bn123&apos;</span><br><span class="line">  smtp_require_tls: false</span><br><span class="line">route:</span><br><span class="line">  group_by: [&apos;alertname&apos;]</span><br><span class="line">  group_wait: 1m</span><br><span class="line">  group_interval: 10m</span><br><span class="line">  repeat_interval: 10m</span><br><span class="line">  receiver: default-receiver</span><br><span class="line">receivers:</span><br><span class="line">- name: &apos;default-receiver&apos;</span><br><span class="line">  email_configs:</span><br><span class="line">  - to: &apos;air_zhe@163.com&apos;</span><br></pre></td></tr></table></figure>
+<p><strong>configMap reload</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/jimmidyson/configmap-reload/tree/v0.2.2</span><br></pre></td></tr></table></figure>
+<p>一台Prometheus服务器每秒可以摄取数百万个样本.</p>
+<p>Prometheus旨在跟踪整个系统的运行状况，行为和性能，而不是单个事件。换句话说，Prometheus关心在最后一分钟有15个请求，花了4秒钟来处理，导致40次数据库调用，17次缓存命中和2次客户购买。单个调用的成本和代码路径将成为性能分析或日志记录的问题。</p>
+<p>官方对非官方<br>不要因为客户端库是非官方的或第三方的集成而推迟。您可能希望与数百个应用程序和系统集成，因此Prometheus项目团队不可能有时间和专业知识来创建和维护它们。因此，生态系统中的绝大多数集成都是第三方。为了使事情合理地保持一致并按预期工作，可以使用有关如何编写集成的准则。<br>作为Prometheus的用户，您应该了解，拉力已根植于Prometheus的核心中，而试图使其进行推顶充其量是不明智的。作为基于指标的系统，Prometheus不适合存储事件日志或单个事件。</p>
+<p>存储</p>
+<p>建议使用SSD，但并非严格要求。</p>
+<p>计数器总是在增加。这样可以创建美观的图形，但是计数器的值本身并没有太多用处。您真正想知道的是计数器增加的速度，这就是<code>rate</code>函数的作用。该<code>rate</code>函数计算计数器每秒增加的速度。将表达式调整为 <strong>rate(prometheus_tsdb_head_samples_appended_total[1m])</strong>，它将计算出Prometheus在1分钟内每秒平均摄取多少个样本</p>
+<p>量具有三种主要方法 使用：<code>inc</code>，<code>dec</code>和<code>set</code></p>
+<p>量规是某些当前状态的快照。对于计数器来说，增长的速度是您所关心的，而对于量规，则是量规的实际值。因此，值可以同时上升和下降。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LAST.set(time.time())</span><br><span class="line">PromQL表达式time() - hello_world_last_time_seconds 将告诉您自上次请求以来有多少秒。</span><br></pre></td></tr></table></figure>
+<p>请求进来inc ,结束des 计算请求数</p>
+<p><strong>摘要</strong></p>
+<p>摘要的作用是让您能够计算事件的平均大小，在这种情况下，是每个响应中返回的平均字节数。 如果您有三个大小分别为1、4和7的响应，则平均值将是它们的总和除以它们的计数，即12除以3。同样适用于摘要。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">hello_world_latency_seconds_count是observe已进行的呼叫数，因此rate(hello_world_latency_seconds_count[1m])在表达式浏览器中将返回Hello World请求的每秒速率。</span><br><span class="line"></span><br><span class="line">hello_world_latency_seconds_sum是传递给的值的总和 observe，因此rate(hello_world_latency_seconds_sum[1m])每秒响应请求所花费的时间也是如此。</span><br><span class="line"></span><br><span class="line">如果将这两个表达式相除，您将获得最后一分钟的平均延迟。 平均延迟的完整表达式为：</span><br><span class="line">rate（hello_world_latency_seconds_sum [1m]）/rate（hello_world_latency_seconds_count [1m]）</span><br></pre></td></tr></table></figure>
+<p><strong>直方图</strong></p>
+<p>直方图度量标准允许您跟踪事件大小的分布，从而可以从中计算分位数。例如，您可以使用直方图来计算0.9分位数（也称为第90 个 百分位数）延迟。</p>
+<p>直方图指标还包括<code>_sum</code>和<code>_count</code>指标，它们的工作原理与摘要指标完全相同。</p>
+<p>摘要将提供平均延迟，但是如果要分位数呢？分位数告诉您，一定比例的事件的大小小于给定值。 例如，0.95分位数为300毫秒，这意味着95％的请求花费的时间少于300毫秒。</p>
+<p>在推理实际的最终用户体验时，分位数很有用。如果用户的浏览器向您的应用程序发出20个并发请求，则确定用户可见延迟的时间是最慢的。在这种情况下，第95 个 百分点捕获了该延迟。</p>
+<p>默认存储桶的延迟范围从1 ms到10 s。这旨在捕获Web应用程序的典型延迟范围。但是，您也可以覆盖它们，并在定义指标时提供自己的存储桶。</p>
+<p>Summary和Histogram都提供了对于事件的计数_count以及值的汇总_sum。 因此使用_count,和_sum时间序列可以计算出相同的内容，例如http每秒的平均响应时间：rate(basename_sum[5m]) / rate(basename_count[5m])。</p>
+<p>同时Summary和Histogram都可以计算和统计样本的分布情况，比如中位数，9分位数等等。其中 0.0&lt;= 分位数Quantiles &lt;= 1.0。</p>
+<p>不同在于Histogram可以通过histogram_quantile函数在服务器端计算分位数。 而Sumamry的分位数则是直接在客户端进行定义。因此对于分位数的计算。 Summary在通过PromQL进行查询时有更好的性能表现，而Histogram则会消耗更多的资源。相对的对于客户端而言Histogram消耗的资源更少。</p>
+<p><strong>标签</strong></p>
+<p>对于HTTP状态代码，而不是<code>code~=&quot;4..&quot;</code>捕获401s，404s，405s等，您可以将它们组合为标签值<code>4xx</code>并使用相等匹配器<code>code=&quot;4xx&quot;</code>。</p>
+<p><strong>聚合运算符</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">sum without()(node_filesystem_size_bytes)</span><br><span class="line">sum by(job, instance, device)(node_filesystem_size_bytes)</span><br><span class="line">sum without(fstype, mountpoint, device)(node_filesystem_size_bytes)</span><br><span class="line">count without(device)(node_disk_read_bytes_total)</span><br><span class="line">avg without(cpu)(rate(node_cpu_seconds_total[5m]))</span><br><span class="line">等于</span><br><span class="line">  sum without(cpu)(rate(node_cpu_seconds_total[5m]))</span><br><span class="line">/</span><br><span class="line">  count without(cpu)(rate(node_cpu_seconds_total[5m]))</span><br><span class="line">max without(device, fstype, mountpoint)(node_filesystem_size_bytes)</span><br><span class="line"></span><br><span class="line">topk without(device, fstype, mountpoint)(2, node_filesystem_size_bytes)</span><br><span class="line">分位数</span><br><span class="line">quantile without(cpu)(0.9, rate(node_cpu_seconds_total&#123;mode=&quot;system&quot;&#125;[5m]))</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/02/prometheus/" data-id="ck2q5sztq000m0oov9b7psnyk" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/监控/">监控</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-k8s-notes" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/k8s-notes/" class="article-date">
+  <time datetime="2019-02-01T19:38:10.000Z" itemprop="datePublished">2019-02-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/k8s-notes/">k8s 笔记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>k8s 容器出现大量 Evicted</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$kubectl describe node/runner-e480</span><br><span class="line"></span><br><span class="line">Normal   NodeHasNoDiskPressure    6m19s (x8 over 6m19s)  kubelet, runner-e480     Node runner-e480 status is now: NodeHasNoDiskPressure</span><br><span class="line"></span><br><span class="line">df -h 系统盘使用85%</span><br><span class="line"></span><br><span class="line">修改了docker 镜像存储路径</span><br><span class="line">https://blog.csdn.net/glongljl/article/details/80158297</span><br><span class="line"></span><br><span class="line">参考:</span><br><span class="line">https://blog.csdn.net/qq_21816375/article/details/82905660</span><br></pre></td></tr></table></figure>
+<h3 id="k8s-命令"><a href="#k8s-命令" class="headerlink" title="k8s 命令"></a>k8s 命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">#命令行自动补全</span><br><span class="line">source &lt;(kubectl completion bash)</span><br><span class="line">echo &quot;source &lt;(kubectl completion bash)&quot; &gt;&gt; ~/.bashrc</span><br><span class="line"></span><br><span class="line">kubectl get sa --all-namespaces=true</span><br><span class="line">kubectl get roles --all-namespaces=true</span><br><span class="line">kubectl get RoleBinding  --all-namespaces=true</span><br><span class="line">kubectl get secrets --all-namespaces=true</span><br><span class="line">kubectl describe  ClusterRole/cluster-admin</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#端口转发 本地2000端口映射到容器3000端口 &amp;……&amp; 目前只能用localhost访问</span><br><span class="line">export POD_NAME=$(kubectl get pods --namespace default -l &quot;app=grafana,release=willing-lamb&quot; -o jsonpath=&quot;&#123;.items[0].metadata.name&#125;&quot;)</span><br><span class="line">kubectl port-forward willing-lamb-grafana-75d49cb58c-7dn6d 2000:3000</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">kubectl get secrets -o json | kubectl update -f -</span><br><span class="line"></span><br><span class="line">kubectl exec POD_NAME -c CONTAINER_NAME reboot</span><br><span class="line">kubectl exec -it [POD_NAME] -c [CONTAINER_NAME] -- /bin/sh -c &quot;kill 1&quot;</span><br><span class="line"></span><br><span class="line">kubectl explain namespace</span><br><span class="line"></span><br><span class="line">kubectl get ns default --show-labels</span><br><span class="line">kubectl completion -h</span><br><span class="line"></span><br><span class="line">kubectl delete pod deviosow-1828 --namespace=kube-system --grace-period=0 --force</span><br><span class="line"></span><br><span class="line">docker images | grep &apos;&lt;none&gt;&apos;| awk &apos;&#123;print $3&#125;&apos; | xargs docker rmi</span><br><span class="line">kubectl -n kube-system get endpoints -o wide</span><br><span class="line"></span><br><span class="line">#dns 验证</span><br><span class="line">kubectl run curl --image=radial/busyboxplus:curl -it</span><br><span class="line">nslookup docker-dind-svc.gitlab-managed-apps</span><br></pre></td></tr></table></figure>
+<p><strong>RBAC</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: ServiceAccount</span><br><span class="line">metadata:</span><br><span class="line">  namespace: default</span><br><span class="line">  name: example-sa</span><br><span class="line">---</span><br><span class="line">kind: Role</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  namespace: default</span><br><span class="line">  name: example-role</span><br><span class="line">rules:</span><br><span class="line">- apiGroups: [&quot;&quot;]</span><br><span class="line">  resources: [&quot;pods&quot;]</span><br><span class="line">  verbs: [&quot;get&quot;, &quot;watch&quot;, &quot;list&quot;]</span><br><span class="line">---</span><br><span class="line">kind: RoleBinding</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  name: example-rolebinding</span><br><span class="line">  namespace: default</span><br><span class="line">subjects:</span><br><span class="line">- kind: ServiceAccount</span><br><span class="line">  name: example-sa</span><br><span class="line">  namespace: default</span><br><span class="line">roleRef:</span><br><span class="line">  kind: Role</span><br><span class="line">  name: example-role</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">  </span><br><span class="line">---</span><br><span class="line">#管理员，角色配置可以参考 kubectl describe  ClusterRole/cluster-admin</span><br><span class="line">kind: Role</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  namespace: default</span><br><span class="line">  name: example-role</span><br><span class="line">rules:</span><br><span class="line">- apiGroups:</span><br><span class="line">  - &apos;*&apos;</span><br><span class="line">  resources:</span><br><span class="line">  - &apos;*&apos;</span><br><span class="line">  verbs:</span><br><span class="line">  - &apos;*&apos;</span><br><span class="line">  </span><br><span class="line">serviceAccountName</span><br><span class="line">serviceAccount #pod请求别的命名空间时的帐号</span><br><span class="line"></span><br><span class="line">Error: release community-feature-haozhe-wei failed: namespaces &quot;php-sht&quot; is forbidden: User &quot;system:serviceaccount:gitlab-managed-apps:default&quot; cannot get resource &quot;namespaces&quot; in API group &quot;&quot; in the namespace &quot;php-sht&quot;</span><br><span class="line"></span><br><span class="line">更新密钥要小心，因为帐号token会被其他服务关联，比如 tiller account</span><br></pre></td></tr></table></figure>
+<p><strong>跨namespace授权 </strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">kind: Role</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  namespace: gitlab</span><br><span class="line">  name: gitlab-view-role</span><br><span class="line">rules:</span><br><span class="line">- apiGroups:</span><br><span class="line">  - &apos;*&apos;</span><br><span class="line">  resources:</span><br><span class="line">  - &apos;*&apos;</span><br><span class="line">  verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;, &quot;create&quot;, &quot;update&quot;, &quot;patch&quot;, &quot;delete&quot;]</span><br><span class="line">---</span><br><span class="line">kind: RoleBinding</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  name: gitlab-view-php-sht-rolebinding</span><br><span class="line">  namespace: gitlab</span><br><span class="line">subjects:</span><br><span class="line">- kind: ServiceAccount</span><br><span class="line">  name: admin</span><br><span class="line">  namespace: php-sht</span><br><span class="line">roleRef:</span><br><span class="line">  kind: Role</span><br><span class="line">  name: gitlab-view-role</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br></pre></td></tr></table></figure>
+<p><strong>角色</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">admin</span><br><span class="line">maintainer</span><br><span class="line">developer</span><br><span class="line">guest/reporter</span><br></pre></td></tr></table></figure>
+<h3 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a>Pod</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">每个 pod 都以mount形式挂载这个 默认的Servcice Account，</span><br><span class="line">如：mountPath&quot;: &quot;/var/run/secrets/kubernetes.io/serviceaccount&quot;</span><br><span class="line"></span><br><span class="line">单独的pod，恢复过程永远发生在当前节点，不会跑到别的节点上去。如果你想让Pod出现在其他的可用节点上，就必须使用 deployment 这样的控制器来管理 pod，哪怕你只需要一个 pod 副本。</span><br><span class="line"></span><br><span class="line">可以通过restartPolicy，改变pod的恢复策略</span><br><span class="line"></span><br><span class="line">selector 意味着后面这些追加的定义，只会作用于 selector 所定义的，带有&quot;role:frontend&quot;标签的Pod对象</span><br><span class="line"></span><br><span class="line">command: [&quot;sh&quot;,&quot;-c&quot;,&quot;mkdir /var/www/html ; ln -s /var/www/community/public /var/www/html/public ; nginx -g &apos;daemon off;&apos;&quot;]</span><br><span class="line"></span><br><span class="line">#多行配置</span><br><span class="line">env:</span><br><span class="line">    - name: COMMAND_SCRIPT</span><br><span class="line">      value: |-</span><br><span class="line">        set -xeo pipefail</span><br><span class="line">        helm init --upgrade</span><br><span class="line">        for i in $(seq 1 30); do helm version &amp;&amp; break; sleep 1s; echo &quot;Retrying ($i)...&quot;; done</span><br><span class="line">        helm repo add runner https://charts.gitlab.io</span><br><span class="line">        helm repo update</span><br><span class="line">        helm upgrade runner runner/gitlab-runner --install --reset-values --tls --tls-ca-cert /data/helm/runner/config/ca.pem --tls-cert /data/helm/runner/config/cert.pem --tls-key /data/helm/runner/config/key.pem --version 0.4.1 --set rbac.create\=true,rbac.enabled\=true --namespace gitlab-managed-apps -f /data/helm/runner/config/values.yaml</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-privileged</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">    - name: nginx-privileged</span><br><span class="line">      image: nginx:1.14.2</span><br><span class="line">      securityContext:</span><br><span class="line">        privileged: true</span><br><span class="line">        runAsUser: 1000 #指定容器运行账户</span><br><span class="line">      </span><br><span class="line">      </span><br><span class="line"></span><br><span class="line">pod 的操作只有创建删除</span><br><span class="line"></span><br><span class="line">&quot;hostAliases&quot;: [</span><br><span class="line">          &#123;</span><br><span class="line">            &quot;ip&quot;: &quot;172.16.101.197&quot;,</span><br><span class="line">            &quot;hostnames&quot;: [</span><br><span class="line">              &quot;prometheus.local.com&quot;</span><br><span class="line">            ]</span><br><span class="line">          &#125;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">pod 的标签很很重要，loki用来建立索引，prometheus可以用来指定报警分组.</span><br></pre></td></tr></table></figure>
+<p><strong>TLS</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl https://192.168.207.237:2376/info --cert ./cert.pm --key ./key.pem  --cacert ./ca.pem</span><br><span class="line">kubectl create secret tls tls-secret --cert=path/to/tls.cert --key=path/to/tls.key</span><br></pre></td></tr></table></figure>
+<p><strong>Namspace</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pv 不属于 namespace </span><br><span class="line">pvc 属于</span><br></pre></td></tr></table></figure>
+<p><strong>Label</strong> and Annotations 注释 可以用来检索</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#标签一定要有 key 可以没有 value</span><br><span class="line">kubectl label/annotate &lt;resource&gt; foo=bar</span><br><span class="line">kubectl label/annotate &lt;resource&gt; foo-</span><br></pre></td></tr></table></figure>
+<h3 id="健康检查"><a href="#健康检查" class="headerlink" title="健康检查"></a>健康检查</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">livenessProbe:</span><br><span class="line">  - initialDelaySeconds:5 #容器启动5s后开始执行</span><br><span class="line">    periodSeconds:5 #每5s执行一次</span><br><span class="line"></span><br><span class="line">readlinessProbe: #健康检查结果决定这个pod是不是能被通过Service的方式访问到，而并不影响Pod的生命周期</span><br></pre></td></tr></table></figure>
+<h3 id="ConfigMap-Secret-Downard-Api"><a href="#ConfigMap-Secret-Downard-Api" class="headerlink" title="ConfigMap Secret Downard Api"></a>ConfigMap Secret Downard Api</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">这三种Project Volume 定义的信息，还可以通过环境变量的方式出现在容器里。但环境变量不具备自动更新的能力。所以一般情况下，都建议你好似用 Volume 文件的方式获取这些信息。</span><br><span class="line"></span><br><span class="line">projected volume可以映射很多volume源到相同的目录下</span><br><span class="line"></span><br><span class="line">#从配置文件生成 configmap</span><br><span class="line">&lt;?php</span><br><span class="line">$c=file_get_contents(&quot;conf.php&quot;);</span><br><span class="line">echo json_encode($c,JSON_UNESCAPED_UNICODE).&quot;\n&quot;;</span><br></pre></td></tr></table></figure>
+<h3 id="k8s-node-节点加入集群"><a href="#k8s-node-节点加入集群" class="headerlink" title="k8s  node 节点加入集群"></a>k8s  node 节点加入集群</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">kubeadm join 172.16.101.197:6443 --token vq0fs8.rzcw1lf6k3lz7986     --discovery-token-ca-cert-hash sha256:68c8228227ae029b091c8d6cdecde4c11ec5dbbbd43fa725060ffdd512fef3cd</span><br><span class="line"></span><br><span class="line">节点需要关闭 swap 启动docker服务</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">还需要下载</span><br><span class="line">k8s.gcr.io/pause:3.1 镜像</span><br><span class="line">k8s.gcr.io/kube-proxy 镜像</span><br><span class="line"></span><br><span class="line">在 master节点观察子节点pod创建情况</span><br><span class="line"></span><br><span class="line">移除节点:</span><br><span class="line">kubectl delete node node-1</span><br></pre></td></tr></table></figure>
+<h3 id="PV"><a href="#PV" class="headerlink" title="PV"></a>PV</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: PersistentVolume</span><br><span class="line">metadata:</span><br><span class="line">  name: es-local-pv0</span><br><span class="line">spec:</span><br><span class="line">  capacity:</span><br><span class="line">    storage: 10Gi</span><br><span class="line">  accessModes:</span><br><span class="line">  - ReadWriteOnce</span><br><span class="line">  persistentVolumeReclaimPolicy: Retain</span><br><span class="line">  storageClassName: local-storage</span><br><span class="line">  local:</span><br><span class="line">    path: /data</span><br><span class="line">  nodeAffinity:</span><br><span class="line">    required:</span><br><span class="line">      nodeSelectorTerms:</span><br><span class="line">      - matchExpressions:</span><br><span class="line">        - key: kubernetes.io/hostname</span><br><span class="line">          operator: In</span><br><span class="line">          values:</span><br><span class="line">          - php-cd-node</span><br></pre></td></tr></table></figure>
+<p><strong>redis</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl run --namespace kube-public redis-client --rm --tty -i --restart=&apos;Never&apos; \</span><br><span class="line"> --env REDIS_PASSWORD=$REDIS_PASSWORD \</span><br><span class="line">--image docker.io/bitnami/redis:5.0.5-debian-9-r36 -- bash</span><br></pre></td></tr></table></figure>
+<h3 id="映射外部服务"><a href="#映射外部服务" class="headerlink" title="映射外部服务"></a>映射外部服务</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: ldap-chang-password</span><br><span class="line">  namespace: kube-system</span><br><span class="line">spec:</span><br><span class="line">  ports:</span><br><span class="line">  - port: 80</span><br><span class="line">    targetPort: 8080</span><br><span class="line">    protocol: TCP</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Endpoints</span><br><span class="line">metadata:</span><br><span class="line">  name: ldap-chang-password</span><br><span class="line">  namespace: kube-system</span><br><span class="line">subsets:</span><br><span class="line">  - addresses:</span><br><span class="line">    - ip: 10.111.8.166</span><br><span class="line">    ports:</span><br><span class="line">    - port: 8080</span><br><span class="line">      protocol: TCP</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  name: uic</span><br><span class="line">  namespace: kube-system</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - host: uic.t1.youhaodongxi.com</span><br><span class="line">    http:</span><br><span class="line">      paths:</span><br><span class="line">      - backend:</span><br><span class="line">          serviceName: ldap-chang-password</span><br><span class="line">          servicePort: 80</span><br><span class="line">        path: /</span><br></pre></td></tr></table></figure>
+<p><strong>API权限</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/</span><br><span class="line"></span><br><span class="line">APISERVER=$(kubectl config view --minify -o jsonpath=&apos;&#123;.clusters[0].cluster.server&#125;&apos;)</span><br><span class="line">TOKEN=$(kubectl get secret $(kubectl get serviceaccount default -o jsonpath=&apos;&#123;.secrets[0].name&#125;&apos;) -o jsonpath=&apos;&#123;.data.token&#125;&apos; | base64 --decode )</span><br><span class="line">curl $APISERVER/api --header &quot;Authorization: Bearer $TOKEN&quot; --insecure</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;APIVersions&quot;,</span><br><span class="line">  &quot;versions&quot;: [</span><br><span class="line">    &quot;v1&quot;</span><br><span class="line">  ],</span><br><span class="line">  &quot;serverAddressByClientCIDRs&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;clientCIDR&quot;: &quot;0.0.0.0/0&quot;,</span><br><span class="line">      &quot;serverAddress&quot;: &quot;10.0.1.149:443&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>how-to-create-a-kubectl-config-file-for-serviceaccount</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://stackoverflow.com/questions/47770676/how-to-create-a-kubectl-config-file-for-serviceaccount</span><br></pre></td></tr></table></figure>
+<p><strong>create-kubectl-by-user</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://docs.bitnami.com/kubernetes/how-to/configure-rbac-in-your-kubernetes-cluster/</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/02/k8s-notes/" data-id="ck2q5sztn000i0oovqnrzkmpe" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-k8s-introduction" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/k8s-introduction/" class="article-date">
+  <time datetime="2019-01-31T00:00:00.000Z" itemprop="datePublished">2019-01-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/k8s-introduction/">k8s 介绍</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Kubernetes"><a href="#Kubernetes" class="headerlink" title="Kubernetes"></a>Kubernetes</h2><p>Kubernetes是一个开源的_用于管理云平台中多个主机上的容器化的应用_Kubernetes的目标是让部署容器化的应用简单并且高效<em>powerful__Kubernetes提供了应用部署</em>规划_更新_维护的一种机制</p>
+<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p><img src="/img/k8s/1.png" alt="image"></p>
+<p>集群中的机器划分为一个Master 节点和一群工作节点(Node)</p>
+<p>Master 节点，由三个紧密协作的独立组件组合而成，它们分别是负责 API 服务的 <strong>kube-apiserver</strong>、负责调度的 <strong>kube-scheduler</strong>，以及负责容器编排的 <strong>kube-controller-manager</strong>。整个集群的持久化数据，则由 kube-apiserver 处理后保存在 <strong>Ectd</strong> 中。</p>
+<p>node上运行着 kubelet、kube-proxy服务进程，负责pod的创建、启动、监控、重启、销毁、以及实现软件模式的负载均衡器。</p>
+<p>在 Kubernetes 项目中，kubelet 主要负责同容器运行时（比如 Docker 项目）打交道，只要你的这个容器运行时能够运行标准的容器镜像，它就可以通过实现 <strong>CRI</strong> 接入到 Kubernetes 项目当中。(比如 rkt)</p>
+<p>而kubelet 的另一个重要功能，则是调用网络插件和存储插件为容器配置网络和持久化存储。<br>
+        
+          <p class="article-more-link">
+            <a href="/2019/01/k8s-introduction/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/01/k8s-introduction/" data-id="ck2q5szte000a0oov76ry9q0b" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    <a class="extend prev" rel="prev" href="/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/b树/">b树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/charts/">charts</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coredns/">coredns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/">grafana</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/">helm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/laravel/">laravel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loki/">loki</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openresty/">openresty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/promtal/">promtal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/报警/">报警</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控/">监控</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/b树/" style="font-size: 10px;">b树</a> <a href="/tags/charts/" style="font-size: 10px;">charts</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/grafana/" style="font-size: 16.67px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 13.33px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 10px;">jenkins</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/laravel/" style="font-size: 10px;">laravel</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/loki/" style="font-size: 13.33px;">loki</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/pipeline/" style="font-size: 10px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 13.33px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 13.33px;">promtal</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/k8s-migration-1/"> 测试服务迁移到新k8s集群记录（一）</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/hexo/">使用hexo管理博客</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/grafana-variables/">grafana 模板变量配置</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/loki/">使用Loki查询日志</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/core-dns/">core-dns使用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 air_zhe@163.com<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	</head>
+	<script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+	<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.js"></script>
+	<body>
+
+	<form method="get">
+		<input  type ="text" name="_name"/>
+		<button>submit</button>
+	</form>
+
+	<script type="text/javascript">
+		jQuery.validator.addMethod("stringCheck", function(value){ 
+			console.log(3);     
+			return /^[\u0391-\uFFE5\w]+$/.test(value);       
+		}, "只能包括中文字、英文字母、数字和下划线");   
+
+		$('form').validate({
+			rules: {
+				_name: {
+				stringCheck: true
+				}
+			},
+		})
+</script>
+</body>
+</html>

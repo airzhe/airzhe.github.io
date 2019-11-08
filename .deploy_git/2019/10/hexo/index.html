@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>使用hexo管理博客 | Runner的小站</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="下载 hexo 镜像1docker pull neofelhz/hexo-docker 启动镜像并映射本地目录 1234567docker run -itd \    -v /home/runner/work/www/blog:/www/blog \    -w=&amp;quot;/www/blog&amp;quot; \    -p 4000:4000 \    --name hexo-test \    n">
+<meta name="keywords" content="hexo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用hexo管理博客">
+<meta property="og:url" content="http://airzhe.github.io/2019/10/hexo/index.html">
+<meta property="og:site_name" content="Runner的小站">
+<meta property="og:description" content="下载 hexo 镜像1docker pull neofelhz/hexo-docker 启动镜像并映射本地目录 1234567docker run -itd \    -v /home/runner/work/www/blog:/www/blog \    -w=&amp;quot;/www/blog&amp;quot; \    -p 4000:4000 \    --name hexo-test \    n">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://airzhe.github.io/img/hexo/1.png">
+<meta property="og:updated_time" content="2019-11-08T12:30:34.588Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用hexo管理博客">
+<meta name="twitter:description" content="下载 hexo 镜像1docker pull neofelhz/hexo-docker 启动镜像并映射本地目录 1234567docker run -itd \    -v /home/runner/work/www/blog:/www/blog \    -w=&amp;quot;/www/blog&amp;quot; \    -p 4000:4000 \    --name hexo-test \    n">
+<meta name="twitter:image" content="http://airzhe.github.io/img/hexo/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Runner的小站" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Runner的小站</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://airzhe.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-hexo" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/hexo/" class="article-date">
+  <time datetime="2019-10-23T16:09:10.000Z" itemprop="datePublished">2019-10-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      使用hexo管理博客
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>下载 hexo 镜像<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull neofelhz/hexo-docker</span><br></pre></td></tr></table></figure></p>
+<p>启动镜像并映射本地目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd \</span><br><span class="line">    -v /home/runner/work/www/blog:/www/blog \</span><br><span class="line">    -w=&quot;/www/blog&quot; \</span><br><span class="line">    -p 4000:4000 \</span><br><span class="line">    --name hexo-test \</span><br><span class="line">    neofelhz/hexo-docker \</span><br><span class="line">    /bin/sh</span><br></pre></td></tr></table></figure>
+<p>进入容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it hexo-test /bin/sh</span><br></pre></td></tr></table></figure>
+<p>执行 <code>hexo init</code>，初始化时间较长，应该和网络有关</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">/www/blog # hexo init </span><br><span class="line">INFO  Cloning hexo-starter to /www/blog</span><br><span class="line">Cloning into &apos;/www/blog&apos;...</span><br><span class="line">remote: Enumerating objects: 8, done.</span><br><span class="line">remote: Counting objects: 100% (8/8), done.</span><br><span class="line">remote: Compressing objects: 100% (8/8), done.</span><br><span class="line">remote: Total 139 (delta 2), reused 2 (delta 0), pack-reused 131</span><br><span class="line">Receiving objects: 100% (139/139), 25.72 KiB | 21.00 KiB/s, done.</span><br><span class="line">Resolving deltas: 100% (64/64), done.</span><br><span class="line">Submodule &apos;themes/landscape&apos; (https://github.com/hexojs/hexo-theme-landscape.git) registered for path &apos;themes/landscape&apos;</span><br><span class="line">Cloning into &apos;/www/blog/themes/landscape&apos;...</span><br><span class="line">......</span><br><span class="line">[3/4] Linking dependencies...</span><br><span class="line">[4/4] Building fresh packages...</span><br><span class="line">success Saved lockfile.</span><br><span class="line">warning Your current version of Yarn is out of date. The latest version is &quot;1.19.1&quot; while you&apos;re on &quot;1.3.2&quot;.</span><br><span class="line">info To upgrade, run the following command:</span><br><span class="line">$ curl -o- -L https://yarnpkg.com/install.sh | bash</span><br><span class="line">Done in 112.25s.</span><br><span class="line">INFO  Start blogging with Hexo!</span><br></pre></td></tr></table></figure>
+<a id="more"></a>`<br><br>初始化完成生成目录如下：<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/www/blog/source/_posts # ls -la</span><br><span class="line">total 132</span><br><span class="line">drwxr-xr-x   6 runner runner  4096 10月 23 14:33 .</span><br><span class="line">drwxr-xr-x  13 runner runner  4096 10月 23 14:15 ..</span><br><span class="line">-rw-r--r--   1 runner runner  2121 10月 23 14:18 _config.yml</span><br><span class="line">-rw-r--r--   1 runner runner 12288 10月 23 14:33 ._config.yml.swp</span><br><span class="line">-rw-r--r--   1 runner runner    65 10月 23 14:18 .gitignore</span><br><span class="line">drwxr-xr-x 273 runner runner 12288 10月 23 14:27 node_modules</span><br><span class="line">-rw-r--r--   1 runner runner   577 10月 23 14:18 package.json</span><br><span class="line">drwxr-xr-x   2 runner runner  4096 10月 23 14:18 scaffolds</span><br><span class="line">drwxr-xr-x   3 runner runner  4096 10月 23 14:18 source</span><br><span class="line">drwxr-xr-x   3 runner runner  4096 10月 23 14:24 themes</span><br><span class="line">-rw-r--r--   1 runner runner 76595 10月 23 14:27 yarn.lock</span><br></pre></td></tr></table></figure>
+<p>修改<code>_config.yml</code> ，title 改为自己的网站标题，拷贝一个新的 md 文件到 <code>source/_posts</code>目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/www/blog/source/_posts # ls</span><br><span class="line">hello-world.md  microk8.md</span><br></pre></td></tr></table></figure>
+<p>执行<code>hexo s</code>启动服务:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/www/blog/source # hexo s</span><br><span class="line">INFO  Start processing</span><br><span class="line">INFO  Hexo is running at http://localhost:4000 . Press Ctrl+C to stop.</span><br></pre></td></tr></table></figure>
+<p>访问 <code>http://localhost:4000</code>，我们的 markdown 文章就以 html 格式展示出来了</p>
+<p><img src="/img/hexo/1.png" alt="1.png"></p>
+<p><strong>上传到 github.io </strong></p>
+<p>1.修改_config.yaml，采用 git 方式部署到自己的 github.io</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: https://github.com/airzhe/airzhe.github.io</span><br></pre></td></tr></table></figure>
+<p>2.安装 <code>hexo-deploy-git</code> 模块，执行:  <code>npm install hexo-deployer-git --save</code>，之后执行 <code>hexo</code> 如果报错 <code>ERROR Local hexo not found ***</code>, 删除 <code>node_modules</code> 目录后，执行 <code>npm install</code></p>
+<p>3.执行 <code>hexo clean &amp;&amp; hexo deploy</code> 按提示配置 git-confg 信息后重试，输入 git 帐号和密码，部署成功！</p>
+<p><strong>小技巧</strong>:</p>
+<p>1.文章注释信息定义：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: &quot;MicroK8s&quot;</span><br><span class="line">date: 2019-10-23 20:23:10</span><br><span class="line">tags: [microk8s,k8s]</span><br><span class="line">share: true</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<p>2.插入图片:  在 source 目录下新建 img 目录，markdown 中以<code>/img</code> 为根路径引入对应图片</p>
+<p>3.站内链接: {&#37; post_link loki  使用Loki查询日志 &#37;}<br>4.更多: <code>&lt;!-- more --&gt;</code></p>
+<p><strong>文档</strong><br><a href="https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="noopener">hexo中文</a><br><a href="https://wxnacy.com/2018/01/12/hexo-specific-symbol/" target="_blank" rel="noopener">hexo特殊符号转义</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/10/hexo/" data-id="ck2q5sztj000f0oovmuamztlf" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/11/k8s-migration-1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+           测试服务迁移到新k8s集群记录（一）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/10/grafana-variables/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">grafana 模板变量配置</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/b树/">b树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/charts/">charts</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coredns/">coredns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/">grafana</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/">helm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/laravel/">laravel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loki/">loki</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openresty/">openresty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/promtal/">promtal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/报警/">报警</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控/">监控</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/b树/" style="font-size: 10px;">b树</a> <a href="/tags/charts/" style="font-size: 10px;">charts</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/grafana/" style="font-size: 16.67px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 13.33px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 10px;">jenkins</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/laravel/" style="font-size: 10px;">laravel</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/loki/" style="font-size: 13.33px;">loki</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/pipeline/" style="font-size: 10px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 13.33px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 13.33px;">promtal</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/k8s-migration-1/"> 测试服务迁移到新k8s集群记录（一）</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/hexo/">使用hexo管理博客</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/grafana-variables/">grafana 模板变量配置</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/loki/">使用Loki查询日志</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/core-dns/">core-dns使用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 air_zhe@163.com<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

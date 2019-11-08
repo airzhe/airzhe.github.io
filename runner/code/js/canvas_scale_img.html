@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>通过Canvas及File API缩放并上传图片</title>
+</head>
+<body>
+
+<input type="file" name="fileDemo" id="fileDemo" multep/>
+<canvas id="myCanvas"></canvas>
+
+
+<img id="result" src="">
+<script type="text/javascript">
+
+    var inputElement = document.getElementById("fileDemo"); 
+    inputElement.addEventListener("change", handleFiles, false);
+
+    // 渲染
+    function render(src,height){
+        // 参数，最大高度
+        var MAX_HEIGHT = height;
+        // 创建一个 Image 对象
+        var image = new Image();
+        // 绑定 load 事件处理器，加载完成后执行
+        image.onload = function(){
+            // 获取 canvas DOM 对象
+            var canvas = document.getElementById("myCanvas");
+            // 如果高度超标
+            if(image.height > MAX_HEIGHT) {
+                // 宽度等比例缩放 *=
+                image.width *= MAX_HEIGHT / image.height;
+                image.height = MAX_HEIGHT;
+            }
+            // 获取 canvas的 2d 环境对象,
+            // 可以理解Context是管理员，canvas是房子
+            var ctx = canvas.getContext("2d");
+            // canvas清屏
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // 重置canvas宽高
+            canvas.width = image.width;
+            canvas.height = image.height;
+            // 将图像绘制到canvas上
+            ctx.drawImage(image, 0, 0, image.width, image.height);
+            // !!! 注意，image 没有加入到 dom之中
+            var myImage = canvas.toDataURL("image/png"); 
+            console.log(myImage);    
+        };
+        // 设置src属性，浏览器会自动加载。
+        // 记住必须先绑定事件，才能设置src属性，否则会出同步问题。
+        image.src = src;
+
+        var img = document.getElementById('result');
+        img.src = src;
+       
+    };
+    
+    
+    function handleFiles(){
+        var resultFile = document.getElementById("fileDemo").files[0];
+        if (resultFile) {
+            var reader = new FileReader();
+             
+            reader.readAsDataURL(resultFile);
+            reader.onload = function (e) {
+                var urlData = this.result;
+
+                 render(urlData,100);
+            };    
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<html ng-app='test'>
+<head>
+	<meta charset="utf-8">
+	<title>derective</title>
+</head>
+<body ng-controller="TestController">
+	<!--  ng-repeat ng-if -->
+
+	<select ng-model="demander">
+		<option>请选择</option>
+		<option ng-repeat="item in demanderList " value="{{$index}}" ng-selected="$index == demander ">{{item}}</option>
+	</select>
+
+	<p ng-if="demander == 4">新媒体内容</p>
+
+	<script type="text/javascript" src="angular.min.js"></script>
+	<script type="text/javascript">
+		var app = angular.module('test',[]);
+		app.controller('TestController',['$scope',function($scope){
+
+			$scope.demander = 5;
+
+			$scope.demanderList = {
+      				0:'未知',
+				1:'线上营销',
+				2:'BD',
+				3:'品牌',
+				4:'新媒体',
+				5:'用户运营',
+				6:'市场中心',
+				7:'政企',
+				8:'公交车',
+				9:'试驾',
+				10:'打车'
+    			}
+
+
+		}])
+	</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+mvc 
+
+MVC全名是Model View Controller，是模型(model)－视图(view)－控制器(controller)的缩写
+
+
+服务
+
+$scope,$location,$http
+
+
+指令
+ng-repeat ng-if 
+
+
+mvvm
+
+
+
+filter
+
+
+工具方法
+
+
+表单验证
+
+
+
+
+
+
+
+
+

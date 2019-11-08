@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>svg 上下箭头翻页</title>
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+    <style type="text/css">
+        body,html{
+            height:100px;
+            overflow: hidden;
+            background: #ccc;
+        }
+        body{
+            width: 1024px;
+            height: 768px;
+            margin:0 auto;
+            -webkit-transfrom-origin:top center;
+            transform-origin:top center;
+            position: relative;
+        }
+        pre{
+            color:#c7254e;
+            font-size: 16px;
+        }
+        .container{
+            background:#fff;
+            height: 100%;
+            padding:0;
+        }
+        .bg_black{
+            background: #000;
+        }
+        .hide{
+            display: none;
+        }
+        .btn{
+            cursor: pointer;
+        }
+        .page{
+            position: absolute;
+            bottom: 2px;
+            left:48%;
+            color:#ccc;
+            font-size: 14px;
+        }
+        .code{
+            position:absolute;left:45%;right:3%;
+        }
+        #path_base{
+            position: absolute;
+            top:200px;
+            left:100px;
+        }
+        .line_code:nth-of-type(1){
+            top:200px;
+        }
+        .line_code:nth-of-type(2){
+            top:340px;
+        }
+
+
+        .rect_code:nth-of-type(1){
+            top:190px;
+        }
+        .rect_code:nth-of-type(2){
+            top:315px;
+        }
+        .rect_code:nth-of-type(3){
+            top:460px;
+        }
+        .rect_code:nth-of-type(4){
+            top:620px;
+        }
+
+        .circle_code:nth-of-type(1){
+            top:230px;
+        }
+        .circle_code:nth-of-type(2){
+            top:500px;
+        }
+
+        .poly_code:nth-of-type(1){
+            top:240px;
+        }
+        .poly_code:nth-of-type(2){
+            top:520px;
+        }
+
+        .ellipse_code:nth-of-type(1){
+            top:390px;
+        }
+
+        .path2_code:nth-of-type(1){
+            top:280px;
+        }
+
+        .path3_code:nth-of-type(1){
+            top:550px;
+        }
+
+        .acr1_code:nth-of-type(1){
+            top:195px;
+            left:40%;
+        }
+        
+        .g_code:nth-of-type(1){
+            top:280px;
+        }
+        .a_code:nth-of-type(1){
+            left:10%;
+            right:10%;
+            top:280px;
+        }
+        .defs_code:nth-of-type(1){
+            top:250px;
+        }
+
+        .gradient_code:nth-of-type(1){
+            top:240px;
+        }
+        .gradient_code:nth-of-type(2){
+            top:520px;
+        }
+        .mask_code:nth-of-type(1){
+            left:10%;
+            right:10%;
+            top:600px;
+        }
+
+
+        .mask{
+            -webkit-animation: breeze 3s linear infinite;
+        }
+        @-webkit-keyframes breeze{
+            0%{
+                 -webkit-transform:matrix(1,0,0,1,0,0);
+            }
+            50%{
+                 -webkit-transform:matrix(1,0,0,1,0,300);
+            }
+            100%{
+                 -webkit-transform:matrix(1,0,0,1,0,0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             xmlns:xlink="http://www.w3.org/1999/xlink"
+             id="screen" width="100%" height="100%" >
+        </svg>
+        <div class="page">- <span id="page_num">1</span> -</div>
+    </div>
+<script type="text/javascript" src="snap.svg.js"></script>
+<script type="text/javascript" src="ppt.js"></script>
+</body>
+</html>
