@@ -133,3 +133,26 @@ share: true
 **文档**
 [hexo中文](https://hexo.io/zh-cn/docs/index.html)
 [hexo特殊符号转义](https://wxnacy.com/2018/01/12/hexo-specific-symbol/)
+
+
+
+**排错**
+
+今天遇到部署时总提示hexo 源码分支指向master分支错误
+
+```
+Branch hexo set up to track remote branch master from https://github.com/airzhe/airzhe.github.io.
+```
+
+看了下是.git/config 文件总配置错误，删除重试，报另外的错误，
+
+```
+Error: Spawn failed
+
+at ChildProcess.task.on.code (/www/blog/node_modules/hexo-deployer-git/node_modules/hexo-util/lib/spawn.js:51:21)
+```
+
+参见以下 解决：
+
+https://www.cnblogs.com/hushuangpu/p/10316560.html
+

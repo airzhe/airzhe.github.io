@@ -3,22 +3,22 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title> 测试服务迁移到新k8s集群记录（一） | Runner的小站</title>
+  <title> 测试服务迁移k8s集群记录 (一) | Runner的小站</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言: 组内给了3台新机器，要把之前的服务全迁到新机器。共6个服务，2个在之前的 k8s 集群，其他4个在物理机。 已经迁移完成，记录下实施过程，大致分3步: 新 k8s 集群搭建、监控日志系统部署、业务服务迁移。 k8s 集群搭建因为是新机器，准备尝试下 k8s  master 高可用方案，运维给的3台机器信息如下，两个mastet 建立ssh 信任，服务参考老集群规划。    主机名 IP 角">
+  <meta name="description" content="前言: 组内给了3台新机器，要把之前的服务全迁到新机器。共6个服务，2个在之前的 k8s 集群，其他4个在物理机。 已经迁移完成，记录下实施过程，大致分3步: 新 k8s 集群搭建、监控日志系统部署、业务服务迁移。 k8s 集群搭建因为是新机器，准备尝试下 k8s  master 高可用方案，运维给的3台机器信息如下，两个mastet 建立ssh 信任，服务规划参考老集群。    主机名 IP 角">
 <meta name="keywords" content="k8s,kube-adm,haproxy">
 <meta property="og:type" content="article">
-<meta property="og:title" content=" 测试服务迁移到新k8s集群记录（一）">
+<meta property="og:title" content=" 测试服务迁移k8s集群记录 (一)">
 <meta property="og:url" content="http://airzhe.github.io/2019/11/k8s-migration-1/index.html">
 <meta property="og:site_name" content="Runner的小站">
-<meta property="og:description" content="前言: 组内给了3台新机器，要把之前的服务全迁到新机器。共6个服务，2个在之前的 k8s 集群，其他4个在物理机。 已经迁移完成，记录下实施过程，大致分3步: 新 k8s 集群搭建、监控日志系统部署、业务服务迁移。 k8s 集群搭建因为是新机器，准备尝试下 k8s  master 高可用方案，运维给的3台机器信息如下，两个mastet 建立ssh 信任，服务参考老集群规划。    主机名 IP 角">
+<meta property="og:description" content="前言: 组内给了3台新机器，要把之前的服务全迁到新机器。共6个服务，2个在之前的 k8s 集群，其他4个在物理机。 已经迁移完成，记录下实施过程，大致分3步: 新 k8s 集群搭建、监控日志系统部署、业务服务迁移。 k8s 集群搭建因为是新机器，准备尝试下 k8s  master 高可用方案，运维给的3台机器信息如下，两个mastet 建立ssh 信任，服务规划参考老集群。    主机名 IP 角">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://airzhe.github.io/img/k8s/5.svg">
 <meta property="og:image" content="http://airzhe.github.io/img/k8s/6.png">
-<meta property="og:updated_time" content="2019-11-08T12:30:34.588Z">
+<meta property="og:updated_time" content="2019-11-08T18:15:08.701Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content=" 测试服务迁移到新k8s集群记录（一）">
-<meta name="twitter:description" content="前言: 组内给了3台新机器，要把之前的服务全迁到新机器。共6个服务，2个在之前的 k8s 集群，其他4个在物理机。 已经迁移完成，记录下实施过程，大致分3步: 新 k8s 集群搭建、监控日志系统部署、业务服务迁移。 k8s 集群搭建因为是新机器，准备尝试下 k8s  master 高可用方案，运维给的3台机器信息如下，两个mastet 建立ssh 信任，服务参考老集群规划。    主机名 IP 角">
+<meta name="twitter:title" content=" 测试服务迁移k8s集群记录 (一)">
+<meta name="twitter:description" content="前言: 组内给了3台新机器，要把之前的服务全迁到新机器。共6个服务，2个在之前的 k8s 集群，其他4个在物理机。 已经迁移完成，记录下实施过程，大致分3步: 新 k8s 集群搭建、监控日志系统部署、业务服务迁移。 k8s 集群搭建因为是新机器，准备尝试下 k8s  master 高可用方案，运维给的3台机器信息如下，两个mastet 建立ssh 信任，服务规划参考老集群。    主机名 IP 角">
 <meta name="twitter:image" content="http://airzhe.github.io/img/k8s/5.svg">
   
     <link rel="alternate" href="/atom.xml" title="Runner的小站" type="application/atom+xml">
@@ -82,7 +82,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-       测试服务迁移到新k8s集群记录（一）
+       测试服务迁移k8s集群记录 (一)
     </h1>
   
 
@@ -92,7 +92,7 @@
       
         <p>前言: 组内给了3台新机器，要把之前的服务全迁到新机器。共6个服务，2个在之前的 k8s 集群，其他4个在物理机。</p>
 <p>已经迁移完成，记录下实施过程，大致分3步: 新 k8s 集群搭建、监控日志系统部署、业务服务迁移。</p>
-<h3 id="k8s-集群搭建"><a href="#k8s-集群搭建" class="headerlink" title="k8s 集群搭建"></a>k8s 集群搭建</h3><p>因为是新机器，准备尝试下 k8s  master 高可用方案，运维给的3台机器信息如下，两个mastet 建立ssh 信任，服务参考老集群规划。</p>
+<h3 id="k8s-集群搭建"><a href="#k8s-集群搭建" class="headerlink" title="k8s 集群搭建"></a>k8s 集群搭建</h3><p>因为是新机器，准备尝试下 k8s  master 高可用方案，运维给的3台机器信息如下，两个mastet 建立ssh 信任，服务规划参考老集群。</p>
 <table>
 <thead>
 <tr>
@@ -154,15 +154,12 @@
 <p><strong>遇到的问题：</strong></p>
 <p>遇到最大的问题是 在 master02 上执行 命令，延时5秒才返回，在上面起的pod，访问外网总提示超时，后来用kube-adm reset 了下，再次加入集群，莫名好了 -__-</p>
 <p>本篇就写到这，后面会更新监控、日志的安装，已经使用 gitlab runner + helm3 来部署服务.</p>
-<p><strong>参考：</strong></p>
-<p><a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/" target="_blank" rel="noopener">https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/</a></p>
-<p><a href="https://blog.csdn.net/networken/article/details/89599004" target="_blank" rel="noopener">https://blog.csdn.net/networken/article/details/89599004</a></p>
-<p><a href="https://www.kubernetes.org.cn/5551.html" target="_blank" rel="noopener">https://www.kubernetes.org.cn/5551.html</a><br>安装dashboard:<br><a href="https://www.cnblogs.com/bluersw/p/11747161.html" target="_blank" rel="noopener">https://www.cnblogs.com/bluersw/p/11747161.html</a><br>scp 信任<br><a href="https://www.cnblogs.com/mchina/archive/2013/03/15/2956017.html" target="_blank" rel="noopener">https://www.cnblogs.com/mchina/archive/2013/03/15/2956017.html</a><br>kubeadm join 使用的 token 过期之后，如何加入集群<br><a href="https://blog.csdn.net/wo18237095579/article/details/89884369" target="_blank" rel="noopener">https://blog.csdn.net/wo18237095579/article/details/89884369</a> </p>
+<p><strong>参考：</strong><br><a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/" target="_blank" rel="noopener">https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/</a><br><a href="https://blog.csdn.net/networken/article/details/89599004" target="_blank" rel="noopener">https://blog.csdn.net/networken/article/details/89599004</a><br><a href="https://www.kubernetes.org.cn/5551.html" target="_blank" rel="noopener">https://www.kubernetes.org.cn/5551.html</a><br>安装dashboard:<br><a href="https://www.cnblogs.com/bluersw/p/11747161.html" target="_blank" rel="noopener">https://www.cnblogs.com/bluersw/p/11747161.html</a><br>scp 信任:<br><a href="https://www.cnblogs.com/mchina/archive/2013/03/15/2956017.html" target="_blank" rel="noopener">https://www.cnblogs.com/mchina/archive/2013/03/15/2956017.html</a><br>kubeadm join 使用的 token 过期之后，如何加入集群:<br><a href="https://blog.csdn.net/wo18237095579/article/details/89884369" target="_blank" rel="noopener">https://blog.csdn.net/wo18237095579/article/details/89884369</a> </p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/k8s-migration-1/" data-id="ck2q5sztg000c0oovom8563nw" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/k8s-migration-1/" data-id="ck2qgn3t4000f0wov5n791w16" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kube-adm/">kube-adm</a></li></ul>
@@ -227,7 +224,7 @@
       <ul>
         
           <li>
-            <a href="/2019/11/k8s-migration-1/"> 测试服务迁移到新k8s集群记录（一）</a>
+            <a href="/2019/11/k8s-migration-1/"> 测试服务迁移k8s集群记录 (一)</a>
           </li>
         
           <li>

@@ -1,5 +1,5 @@
 ---
-title: " 测试服务迁移到新k8s集群记录（一）"
+title: " 测试服务迁移k8s集群记录 (一)"
 date: 2019-11-08 18:40:10
 tags: [k8s,kube-adm,haproxy]
 share: true
@@ -11,7 +11,7 @@ share: true
 
 ### k8s 集群搭建
 
-因为是新机器，准备尝试下 k8s  master 高可用方案，运维给的3台机器信息如下，两个mastet 建立ssh 信任，服务参考老集群规划。
+因为是新机器，准备尝试下 k8s  master 高可用方案，运维给的3台机器信息如下，两个mastet 建立ssh 信任，服务规划参考老集群。
 
 | 主机名        | IP        | 角色     | 服务        |
 | ------------- | --------- | -------- | ----------- |
@@ -211,16 +211,13 @@ users:
 
 
 **参考：**
-
 https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/
-
 https://blog.csdn.net/networken/article/details/89599004
-
 https://www.kubernetes.org.cn/5551.html
 安装dashboard:
 https://www.cnblogs.com/bluersw/p/11747161.html 
-scp 信任
+scp 信任:
 https://www.cnblogs.com/mchina/archive/2013/03/15/2956017.html 
-kubeadm join 使用的 token 过期之后，如何加入集群
+kubeadm join 使用的 token 过期之后，如何加入集群:
 https://blog.csdn.net/wo18237095579/article/details/89884369 
 
