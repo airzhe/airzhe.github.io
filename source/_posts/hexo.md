@@ -144,7 +144,7 @@ share: true
 Branch hexo set up to track remote branch master from https://github.com/airzhe/airzhe.github.io.
 ```
 
-看了下是.git/config 文件总配置错误，删除重试，报另外的错误，
+或者以下报错，删除 `.deploy_git` 目录，重试解决
 
 ```
 Error: Spawn failed
@@ -152,7 +152,7 @@ Error: Spawn failed
 at ChildProcess.task.on.code (/www/blog/node_modules/hexo-deployer-git/node_modules/hexo-util/lib/spawn.js:51:21)
 ```
 
-参见以下 解决：
+参考如下:
 
 https://www.cnblogs.com/hushuangpu/p/10316560.html
 

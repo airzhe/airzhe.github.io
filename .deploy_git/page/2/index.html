@@ -62,6 +62,91 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-nginx" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/nginx/" class="article-date">
+  <time datetime="2019-02-27T00:00:00.000Z" itemprop="datePublished">2019-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/nginx/">nginx 学习</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>POST_READ 阶段：</p>
+<p>x-forwarded-for x-real-ip </p>
+<p>realip 模块启用 </p>
+<p>return 302 /a.html</p>
+<p>302 浏览器缓存</p>
+<p>error_page 404=/404.php</p>
+<p>rewrite regex replacement</p>
+<p>如果 replacement 是以http开头，直接返回302</p>
+<p>last 持续 break 停止当前脚本指令执行,后面的指令不会执行，直接读取文件返回  redirect 302 permant 301</p>
+<p>http permanent 同时出现返回301</p>
+<p>rewrite log 指令 开启rewrite 日志</p>
+<p><strong>if 使用场景</strong></p>
+<ol>
+<li>检查变量为空或者值是否为0，直接使用</li>
+<li>将变量和字符串做匹配，使用=或者!=</li>
+<li>将变量与正则表达式做匹配 ~ 或~*</li>
+<li>检查文件是否存在 -f</li>
+<li>检查目录是否存在 -d</li>
+<li>检查文件、目录、软连是否存在 -e </li>
+<li>检查是否为可执行文件 -x</li>
+</ol>
+<ul>
+<li>忽略大小写</li>
+<li>^~ 禁止正则表达式匹配</li>
+</ul>
+<hr>
+<ul>
+<li>limit_conn 限制并发连接数以ip为单位</li>
+<li>limit_req 把突发的 流量限制为每秒多少请求 用户请求会变慢，不会被拒绝 nodelay 盆里的请求是否立即返回 burst=3没分钟请求3次，在limit_conn 之前</li>
+<li>mirror 流量拷贝</li>
+<li>sub 替换</li>
+<li>sub_filter </li>
+<li>additon 模块在响应前或后添加 自请求的内容</li>
+<li>referer 模块 对于大多数网站来说都是有效的</li>
+<li>valid_referers  if($invalid_referer){return 403}</li>
+<li>secure_link</li>
+<li>rewrite 不会修改 url地址，如dns cname记录 ，proxy_pass 会修改请求的url</li>
+<li>mirror_request body off</li>
+<li>map 模块</li>
+</ul>
+<hr>
+<ul>
+<li>nginx  Upstream Consistent Hash</li>
+<li>proxy_cache_use_state</li>
+<li>strace -p</li>
+<li>ngx_http_cache_purge_module 清除nginx缓存</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/02/nginx/" data-id="ck2qgz8vr000i3cov4fi7omen" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openresty/">openresty</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-tcp" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/02/tcp/" class="article-date">
@@ -130,66 +215,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/tcp/" data-id="ck2qgn3tf000p0wovluypacfq" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/tcp/" data-id="ck2qgz8vw000o3covfvntaoib" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-laravel" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/02/laravel/" class="article-date">
-  <time datetime="2019-02-27T00:00:00.000Z" itemprop="datePublished">2019-02-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/laravel/">laravel 学习</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="config"><a href="#config" class="headerlink" title="config"></a>config</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">php artisan config:cache</span><br><span class="line">php artisan config:clear</span><br></pre></td></tr></table></figure>
-<h4 id="维护模式"><a href="#维护模式" class="headerlink" title="[维护模式]"></a>[维护模式]</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan down --message=&quot;Upgrading Database&quot; --retry=60</span><br></pre></td></tr></table></figure>
-<p>要查看所有有效的命令，可以在终端中运行<code>php artisan list make</code>命令。</p>
-<p><strong>Events</strong>  事件类</p>
-<p><strong>Jobs</strong>  任务队列</p>
-<p><strong>Listeners</strong> 事件监听</p>
-<p><strong>Mail</strong> 发邮件</p>
-<p><strong>Notifications</strong> 发送通知</p>
-<p><strong>Policies</strong> 授权策略</p>
-<p><strong>Database </strong> 目录包含了数据迁移及填充文件，如果你喜欢的话还可以将其作为 SQLite 数据库存放目录；</p>
-<p>Eloquent 是 Laravel 的 ‘ORM’，即 ‘Object Relational Mapping’，对象关系映射。ORM 的出现是为了帮我们把对数据库的操作变得更加地方便。</p>
-<p>php artisan make:model Model/Test</p>
-<p>包含被软删除的模型  Test::withTrashed()-&gt;find(1);</p>
-<p>php artisan vendor:publish </p>
-        
-          <p class="article-more-link">
-            <a href="/2019/02/laravel/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/laravel/" data-id="ck2qgn3t9000i0wov9b3yngjo" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/laravel/">laravel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li></ul>
 
     </footer>
   </div>
@@ -238,7 +267,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/jenkins-introduction/" data-id="ck2qgn3su00080wov4h0oau2r" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/jenkins-introduction/" data-id="ck2qgz8vi000a3cov9hav0pxs" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pipeline/">pipeline</a></li></ul>
@@ -330,7 +359,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/prometheus/" data-id="ck2qgn3td000o0wovrzzmmfzw" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/prometheus/" data-id="ck2qgz8vx000p3cov008un66z" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/监控/">监控</a></li></ul>
@@ -397,7 +426,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/k8s-notes/" data-id="ck2qgn3t6000g0wov03m5t4y7" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/k8s-notes/" data-id="ck2qgz8vt000k3cov552hrlp8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
@@ -446,7 +475,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/01/k8s-introduction/" data-id="ck2qgn3t0000c0wovi3wpm6al" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/01/k8s-introduction/" data-id="ck2qgz8vk000c3covx2dh0or8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
