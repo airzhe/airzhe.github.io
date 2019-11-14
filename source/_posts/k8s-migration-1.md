@@ -1,7 +1,7 @@
 ---
 title: " 测试服务迁移k8s集群记录 (一)"
 date: 2019-11-08 18:40:10
-tags: [k8s,kube-adm,haproxy]
+tags: [k8s,kubernetes,kube-adm,haproxy]
 share: true
 ---
 

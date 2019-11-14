@@ -2,7 +2,7 @@
 title: "k8s 笔记"
 description: ""
 date: 2019-02-01 19:38:10
-tags: [k8s]
+tags: [k8s,kubernetes]
 comments: false
 share: true
 ---
@@ -60,6 +60,15 @@ kubectl -n kube-system get endpoints -o wide
 #dns 验证
 kubectl run curl --image=radial/busyboxplus:curl -it
 nslookup docker-dind-svc.gitlab-managed-apps
+
+
+#使用命令快速创建 deployment 和 service
+kubectl run nginx --image=nginx --replicas=2
+kubectl expose deployment nginx --port 80 --external-ip 172.17.8.201
+
+node 上使用 k8s 的core-dns 服务
+dig @10.152.183.10 grafana.istio-system.svc.cluster.local
+
 ```
 
 

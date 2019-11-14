@@ -3,7 +3,7 @@ layout: post
 title: "k8s 介绍"
 description: ""
 date: 2019-01-31
-tags: [docker,k8s]
+tags: [docker,k8s,kubernetes]
 comments: false
 share: true
 ---

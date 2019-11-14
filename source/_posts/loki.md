@@ -10,6 +10,12 @@ loki 是 grafana 公司出的日志查询工具，区别es，只对标签不对�
 
 ![1.png](/img/loki/1.png)
 
+helm 源
+
+```helm repo add loki https://grafana.github.io/loki/charts
+helm repo update
+```
+
 [查询语句](https://github.com/grafana/loki/blob/65ba42a6e7dc975d6f25b15fc6f9b8d72446b3e2/docs/logql.md)：
 
 ```
