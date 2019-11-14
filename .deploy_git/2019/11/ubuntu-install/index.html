@@ -3,15 +3,22 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>Tag: 监控 | Runner的小站</title>
+  <title>ubuntu18.04安装 | Runner的小站</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Runner的小站">
-<meta property="og:url" content="http://airzhe.github.io/tags/监控/index.html">
+  <meta name="description" content="镜像制作 工具：https://rufus.ie/  分区： 12345/ 50G 根分区/boot 500MB 引导分区efi 500MBswap 4G 交换分区/home 个人数据分区 安装完成重启 修改163源 并更新 12345678910111213$ cat /etc/apt/sources.listdeb http://mirrors.163.com/ubuntu/ bionic m">
+<meta name="keywords" content="ubuntu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ubuntu18.04安装">
+<meta property="og:url" content="http://airzhe.github.io/2019/11/ubuntu-install/index.html">
 <meta property="og:site_name" content="Runner的小站">
+<meta property="og:description" content="镜像制作 工具：https://rufus.ie/  分区： 12345/ 50G 根分区/boot 500MB 引导分区efi 500MBswap 4G 交换分区/home 个人数据分区 安装完成重启 修改163源 并更新 12345678910111213$ cat /etc/apt/sources.listdeb http://mirrors.163.com/ubuntu/ bionic m">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://airzhe.github.io/img/ubuntu/1.png">
+<meta property="og:updated_time" content="2019-11-14T12:53:21.810Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Runner的小站">
+<meta name="twitter:title" content="ubuntu18.04安装">
+<meta name="twitter:description" content="镜像制作 工具：https://rufus.ie/  分区： 12345/ 50G 根分区/boot 500MB 引导分区efi 500MBswap 4G 交换分区/home 个人数据分区 安装完成重启 修改163源 并更新 12345678910111213$ cat /etc/apt/sources.listdeb http://mirrors.163.com/ubuntu/ bionic m">
+<meta name="twitter:image" content="http://airzhe.github.io/img/ubuntu/1.png">
   
     <link rel="alternate" href="/atom.xml" title="Runner的小站" type="application/atom+xml">
   
@@ -60,39 +67,78 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2019/02/prometheus/" class="archive-article-date">
-  <time datetime="2019-02-01T19:46:10.000Z" itemprop="datePublished">Feb 1</time>
+        <section id="main"><article id="post-ubuntu-install" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/ubuntu-install/" class="article-date">
+  <time datetime="2019-11-14T20:53:10.000Z" itemprop="datePublished">2019-11-14</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/02/prometheus/">Prometheus入门</a>
+    <h1 class="article-title" itemprop="name">
+      ubuntu18.04安装
     </h1>
   
 
-    </header>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>镜像制作</strong></p>
+<p>工具：<a href="https://rufus.ie/" target="_blank" rel="noopener">https://rufus.ie/</a> </p>
+<p><strong>分区：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/ 50G 根分区</span><br><span class="line">/boot 500MB 引导分区</span><br><span class="line">efi 500MB</span><br><span class="line">swap 4G 交换分区</span><br><span class="line">/home 个人数据分区</span><br></pre></td></tr></table></figure>
+<p>安装完成重启</p>
+<p><strong>修改163源 并更新</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ cat /etc/apt/sources.list</span><br><span class="line">deb http://mirrors.163.com/ubuntu/ bionic main restricted universe multiverse</span><br><span class="line">deb http://mirrors.163.com/ubuntu/ bionic-security main restricted universe multiverse</span><br><span class="line">deb http://mirrors.163.com/ubuntu/ bionic-updates main restricted universe multiverse</span><br><span class="line">deb http://mirrors.163.com/ubuntu/ bionic-proposed main restricted universe multiverse</span><br><span class="line">deb http://mirrors.163.com/ubuntu/ bionic-backports main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.163.com/ubuntu/ bionic main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.163.com/ubuntu/ bionic-security main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.163.com/ubuntu/ bionic-updates main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.163.com/ubuntu/ bionic-proposed main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.163.com/ubuntu/ bionic-backports main restricted universe multiverse</span><br><span class="line">$ sudo apt update</span><br><span class="line">$ sudo apt upgrade</span><br></pre></td></tr></table></figure>
+<p><strong>安装网卡驱动</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/tomaspinho/rtl8821ce</span><br></pre></td></tr></table></figure>
+<p><strong>常用软件</strong></p>
+<ul>
+<li>chrome</li>
+<li><a href="https://www.jianguoyun.com/" target="_blank" rel="noopener">Nutstore</a>  #坚果网盘 导入备份数据</li>
+<li><a href="https://ywnz.com/linuxjc/2891.html" target="_blank" rel="noopener">google 拼音</a> </li>
+<li><a href="https://www.jetbrains.com/phpstorm/" target="_blank" rel="noopener">phpstorm</a></li>
+<li>sublime</li>
+<li>vim</li>
+<li>git 、gitflow 、别名设置</li>
+<li><a href="http://typora.io/" target="_blank" rel="noopener">typora</a></li>
+<li>docker.io</li>
+<li>postman</li>
+<li>gimp</li>
+</ul>
+<p><img src="/img/ubuntu/1.png" alt="1.png"></p>
+<p>总结：装个系统还是比较容器的，软件的安装取决于你的网速，数据备份很重要，坚果网盘真的好用</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/11/ubuntu-install/" data-id="ck2ypsas9000r0vl9345og1z8" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
+
+    </footer>
   </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/11/grafana-mysql-source/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">grafana 使用 mysql 源统计</div>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-  
-    </div></section>
-  
 
 </section>
         
