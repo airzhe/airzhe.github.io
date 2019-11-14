@@ -1,11 +1,11 @@
 ---
-title: "grafana 使用 mysql 源统计"
+title: "grafana使用mysql源做统计"
 date: 2019-11-14 20:41:01
 tags: [grafana,helm]
 share: true
 ---
 
-配置对应的 mysql 数据源，新建 pannel，查询语句：
+配置对应的 mysql 数据源，新建面板，查询语句：
 
 ```
 SELECT
@@ -18,11 +18,11 @@ WHERE
 ORDER BY created_at
 ```
 
-Format as 选择 Time series , Unit 选择 Currency, Decimals 选 2
+Format as选择Time series, Unit 选择 Currency
 
 ![11.png](/img/grafana/11.png)
 
-**最终效果**
+**效果图**
 
 ![12.png](/img/grafana/12.png)
 
@@ -35,7 +35,7 @@ plugins:
   - grafana-piechart-panel
 ```
 
-开启alpha模式
+开启 plugin alpha 模式
 
 ```
 grafana.ini:
@@ -51,7 +51,7 @@ grafana.ini:
   grafana_net:
     url: https://grafana.net
   server:
-    root_url: http://grafana.t1.nicetuan.net
+    root_url: http://grafana.local.com
   plugins:
     enable_alpha: true
 ```
@@ -59,3 +59,4 @@ grafana.ini:
 参考链接：
 https://www.mssqltips.com/sqlservertip/6008/sql-server-time-series-data-visualization-with-grafana/
 https://blog.csdn.net/malingyu/article/details/84389113
+https://community.grafana.com/t/how-to-add-time-series-queries-with-grafana-and-mysql/3170/55

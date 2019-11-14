@@ -3,22 +3,22 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>grafana 使用 mysql 源统计 | Runner的小站</title>
+  <title>grafana使用mysql源做统计 | Runner的小站</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="配置对应的 mysql 数据源，新建 pannel，查询语句： 12345678SELECT  created_at AS &amp;quot;time&amp;quot;,  &amp;quot;下单金额&amp;quot; AS metric,  total_fee/100FROM `order`WHERE  $__unixEpochFilter(created_at)ORDER BY created_at Format a">
+  <meta name="description" content="配置对应的 mysql 数据源，新建面板，查询语句： 12345678SELECT  created_at AS &amp;quot;time&amp;quot;,  &amp;quot;下单金额&amp;quot; AS metric,  total_fee/100FROM `order`WHERE  $__unixEpochFilter(created_at)ORDER BY created_at Format as选择Ti">
 <meta name="keywords" content="helm,grafana">
 <meta property="og:type" content="article">
-<meta property="og:title" content="grafana 使用 mysql 源统计">
+<meta property="og:title" content="grafana使用mysql源做统计">
 <meta property="og:url" content="http://airzhe.github.io/2019/11/grafana-mysql-source/index.html">
 <meta property="og:site_name" content="Runner的小站">
-<meta property="og:description" content="配置对应的 mysql 数据源，新建 pannel，查询语句： 12345678SELECT  created_at AS &amp;quot;time&amp;quot;,  &amp;quot;下单金额&amp;quot; AS metric,  total_fee/100FROM `order`WHERE  $__unixEpochFilter(created_at)ORDER BY created_at Format a">
+<meta property="og:description" content="配置对应的 mysql 数据源，新建面板，查询语句： 12345678SELECT  created_at AS &amp;quot;time&amp;quot;,  &amp;quot;下单金额&amp;quot; AS metric,  total_fee/100FROM `order`WHERE  $__unixEpochFilter(created_at)ORDER BY created_at Format as选择Ti">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://airzhe.github.io/img/grafana/11.png">
 <meta property="og:image" content="http://airzhe.github.io/img/grafana/12.png">
-<meta property="og:updated_time" content="2019-11-14T12:49:39.394Z">
+<meta property="og:updated_time" content="2019-11-14T19:12:32.786Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="grafana 使用 mysql 源统计">
-<meta name="twitter:description" content="配置对应的 mysql 数据源，新建 pannel，查询语句： 12345678SELECT  created_at AS &amp;quot;time&amp;quot;,  &amp;quot;下单金额&amp;quot; AS metric,  total_fee/100FROM `order`WHERE  $__unixEpochFilter(created_at)ORDER BY created_at Format a">
+<meta name="twitter:title" content="grafana使用mysql源做统计">
+<meta name="twitter:description" content="配置对应的 mysql 数据源，新建面板，查询语句： 12345678SELECT  created_at AS &amp;quot;time&amp;quot;,  &amp;quot;下单金额&amp;quot; AS metric,  total_fee/100FROM `order`WHERE  $__unixEpochFilter(created_at)ORDER BY created_at Format as选择Ti">
 <meta name="twitter:image" content="http://airzhe.github.io/img/grafana/11.png">
   
     <link rel="alternate" href="/atom.xml" title="Runner的小站" type="application/atom+xml">
@@ -82,7 +82,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      grafana 使用 mysql 源统计
+      grafana使用mysql源做统计
     </h1>
   
 
@@ -90,23 +90,23 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>配置对应的 mysql 数据源，新建 pannel，查询语句：</p>
+        <p>配置对应的 mysql 数据源，新建面板，查询语句：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">  created_at AS &quot;time&quot;,</span><br><span class="line">  &quot;下单金额&quot; AS metric,</span><br><span class="line">  total_fee/100</span><br><span class="line">FROM `order`</span><br><span class="line">WHERE</span><br><span class="line">  $__unixEpochFilter(created_at)</span><br><span class="line">ORDER BY created_at</span><br></pre></td></tr></table></figure>
-<p>Format as 选择 Time series , Unit 选择 Currency, Decimals 选 2</p>
+<p>Format as选择Time series, Unit 选择 Currency</p>
 <p><img src="/img/grafana/11.png" alt="11.png"></p>
-<p><strong>最终效果</strong></p>
+<p><strong>效果图</strong></p>
 <p><img src="/img/grafana/12.png" alt="12.png"></p>
 <p><strong>备注：</strong></p>
 <p>helm grafana chart 安装饼装图插件</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">plugins:</span><br><span class="line">  - grafana-piechart-panel</span><br></pre></td></tr></table></figure>
-<p>开启alpha模式</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">grafana.ini:</span><br><span class="line">  paths:</span><br><span class="line">    data: /var/lib/grafana/data</span><br><span class="line">    logs: /var/log/grafana</span><br><span class="line">    plugins: /var/lib/grafana/plugins</span><br><span class="line">    provisioning: /etc/grafana/provisioning</span><br><span class="line">  analytics:</span><br><span class="line">    check_for_updates: true</span><br><span class="line">  log:</span><br><span class="line">    mode: console</span><br><span class="line">  grafana_net:</span><br><span class="line">    url: https://grafana.net</span><br><span class="line">  server:</span><br><span class="line">    root_url: http://grafana.t1.nicetuan.net</span><br><span class="line">  plugins:</span><br><span class="line">    enable_alpha: true</span><br></pre></td></tr></table></figure>
-<p>参考链接：<br><a href="https://www.mssqltips.com/sqlservertip/6008/sql-server-time-series-data-visualization-with-grafana/" target="_blank" rel="noopener">https://www.mssqltips.com/sqlservertip/6008/sql-server-time-series-data-visualization-with-grafana/</a><br><a href="https://blog.csdn.net/malingyu/article/details/84389113" target="_blank" rel="noopener">https://blog.csdn.net/malingyu/article/details/84389113</a></p>
+<p>开启 plugin alpha 模式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">grafana.ini:</span><br><span class="line">  paths:</span><br><span class="line">    data: /var/lib/grafana/data</span><br><span class="line">    logs: /var/log/grafana</span><br><span class="line">    plugins: /var/lib/grafana/plugins</span><br><span class="line">    provisioning: /etc/grafana/provisioning</span><br><span class="line">  analytics:</span><br><span class="line">    check_for_updates: true</span><br><span class="line">  log:</span><br><span class="line">    mode: console</span><br><span class="line">  grafana_net:</span><br><span class="line">    url: https://grafana.net</span><br><span class="line">  server:</span><br><span class="line">    root_url: http://grafana.local.com</span><br><span class="line">  plugins:</span><br><span class="line">    enable_alpha: true</span><br></pre></td></tr></table></figure>
+<p>参考链接：<br><a href="https://www.mssqltips.com/sqlservertip/6008/sql-server-time-series-data-visualization-with-grafana/" target="_blank" rel="noopener">https://www.mssqltips.com/sqlservertip/6008/sql-server-time-series-data-visualization-with-grafana/</a><br><a href="https://blog.csdn.net/malingyu/article/details/84389113" target="_blank" rel="noopener">https://blog.csdn.net/malingyu/article/details/84389113</a><br><a href="https://community.grafana.com/t/how-to-add-time-series-queries-with-grafana-and-mysql/3170/55" target="_blank" rel="noopener">https://community.grafana.com/t/how-to-add-time-series-queries-with-grafana-and-mysql/3170/55</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ck2ypsarp00040vl9z2c6e4uc" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ck2z3c2zl00051nl9tv6gieco" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li></ul>
@@ -184,7 +184,7 @@
           </li>
         
           <li>
-            <a href="/2019/11/grafana-mysql-source/">grafana 使用 mysql 源统计</a>
+            <a href="/2019/11/grafana-mysql-source/">grafana使用mysql源做统计</a>
           </li>
         
           <li>

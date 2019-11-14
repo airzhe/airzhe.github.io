@@ -14,7 +14,7 @@ share: true
 **分区：**
 
 ```
-/ 50G 根分区
+/ 50G 根分区(一般分配30G就可以)
 /boot 500MB 引导分区
 efi 500MB
 swap 4G 交换分区
@@ -23,7 +23,7 @@ swap 4G 交换分区
 
 安装完成重启
 
-**修改163源 并更新**
+**修改163源并更新**
 
 ```
 $ cat /etc/apt/sources.list
@@ -41,7 +41,7 @@ $ sudo apt update
 $ sudo apt upgrade
 ```
 
-**安装网卡驱动**
+**安装网卡驱动 :(**
 
 ```
 https://github.com/tomaspinho/rtl8821ce
@@ -55,8 +55,8 @@ https://github.com/tomaspinho/rtl8821ce
 - [phpstorm](https://www.jetbrains.com/phpstorm/)
 - sublime
 - vim
-- git 、gitflow 、别名设置
-- [typora](http://typora.io/)
+- git 别名设置
+- [typora](http://typora.io/) #markdown工具
 - docker.io
 - postman
 - gimp
@@ -65,4 +65,4 @@ https://github.com/tomaspinho/rtl8821ce
 ![1.png](/img/ubuntu/1.png)
 
 
-总结：装个系统还是比较容器的，软件的安装取决于你的网速，数据备份很重要，坚果网盘真的好用
+总结：装个系统还是比较容易的，数据备份很重要，坚果网盘真的好用。
