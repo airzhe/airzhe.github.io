@@ -138,21 +138,16 @@ share: true
 
 **排错**
 
-今天遇到部署时总提示hexo 源码分支指向master分支错误
-
+1. 今天遇到部署时总提示hexo 源码分支指向master分支错误
 ```
 Branch hexo set up to track remote branch master from https://github.com/airzhe/airzhe.github.io.
 ```
-
 或者以下报错，删除 `.deploy_git` 目录，重试解决
-
 ```
 Error: Spawn failed
 
 at ChildProcess.task.on.code (/www/blog/node_modules/hexo-deployer-git/node_modules/hexo-util/lib/spawn.js:51:21)
 ```
+参考： https://www.cnblogs.com/hushuangpu/p/10316560.html
 
-参考如下:
-
-https://www.cnblogs.com/hushuangpu/p/10316560.html
-
+2. 切换网络hexo容器提示 github.com 无法访问，容器重启后正常

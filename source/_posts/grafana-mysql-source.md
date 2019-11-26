@@ -22,7 +22,7 @@ Format as选择Time series, Unit 选择 Currency
 
 ![11.png](/img/grafana/11.png)
 
-**效果图**
+**效果图:**
 
 ![12.png](/img/grafana/12.png)
 
