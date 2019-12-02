@@ -3,19 +3,19 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>把gogs里的用户迁移到openldap | Runner的小站</title>
+  <title>迁移gogs用户到openldap | Runner的小站</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="公司之前使用 gogs 作为 git 服务器，要改成 gitlab，现在解决帐号迁移问题 搭建 openldap 服务器 查看 gogs 代码，使用的是 pbkdf2 加密方式，SALT_SIZE为10 ，迭代次数为10000 ，DK_SIZE为50 ，如下： 12345// EncodePasswd encodes password to safe format.func (u *User) E">
 <meta name="keywords" content="ldap,openldap,gogs,pbkdf2">
 <meta property="og:type" content="article">
-<meta property="og:title" content="把gogs里的用户迁移到openldap">
+<meta property="og:title" content="迁移gogs用户到openldap">
 <meta property="og:url" content="http://airzhe.github.io/2019/11/ldap-pbkdf2/index.html">
 <meta property="og:site_name" content="Runner的小站">
 <meta property="og:description" content="公司之前使用 gogs 作为 git 服务器，要改成 gitlab，现在解决帐号迁移问题 搭建 openldap 服务器 查看 gogs 代码，使用的是 pbkdf2 加密方式，SALT_SIZE为10 ，迭代次数为10000 ，DK_SIZE为50 ，如下： 12345// EncodePasswd encodes password to safe format.func (u *User) E">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-11-25T12:20:53.066Z">
+<meta property="og:updated_time" content="2019-12-02T08:33:06.703Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="把gogs里的用户迁移到openldap">
+<meta name="twitter:title" content="迁移gogs用户到openldap">
 <meta name="twitter:description" content="公司之前使用 gogs 作为 git 服务器，要改成 gitlab，现在解决帐号迁移问题 搭建 openldap 服务器 查看 gogs 代码，使用的是 pbkdf2 加密方式，SALT_SIZE为10 ，迭代次数为10000 ，DK_SIZE为50 ，如下： 12345// EncodePasswd encodes password to safe format.func (u *User) E">
   
     <link rel="alternate" href="/atom.xml" title="Runner的小站" type="application/atom+xml">
@@ -79,7 +79,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      把gogs里的用户迁移到openldap
+      迁移gogs用户到openldap
     </h1>
   
 
@@ -107,7 +107,7 @@
 <p><strong>gogs 密码转换</strong></p>
 <p>接下来给 gogs 用户生成对应的 openldap 密码，go 版本的代码参考：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">    &quot;encoding/base64&quot;</span><br><span class="line">    &quot;strings&quot;</span><br><span class="line">    _&quot;strconv&quot;</span><br><span class="line">    &quot;encoding/hex&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    salt    := []byte(&quot;58R38iUGs7&quot;) #</span><br><span class="line">    pwd_hex := &quot;8f230e33791bf48cdd5e93d21da7bc6abd8d5cb53ae0cf3eefced0d7095b82d95a5482883aa03fdebafa16a5c865686172c7&quot;</span><br><span class="line">    pwd_str,_:= hex.DecodeString(pwd_hex)</span><br><span class="line">    fmt.Printf(&quot;&#123;PBKDF2-SHA256&#125;10000$%s$%s&quot;,ab64_encode(salt),ab64_encode(pwd_str))</span><br><span class="line">    fmt.Println()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func ab64_encode(pwd_str []byte) string&#123;</span><br><span class="line">    encodeString := base64.StdEncoding.EncodeToString([]byte(pwd_str))</span><br><span class="line">    encod:=strings.ReplaceAll(strings.TrimRight(encodeString,&quot;=&quot;),&quot;+&quot;,&quot;.&quot;)</span><br><span class="line">    return encod</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>到此，我们已经搞定大多数 gogs 迁移的技术问题了.</p>
+<p>到此，已经解决大多数 gogs 迁移的技术问题了.</p>
 <p>踩坑：</p>
 <ol>
 <li>github 上搜索排第一的 docker-openldap 不能支持这个模块方式的认证，总报错 (也可能是别的原因)</li>
@@ -124,7 +124,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ck3eegzu3000g1zl9082l2k15" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ck3o7kufa000o28l9xgg433c1" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gogs/">gogs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ldap/">ldap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openldap/">openldap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li></ul>
@@ -189,7 +189,7 @@
       <ul>
         
           <li>
-            <a href="/2019/11/ldap-pbkdf2/">把gogs里的用户迁移到openldap</a>
+            <a href="/2019/11/ldap-pbkdf2/">迁移gogs用户到openldap</a>
           </li>
         
           <li>

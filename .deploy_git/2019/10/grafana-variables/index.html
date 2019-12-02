@@ -18,7 +18,7 @@
 <meta property="og:image" content="http://airzhe.github.io/img/grafana/3.png">
 <meta property="og:image" content="http://airzhe.github.io/img/grafana/4.png">
 <meta property="og:image" content="http://airzhe.github.io/img/grafana/5.png">
-<meta property="og:updated_time" content="2019-11-14T03:33:28.579Z">
+<meta property="og:updated_time" content="2019-12-02T09:00:10.803Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="grafana 模板变量配置">
 <meta name="twitter:description" content="重新安装了日志采集器，生成了所有日志文件的 metrics 统计信息，在 grafana 中显示如图，比较混乱  prometheus 中按标签查询结果，显示了该标签有多个查询结果">
@@ -104,11 +104,12 @@
 <p>保存，面版按当前日期显示正常：</p>
 <p><img src="/img/grafana/5.png" alt="5.png"></p>
 <p>日志监控的配置参考上篇文章: <a href="/2019/10/loki/" title="使用Loki查询日志">使用Loki查询日志</a></p>
+<p><a href="/2019/11/grafana-mysql-source/" title="grafana 使用 mysql源">grafana 使用 mysql源</a>时，如果使用 All 变量，查询 sql 过滤要改成 in 方式，如: <code>select count(*) from t where type in (${source_type})</code>;</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/grafana-variables/" data-id="ck3eegztp00071zl9wk5119oh" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/grafana-variables/" data-id="ck3o7kuen000428l9x20di2g2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/promtal/">promtal</a></li></ul>
@@ -182,7 +183,7 @@
       <ul>
         
           <li>
-            <a href="/2019/11/ldap-pbkdf2/">把gogs里的用户迁移到openldap</a>
+            <a href="/2019/11/ldap-pbkdf2/">迁移gogs用户到openldap</a>
           </li>
         
           <li>

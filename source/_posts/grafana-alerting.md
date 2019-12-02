@@ -21,7 +21,7 @@ payment_queue_length{name="order_notify"} 90
 配置邮件报警规则(间隔5分钟发送一次)
 ![8](/img/grafana-alerting/8.png)
 
-配置报警策略,关联邮件报警规则(每30m秒检查一次,报警触发后延迟1分钟后再通知)
+配置报警策略,关联邮件报警规则(每30m秒检查一次,报警触发后延迟1分钟后再通知,注意For参数和Conditions里的query时间单位要合理配置，一般设置相同。还要注意设置`no data`情况下的报警状态，防止当前时间点没有采集到数据报警)
 ![7](/img/grafana-alerting/7.png)
 
 在grafana中展示（图中设置了值超过100的报警规则）

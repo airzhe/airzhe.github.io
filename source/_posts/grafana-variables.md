@@ -28,3 +28,5 @@ prometheus 中按标签查询结果，显示了该标签有多个查询结果
 
 
 日志监控的配置参考上篇文章: {% post_link loki  使用Loki查询日志%}
+
+{% post_link grafana-mysql-source grafana 使用 mysql源%}时，如果使用 All 变量，查询 sql 过滤要改成 in 方式，如: `select count(*) from t where type in (${source_type})`;

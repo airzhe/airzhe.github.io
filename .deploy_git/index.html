@@ -76,7 +76,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/ldap-pbkdf2/">把gogs里的用户迁移到openldap</a>
+      <a class="article-title" href="/2019/11/ldap-pbkdf2/">迁移gogs用户到openldap</a>
     </h1>
   
 
@@ -99,7 +99,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ck3eegzu3000g1zl9082l2k15" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ck3o7kufa000o28l9xgg433c1" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gogs/">gogs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ldap/">ldap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openldap/">openldap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li></ul>
@@ -162,7 +162,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ubuntu-install/" data-id="ck3eegzuf000s1zl9dla0du9d" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/ubuntu-install/" data-id="ck3o7kufg000v28l9jf5ppmga" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -199,20 +199,16 @@
         <p>配置对应的 mysql 数据源，新建面板，查询语句：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">  created_at AS &quot;time&quot;,</span><br><span class="line">  &quot;下单金额&quot; AS metric,</span><br><span class="line">  total_fee/100</span><br><span class="line">FROM `order`</span><br><span class="line">WHERE</span><br><span class="line">  $__unixEpochFilter(created_at)</span><br><span class="line">ORDER BY created_at</span><br></pre></td></tr></table></figure>
 <p>Format as选择Time series, Unit 选择 Currency</p>
-<p><img src="/img/grafana/11.png" alt="11.png"></p>
-<p><strong>效果图:</strong></p>
-<p><img src="/img/grafana/12.png" alt="12.png"></p>
-<p><strong>备注：</strong></p>
-<p>helm grafana chart 安装饼装图插件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">plugins:</span><br><span class="line">  - grafana-piechart-panel</span><br></pre></td></tr></table></figure>
-<p>开启 plugin alpha 模式</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">grafana.ini:</span><br><span class="line">  paths:</span><br><span class="line">    data: /var/lib/grafana/data</span><br><span class="line">    logs: /var/log/grafana</span><br><span class="line">    plugins: /var/lib/grafana/plugins</span><br><span class="line">    provisioning: /etc/grafana/provisioning</span><br><span class="line">  analytics:</span><br><span class="line">    check_for_updates: true</span><br><span class="line">  log:</span><br><span class="line">    mode: console</span><br><span class="line">  grafana_net:</span><br><span class="line">    url: https://grafana.net</span><br><span class="line">  server:</span><br><span class="line">    root_url: http://grafana.local.com</span><br><span class="line">  plugins:</span><br><span class="line">    enable_alpha: true</span><br></pre></td></tr></table></figure>
-<p>参考链接：<br><a href="https://www.mssqltips.com/sqlservertip/6008/sql-server-time-series-data-visualization-with-grafana/" target="_blank" rel="noopener">https://www.mssqltips.com/sqlservertip/6008/sql-server-time-series-data-visualization-with-grafana/</a><br><a href="https://blog.csdn.net/malingyu/article/details/84389113" target="_blank" rel="noopener">https://blog.csdn.net/malingyu/article/details/84389113</a><br><a href="https://community.grafana.com/t/how-to-add-time-series-queries-with-grafana-and-mysql/3170/55" target="_blank" rel="noopener">https://community.grafana.com/t/how-to-add-time-series-queries-with-grafana-and-mysql/3170/55</a></p>
-
+<p><img src="/img/grafana/11.png" alt="11.png"><br>
+        
+          <p class="article-more-link">
+            <a href="/2019/11/grafana-mysql-source/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ck3eegztm00051zl9loi38xda" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ck3o7kuer000728l9s4j3b4qo" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li></ul>
@@ -289,7 +285,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/k8s-migration-1/" data-id="ck3eegzu1000f1zl9n2rvtwzq" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/k8s-migration-1/" data-id="ck3o7kuew000b28l951yvp95a" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
@@ -338,7 +334,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/hexo/" data-id="ck3eegztr00081zl9f1wt8tq8" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/hexo/" data-id="ck3o7kuf3000f28l90pnwceiy" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
@@ -384,7 +380,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/grafana-variables/" data-id="ck3eegztp00071zl9wk5119oh" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/grafana-variables/" data-id="ck3o7kuen000428l9x20di2g2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/promtal/">promtal</a></li></ul>
@@ -435,7 +431,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/loki/" data-id="ck3eegzua000o1zl96tgimefk" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/loki/" data-id="ck3o7kufd000s28l9tch2cjjs" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/promtal/">promtal</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/日志/">日志</a></li></ul>
@@ -479,7 +475,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/core-dns/" data-id="ck3eegzt700011zl9xrt186cn" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/core-dns/" data-id="ck3o7kuel000328l9yd9th2hk" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/coredns/">coredns</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/etcd/">etcd</a></li></ul>
@@ -525,7 +521,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/gitrunner-helm-install/" data-id="ck3eegztj00041zl9u3bdhzut" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/gitrunner-helm-install/" data-id="ck3o7kuep000528l9fcvuqstm" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li></ul>
@@ -569,7 +565,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/helm/" data-id="ck3eegzty000c1zl9wlorockw" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/helm/" data-id="ck3o7kuev000a28l96hswrg4n" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/charts/">charts</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
@@ -629,7 +625,7 @@
       <ul>
         
           <li>
-            <a href="/2019/11/ldap-pbkdf2/">把gogs里的用户迁移到openldap</a>
+            <a href="/2019/11/ldap-pbkdf2/">迁移gogs用户到openldap</a>
           </li>
         
           <li>

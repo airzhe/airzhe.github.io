@@ -15,7 +15,7 @@
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://airzhe.github.io/img/grafana/11.png">
 <meta property="og:image" content="http://airzhe.github.io/img/grafana/12.png">
-<meta property="og:updated_time" content="2019-11-15T03:32:52.479Z">
+<meta property="og:updated_time" content="2019-12-02T08:50:12.601Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="grafana使用mysql源做统计">
 <meta name="twitter:description" content="配置对应的 mysql 数据源，新建面板，查询语句： 12345678SELECT  created_at AS &amp;quot;time&amp;quot;,  &amp;quot;下单金额&amp;quot; AS metric,  total_fee/100FROM `order`WHERE  $__unixEpochFilter(created_at)ORDER BY created_at Format as选择Ti">
@@ -93,20 +93,21 @@
         <p>配置对应的 mysql 数据源，新建面板，查询语句：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">  created_at AS &quot;time&quot;,</span><br><span class="line">  &quot;下单金额&quot; AS metric,</span><br><span class="line">  total_fee/100</span><br><span class="line">FROM `order`</span><br><span class="line">WHERE</span><br><span class="line">  $__unixEpochFilter(created_at)</span><br><span class="line">ORDER BY created_at</span><br></pre></td></tr></table></figure>
 <p>Format as选择Time series, Unit 选择 Currency</p>
-<p><img src="/img/grafana/11.png" alt="11.png"></p>
+<p><img src="/img/grafana/11.png" alt="11.png"><br><a id="more"></a></p>
 <p><strong>效果图:</strong></p>
 <p><img src="/img/grafana/12.png" alt="12.png"></p>
-<p><strong>备注：</strong></p>
-<p>helm grafana chart 安装饼装图插件</p>
+<p><strong>备注:</strong></p>
+<p>helm版 grafana chart 安装饼装图插件</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">plugins:</span><br><span class="line">  - grafana-piechart-panel</span><br></pre></td></tr></table></figure>
 <p>开启 plugin alpha 模式</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">grafana.ini:</span><br><span class="line">  paths:</span><br><span class="line">    data: /var/lib/grafana/data</span><br><span class="line">    logs: /var/log/grafana</span><br><span class="line">    plugins: /var/lib/grafana/plugins</span><br><span class="line">    provisioning: /etc/grafana/provisioning</span><br><span class="line">  analytics:</span><br><span class="line">    check_for_updates: true</span><br><span class="line">  log:</span><br><span class="line">    mode: console</span><br><span class="line">  grafana_net:</span><br><span class="line">    url: https://grafana.net</span><br><span class="line">  server:</span><br><span class="line">    root_url: http://grafana.local.com</span><br><span class="line">  plugins:</span><br><span class="line">    enable_alpha: true</span><br></pre></td></tr></table></figure>
-<p>参考链接：<br><a href="https://www.mssqltips.com/sqlservertip/6008/sql-server-time-series-data-visualization-with-grafana/" target="_blank" rel="noopener">https://www.mssqltips.com/sqlservertip/6008/sql-server-time-series-data-visualization-with-grafana/</a><br><a href="https://blog.csdn.net/malingyu/article/details/84389113" target="_blank" rel="noopener">https://blog.csdn.net/malingyu/article/details/84389113</a><br><a href="https://community.grafana.com/t/how-to-add-time-series-queries-with-grafana-and-mysql/3170/55" target="_blank" rel="noopener">https://community.grafana.com/t/how-to-add-time-series-queries-with-grafana-and-mysql/3170/55</a></p>
+<p><strong>参考查询:</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">#最近七天每日订单金额</span><br><span class="line">SELECT</span><br><span class="line">   unix_timestamp(from_unixtime(created_at,&apos;%Y-%m-%d 00:00:00&apos;)) as time,</span><br><span class="line">   from_unixtime(created_at,&apos;%Y-%m-%d&apos;) AS metric,</span><br><span class="line">   sum(total_fee)/100</span><br><span class="line">FROM `order_log`</span><br><span class="line">WHERE</span><br><span class="line">  created_at &lt;= ($__unixEpochTo()) AND created_at &gt;= ($__unixEpochTo() DIV 86400 * 86400 - 6*60*60*24 - 8*60*60) AND state = 3  AND agg_platform in ($&#123;agg_platform&#125;)</span><br><span class="line">GROUP BY time</span><br><span class="line">ORDER BY time</span><br><span class="line"></span><br><span class="line">#昨日下单数在当前时间轴展示</span><br><span class="line">SELECT</span><br><span class="line">    time + 86400 as time, </span><br><span class="line">    &quot;昨日下单数&quot; AS metric,</span><br><span class="line">    cnt</span><br><span class="line">FROM</span><br><span class="line">(</span><br><span class="line">  SELECT</span><br><span class="line">     $__unixEpochGroup(created_at,$__interval) as time,</span><br><span class="line">     count(*) cnt</span><br><span class="line">  FROM `order_log`</span><br><span class="line">  WHERE</span><br><span class="line">    created_at &gt;  ($__unixEpochFrom() - 86400)  AND created_at &lt;  ($__unixEpochTo() - 86400)  AND agg_platform in ($&#123;agg_platform&#125;)</span><br><span class="line">  GROUP BY time</span><br><span class="line">  ORDER BY time</span><br><span class="line">) obl</span><br></pre></td></tr></table></figure></p>
+<p>参考链接：<br><a href="https://www.mssqltips.com/sqlservertip/6008/sql-server-time-series-data-visualization-with-grafana/" target="_blank" rel="noopener">https://www.mssqltips.com/sqlservertip/6008/sql-server-time-series-data-visualization-with-grafana/</a><br><a href="https://blog.csdn.net/malingyu/article/details/84389113" target="_blank" rel="noopener">https://blog.csdn.net/malingyu/article/details/84389113</a><br><a href="https://community.grafana.com/t/how-to-add-time-series-queries-with-grafana-and-mysql/3170/55" target="_blank" rel="noopener">https://community.grafana.com/t/how-to-add-time-series-queries-with-grafana-and-mysql/3170/55</a><br><a href="https://www.cnblogs.com/michellexiaoqi/p/7274890.html" target="_blank" rel="noopener">去除 Data outside time range</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ck3eegztm00051zl9loi38xda" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ck3o7kuer000728l9s4j3b4qo" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li></ul>
@@ -180,7 +181,7 @@
       <ul>
         
           <li>
-            <a href="/2019/11/ldap-pbkdf2/">把gogs里的用户迁移到openldap</a>
+            <a href="/2019/11/ldap-pbkdf2/">迁移gogs用户到openldap</a>
           </li>
         
           <li>

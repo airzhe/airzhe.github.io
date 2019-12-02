@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "把gogs里的用户迁移到openldap"
+title: "迁移gogs用户到openldap"
 description: ""
 date: 2019-11-25 20:19:00
 tags: [ldap,openldap,gogs,pbkdf2]
