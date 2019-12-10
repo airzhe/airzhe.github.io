@@ -3,20 +3,15 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>B 树 | Runner的小站</title>
+  <title>Runner的小站</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="gRPC是一个高性能、通用的开源 RPC 框架，其由 Google 主要面向移动应用开发并基于HTTP/2协议标准而设计，基于ProtoBuf(Protocol Buffers) 序列化协议开发，且支持众多开发语言。 使用 protoc –go_out=. *.proto 把proto文件转成 go 文件，定义格式如下： 123456789message HelloRequest &amp;#123;">
-<meta name="keywords" content="b树,数据结构">
-<meta property="og:type" content="article">
-<meta property="og:title" content="B 树">
-<meta property="og:url" content="http://airzhe.github.io/2019/02/btree/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Runner的小站">
+<meta property="og:url" content="http://airzhe.github.io/page/3/index.html">
 <meta property="og:site_name" content="Runner的小站">
-<meta property="og:description" content="gRPC是一个高性能、通用的开源 RPC 框架，其由 Google 主要面向移动应用开发并基于HTTP/2协议标准而设计，基于ProtoBuf(Protocol Buffers) 序列化协议开发，且支持众多开发语言。 使用 protoc –go_out=. *.proto 把proto文件转成 go 文件，定义格式如下： 123456789message HelloRequest &amp;#123;">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-11-14T03:33:28.579Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="B 树">
-<meta name="twitter:description" content="gRPC是一个高性能、通用的开源 RPC 框架，其由 Google 主要面向移动应用开发并基于HTTP/2协议标准而设计，基于ProtoBuf(Protocol Buffers) 序列化协议开发，且支持众多开发语言。 使用 protoc –go_out=. *.proto 把proto文件转成 go 文件，定义格式如下： 123456789message HelloRequest &amp;#123;">
+<meta name="twitter:title" content="Runner的小站">
   
     <link rel="alternate" href="/atom.xml" title="Runner的小站" type="application/atom+xml">
   
@@ -65,10 +60,12 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-btree" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main">
+  
+    <article id="post-k8s-introduction" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/02/btree/" class="article-date">
-  <time datetime="2019-02-27T00:00:00.000Z" itemprop="datePublished">2019-02-27</time>
+    <a href="/2019/01/k8s-introduction/" class="article-date">
+  <time datetime="2019-01-31T00:00:00.000Z" itemprop="datePublished">2019-01-31</time>
 </a>
     
   </div>
@@ -78,8 +75,8 @@
       <header class="article-header">
         
   
-    <h1 class="article-title" itemprop="name">
-      B 树
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/k8s-introduction/">k8s 介绍</a>
     </h1>
   
 
@@ -87,57 +84,38 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>gRPC是一个高性能、通用的开源 RPC 框架，其由 Google 主要面向移动应用开发并基于HTTP/2协议标准而设计，基于ProtoBuf(Protocol Buffers) 序列化协议开发，且支持众多开发语言。 使用 protoc –go_out=. *.proto 把proto文件转成 go 文件，定义格式如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">message HelloRequest &#123;</span><br><span class="line">  string greeting = 1;</span><br><span class="line">&#125;</span><br><span class="line">message HelloResponse &#123;</span><br><span class="line">  string reply = 1;</span><br><span class="line">&#125;</span><br><span class="line">service HelloService &#123;</span><br><span class="line">  rpc SayHello(HelloRequest) returns (HelloResponse);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><a href="https://zhuanlan.zhihu.com/p/27700617" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/27700617</a></p>
-<p>B树中每一个内部节点会包含一定数量的键，键将节点的子树分开。例如，如果一个内部节点有3个子节点（子树），那么它就必须有两个键： a1 和 a2 。左边子树的所有值都必须小于 a1 ，中间子树的所有值都必须在 a1 和a2 之间，右边子树的所有值都必须大于 a2 。</p>
-<p>规则：</p>
-<p>（1）所有节点关键字是按递增次序排列，并遵循左小右大原则；</p>
-<p>（2）1&lt;子节点数量&lt;=M ，M&gt;=2，空树除外（注：m阶代表一个树节点最多有多少个查找路径，m阶=m路,当m=2则是2叉树,m=3则是3叉）；</p>
-<p>（3）非根节点关键字数量大于等于ceil(m/2)-1且小于等于m-1个；（注：ceil()是个朝正无穷方向取整的函数 如ceil(1.1)结果为2)</p>
-<p>（4）非叶节点有N个子节点，则该节点的关键字数等于N-1;</p>
-<p>（5）所有叶子节点均在同一层、叶子节点除了包含了关键字和关键字记录的指针外也有指向其子节点的指针只不过其指针地址都为null对应下图最后一层节点的空格子</p>
-<p>B+ 树特点</p>
-<p>1、相较于B树B+每个非叶子节点存储的关键字数更多，树的层级更少所以查询数据更快；</p>
-<p>2、B+所有关键字数据地址都存在叶子节点上，所以每次查找的次数都相同所以查询速度要比B树更稳定;</p>
-<p>3、B+树所有的叶子节点数据构成了一个有序链表，在查询大小区间的数据时候更方便，数据紧密性很高，缓存的命中率也会比B树高。</p>
-<p>4、B+树遍历整棵树只需要遍历所有的叶子节点即可，，而不需要像B树一样需要对每一层进行遍历。</p>
-<p>5、B树相对于B+树的优点是，如果经常访问的数据离根节点很近，而B树的非叶子节点本身存有关键字其数据的地址，所以这种数据检索的时候会要比B+树快。</p>
-
+        <h2 id="Kubernetes"><a href="#Kubernetes" class="headerlink" title="Kubernetes"></a>Kubernetes</h2><p>Kubernetes是一个开源的_用于管理云平台中多个主机上的容器化的应用_Kubernetes的目标是让部署容器化的应用简单并且高效<em>powerful__Kubernetes提供了应用部署</em>规划_更新_维护的一种机制</p>
+<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p><img src="/img/k8s/1.png" alt="image"></p>
+<p>集群中的机器划分为一个Master 节点和一群工作节点(Node)</p>
+<p>Master 节点，由三个紧密协作的独立组件组合而成，它们分别是负责 API 服务的 <strong>kube-apiserver</strong>、负责调度的 <strong>kube-scheduler</strong>，以及负责容器编排的 <strong>kube-controller-manager</strong>。整个集群的持久化数据，则由 kube-apiserver 处理后保存在 <strong>Ectd</strong> 中。</p>
+<p>node上运行着 kubelet、kube-proxy服务进程，负责pod的创建、启动、监控、重启、销毁、以及实现软件模式的负载均衡器。</p>
+<p>在 Kubernetes 项目中，kubelet 主要负责同容器运行时（比如 Docker 项目）打交道，只要你的这个容器运行时能够运行标准的容器镜像，它就可以通过实现 <strong>CRI</strong> 接入到 Kubernetes 项目当中。(比如 rkt)</p>
+<p>而kubelet 的另一个重要功能，则是调用网络插件和存储插件为容器配置网络和持久化存储。<br>
+        
+          <p class="article-more-link">
+            <a href="/2019/01/k8s-introduction/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/btree/" data-id="ck3zsue0g00010tl9zrza7n9u" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/01/k8s-introduction/" data-id="ck3zsue1f000p0tl9hzrt9ysb" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/b树/">b树</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
 
     </footer>
   </div>
   
-    
-<nav id="article-nav">
-  
-    <a href="/2019/10/grafana-alerting/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          grafana alerting 报警
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2019/02/tcp/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Linux高性能服务器编程</div>
-    </a>
-  
-</nav>
-
-  
 </article>
 
+
+  
+
+
+  <nav id="page-nav">
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+  </nav>
 </section>
         
           <aside id="sidebar">

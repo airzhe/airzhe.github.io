@@ -3,20 +3,19 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>B 树 | Runner的小站</title>
+  <title>Runner的小站</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="gRPC是一个高性能、通用的开源 RPC 框架，其由 Google 主要面向移动应用开发并基于HTTP/2协议标准而设计，基于ProtoBuf(Protocol Buffers) 序列化协议开发，且支持众多开发语言。 使用 protoc –go_out=. *.proto 把proto文件转成 go 文件，定义格式如下： 123456789message HelloRequest &amp;#123;">
-<meta name="keywords" content="b树,数据结构">
+  <meta name="description" content=".task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }">
 <meta property="og:type" content="article">
-<meta property="og:title" content="B 树">
-<meta property="og:url" content="http://airzhe.github.io/2019/02/btree/index.html">
+<meta property="og:title" content="Runner的小站">
+<meta property="og:url" content="http://airzhe.github.io/2019/12/btree/index.html">
 <meta property="og:site_name" content="Runner的小站">
-<meta property="og:description" content="gRPC是一个高性能、通用的开源 RPC 框架，其由 Google 主要面向移动应用开发并基于HTTP/2协议标准而设计，基于ProtoBuf(Protocol Buffers) 序列化协议开发，且支持众多开发语言。 使用 protoc –go_out=. *.proto 把proto文件转成 go 文件，定义格式如下： 123456789message HelloRequest &amp;#123;">
+<meta property="og:description" content=".task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-11-14T03:33:28.579Z">
+<meta property="og:updated_time" content="2019-12-10T02:58:05.988Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="B 树">
-<meta name="twitter:description" content="gRPC是一个高性能、通用的开源 RPC 框架，其由 Google 主要面向移动应用开发并基于HTTP/2协议标准而设计，基于ProtoBuf(Protocol Buffers) 序列化协议开发，且支持众多开发语言。 使用 protoc –go_out=. *.proto 把proto文件转成 go 文件，定义格式如下： 123456789message HelloRequest &amp;#123;">
+<meta name="twitter:title" content="Runner的小站">
+<meta name="twitter:description" content=".task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }">
   
     <link rel="alternate" href="/atom.xml" title="Runner的小站" type="application/atom+xml">
   
@@ -67,28 +66,58 @@
       <div class="outer">
         <section id="main"><article id="post-btree" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/02/btree/" class="article-date">
-  <time datetime="2019-02-27T00:00:00.000Z" itemprop="datePublished">2019-02-27</time>
+    <a href="/2019/12/btree/" class="article-date">
+  <time datetime="2019-12-10T02:58:05.988Z" itemprop="datePublished">2019-12-10</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      B 树
-    </h1>
-  
-
-      </header>
-    
     <div class="article-entry" itemprop="articleBody">
       
-        <p>gRPC是一个高性能、通用的开源 RPC 框架，其由 Google 主要面向移动应用开发并基于HTTP/2协议标准而设计，基于ProtoBuf(Protocol Buffers) 序列化协议开发，且支持众多开发语言。 使用 protoc –go_out=. *.proto 把proto文件转成 go 文件，定义格式如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">message HelloRequest &#123;</span><br><span class="line">  string greeting = 1;</span><br><span class="line">&#125;</span><br><span class="line">message HelloResponse &#123;</span><br><span class="line">  string reply = 1;</span><br><span class="line">&#125;</span><br><span class="line">service HelloService &#123;</span><br><span class="line">  rpc SayHello(HelloRequest) returns (HelloResponse);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <!DOCTYPE html>
+    <html>
+    <head><meta name="generator" content="Hexo 3.9.0">
+        <meta charset="UTF-8">
+        <title></title>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        
+    </head>
+    <body class="vscode-light">
+        <hr>
+<h2 id="layout-posttitle-%22b-%e6%a0%91%22description-%22%22date-2019-02-27tags-b%e6%a0%91%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84comments-falseshare-true">layout: post
+title: &quot;B 树&quot;
+description: &quot;&quot;
+date: 2019-02-27
+tags: [b树,数据结构]
+comments: false
+share: true</h2>
+<p>gRPC是一个高性能、通用的开源 RPC 框架，其由 Google 主要面向移动应用开发并基于HTTP/2协议标准而设计，基于ProtoBuf(Protocol Buffers) 序列化协议开发，且支持众多开发语言。 使用 protoc --go_out=. *.proto 把proto文件转成 go 文件，定义格式如下：</p>
+<pre><code><code><div>message HelloRequest {
+  string greeting = 1;
+}
+message HelloResponse {
+  string reply = 1;
+}
+service HelloService {
+  rpc SayHello(HelloRequest) returns (HelloResponse);
+}
+</div></code></code></pre>
 <p><a href="https://zhuanlan.zhihu.com/p/27700617" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/27700617</a></p>
 <p>B树中每一个内部节点会包含一定数量的键，键将节点的子树分开。例如，如果一个内部节点有3个子节点（子树），那么它就必须有两个键： a1 和 a2 。左边子树的所有值都必须小于 a1 ，中间子树的所有值都必须在 a1 和a2 之间，右边子树的所有值都必须大于 a2 。</p>
 <p>规则：</p>
@@ -104,33 +133,24 @@
 <p>4、B+树遍历整棵树只需要遍历所有的叶子节点即可，，而不需要像B树一样需要对每一层进行遍历。</p>
 <p>5、B树相对于B+树的优点是，如果经常访问的数据离根节点很近，而B树的非叶子节点本身存有关键字其数据的地址，所以这种数据检索的时候会要比B+树快。</p>
 
+    </body>
+    </html>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/btree/" data-id="ck3zsue0g00010tl9zrza7n9u" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/btree/" data-id="ck3zsue0b00000tl9fszv3g6b" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/b树/">b树</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li></ul>
-
     </footer>
   </div>
   
     
 <nav id="article-nav">
   
-    <a href="/2019/10/grafana-alerting/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          grafana alerting 报警
-        
-      </div>
-    </a>
   
-  
-    <a href="/2019/02/tcp/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2019/11/ldap-pbkdf2/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Linux高性能服务器编程</div>
+      <div class="article-nav-title">迁移gogs用户到openldap</div>
     </a>
   
 </nav>
