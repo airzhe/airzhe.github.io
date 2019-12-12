@@ -62,90 +62,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-btree" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/btree/" class="article-date">
-  <time datetime="2019-12-10T02:58:05.988Z" itemprop="datePublished">2019-12-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <!DOCTYPE html>
-    <html>
-    <head><meta name="generator" content="Hexo 3.9.0">
-        <meta charset="UTF-8">
-        <title></title>
-        
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
-        
-        <style>
-.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
-</style>
-        <style>
-            body {
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
-                font-size: 14px;
-                line-height: 1.6;
-            }
-        </style>
-        
-        
-    </head>
-    <body class="vscode-light">
-        <hr>
-<h2 id="layout-posttitle-%22b-%e6%a0%91%22description-%22%22date-2019-02-27tags-b%e6%a0%91%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84comments-falseshare-true">layout: post
-title: &quot;B 树&quot;
-description: &quot;&quot;
-date: 2019-02-27
-tags: [b树,数据结构]
-comments: false
-share: true</h2>
-<p>gRPC是一个高性能、通用的开源 RPC 框架，其由 Google 主要面向移动应用开发并基于HTTP/2协议标准而设计，基于ProtoBuf(Protocol Buffers) 序列化协议开发，且支持众多开发语言。 使用 protoc --go_out=. *.proto 把proto文件转成 go 文件，定义格式如下：</p>
-<pre><code><code><div>message HelloRequest {
-  string greeting = 1;
-}
-message HelloResponse {
-  string reply = 1;
-}
-service HelloService {
-  rpc SayHello(HelloRequest) returns (HelloResponse);
-}
-</div></code></code></pre>
-<p><a href="https://zhuanlan.zhihu.com/p/27700617" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/27700617</a></p>
-<p>B树中每一个内部节点会包含一定数量的键，键将节点的子树分开。例如，如果一个内部节点有3个子节点（子树），那么它就必须有两个键： a1 和 a2 。左边子树的所有值都必须小于 a1 ，中间子树的所有值都必须在 a1 和a2 之间，右边子树的所有值都必须大于 a2 。</p>
-<p>规则：</p>
-<p>（1）所有节点关键字是按递增次序排列，并遵循左小右大原则；</p>
-<p>（2）1&lt;子节点数量&lt;=M ，M&gt;=2，空树除外（注：m阶代表一个树节点最多有多少个查找路径，m阶=m路,当m=2则是2叉树,m=3则是3叉）；</p>
-<p>（3）非根节点关键字数量大于等于ceil(m/2)-1且小于等于m-1个；（注：ceil()是个朝正无穷方向取整的函数 如ceil(1.1)结果为2)</p>
-<p>（4）非叶节点有N个子节点，则该节点的关键字数等于N-1;</p>
-<p>（5）所有叶子节点均在同一层、叶子节点除了包含了关键字和关键字记录的指针外也有指向其子节点的指针只不过其指针地址都为null对应下图最后一层节点的空格子</p>
-<p>B+ 树特点</p>
-<p>1、相较于B树B+每个非叶子节点存储的关键字数更多，树的层级更少所以查询数据更快；</p>
-<p>2、B+所有关键字数据地址都存在叶子节点上，所以每次查找的次数都相同所以查询速度要比B树更稳定;</p>
-<p>3、B+树所有的叶子节点数据构成了一个有序链表，在查询大小区间的数据时候更方便，数据紧密性很高，缓存的命中率也会比B树高。</p>
-<p>4、B+树遍历整棵树只需要遍历所有的叶子节点即可，，而不需要像B树一样需要对每一层进行遍历。</p>
-<p>5、B树相对于B+树的优点是，如果经常访问的数据离根节点很近，而B树的非叶子节点本身存有关键字其数据的地址，所以这种数据检索的时候会要比B+树快。</p>
-
-    </body>
-    </html>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/btree/" data-id="ck3zsue0b00000tl9fszv3g6b" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
     <article id="post-ldap-pbkdf2" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/11/ldap-pbkdf2/" class="article-date">
@@ -183,7 +99,7 @@ service HelloService {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ck3zsue14000h0tl9qawhkmtv" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ck42byvuo000m0rl9ram9qmlb" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gogs/">gogs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ldap/">ldap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openldap/">openldap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li></ul>
@@ -247,7 +163,7 @@ service HelloService {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ubuntu-install/" data-id="ck3zsue1l000u0tl9dcbxlcvv" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/ubuntu-install/" data-id="ck42byvuv000w0rl90p40e0bl" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -293,7 +209,7 @@ service HelloService {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ck3zsue0o00040tl9yxf5wgdr" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ck42byvu800050rl97g02teig" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li></ul>
@@ -370,7 +286,7 @@ service HelloService {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/k8s-migration-1/" data-id="ck3zsue12000g0tl9lisdv8n4" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/k8s-migration-1/" data-id="ck42byvui000f0rl9g4ix00d8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
@@ -419,7 +335,7 @@ service HelloService {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/hexo/" data-id="ck3zsue0x000b0tl9i8y2u0vl" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/hexo/" data-id="ck42byvua00070rl9bo4uhtnp" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
@@ -465,7 +381,7 @@ service HelloService {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/grafana-variables/" data-id="ck3zsue0u00080tl91bu6gbif" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/grafana-variables/" data-id="ck42byvub00080rl9768i4npi" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/promtal/">promtal</a></li></ul>
@@ -516,7 +432,7 @@ service HelloService {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/loki/" data-id="ck3zsue16000j0tl9ioeg62n2" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/loki/" data-id="ck42byvur000p0rl9bxu3oi6r" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/promtal/">promtal</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/日志/">日志</a></li></ul>
@@ -560,7 +476,7 @@ service HelloService {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/core-dns/" data-id="ck3zsue0j00020tl9h9dbj2l8" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/core-dns/" data-id="ck42byvu400030rl99oo6wvls" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/coredns/">coredns</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/etcd/">etcd</a></li></ul>
@@ -606,7 +522,7 @@ service HelloService {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/gitrunner-helm-install/" data-id="ck3zsue0p00050tl9oaz1cmyu" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/gitrunner-helm-install/" data-id="ck42byvtz00010rl9hche8gtj" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li></ul>
@@ -618,10 +534,54 @@ service HelloService {
 
 
   
+    <article id="post-helm" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/helm/" class="article-date">
+  <time datetime="2019-10-16T17:35:10.000Z" itemprop="datePublished">2019-10-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/helm/">helm 命令介绍及使用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>命令</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">helm repo list</span><br><span class="line">helm search </span><br><span class="line">helm list #列出已经按照项目</span><br><span class="line">helm del --purge istio-init #删除</span><br><span class="line">helm fetch stable/grafana #下载到本地</span><br><span class="line">helm push mysql-0.3.5.tgz myrepo</span><br><span class="line">helm repo add  myrepo https://xx.xx.xx.xx/chartrepo/charts #添加仓库</span><br><span class="line">helm repo add bitnami https://charts.bitnami.com/bitnami  #添加仓库</span><br><span class="line"></span><br><span class="line">helm list --deleted</span><br><span class="line">helm rollback nginx-ingress 1</span><br><span class="line"></span><br><span class="line">helm create hello_test</span><br><span class="line">helm package ./hello_test/ #打包</span><br><span class="line">helm install ./hello_test-0.1.0.tgz --debug --dry-run #调试</span><br><span class="line">helm get manifest #这条命令可以通过 release 名来打印其相关yaml信息</span><br><span class="line">helm status wintering-rodent</span><br><span class="line"></span><br><span class="line">helm plugin install https://github.com/chartmuseum/helm-push #安装push插件</span><br><span class="line">helm repo add mylibrary http://harbor.local.com:8082/chartrepo/library</span><br><span class="line">helm push --username=runner --password=745632Bn hello_test mylibrary</span><br><span class="line"></span><br><span class="line">helm fetch stable/redis</span><br><span class="line">helm push redis-8.1.2.tgz -urunner -p745632Bn  mylibrary  -v 0.2.0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">docker run -ti --rm --entrypoint /bin/sh alpine/helm:2.9.0</span><br><span class="line">export HELM_HOST=10.102.49.77:44134 #修改 tiller 地址 10.111.8.171:44134</span><br><span class="line">helm list</span><br><span class="line">helm init --client-only</span><br><span class="line"></span><br><span class="line">helm upgrade -f panda.yaml happpy-panda stable/mariadb #更新</span><br><span class="line">helm temlate helm/istio -name istio -namespace istio-system -f my-values.yaml &gt; my-isti.yaml #根据模板生成部署清单，不用依赖 tiller 服务端。</span><br><span class="line">helm template istio -name istio -f book-values.yaml -namespace istio-system | kubectl apply -f</span><br><span class="line"></span><br><span class="line">helm delete --purge #版本存储在 kube-system 命名空间内的ConfigMaps中</span><br><span class="line">helm status </span><br><span class="line"></span><br><span class="line">helm inspect values . #查看charts的配置选项</span><br><span class="line">helm inspect values yhdx/community --version 0.2.0</span><br><span class="line">helm get values zeroed-gnat -a #查看 release 的配置值</span><br><span class="line"></span><br><span class="line">helm --set a=b,c=d </span><br><span class="line">helm --set name=&#123;a,b,c&#125; </span><br><span class="line">helm --set server[0].port = 80</span><br><span class="line"></span><br><span class="line">--timeout</span><br><span class="line">--wait</span><br><span class="line"></span><br><span class="line">helm init --service-account </span><br><span class="line">helm install . --debug --dry-run --set favoriteDrink=tea #set 替换</span><br><span class="line">helm install stable/drupal --set image=my-registry/drupal:0.1.0 --set livenessProbe.exec.command=[cat,docroot/CHANGELOG.txt] --set livenessProbe.httpGet=null</span><br><span class="line">helm upgrade sanguine-panther --set image1.tag=0.3 --set imagePullPolicy=Always . </span><br><span class="line">helm upgrade nginx-ingress -f ingress-nginx.yaml  stable/nginx-ingress</span><br><span class="line"></span><br><span class="line">#启动本地 chartmuseum 仓库</span><br><span class="line">docker run --rm -itd \</span><br><span class="line">  -p 8089:8080 \</span><br><span class="line">  -e DEBUG=1 \</span><br><span class="line">  -e STORAGE=local \</span><br><span class="line">  -e STORAGE_LOCAL_ROOTDIR=/charts \</span><br><span class="line">  -v /home/runner/work/k8s/chartmuseum/charts:/charts \</span><br><span class="line"> --name my_chartmuseum  chartmuseum/chartmuseum:latest</span><br><span class="line">helm repo add myChartMuseum http://172.16.101.197:8089</span><br><span class="line"></span><br><span class="line">helm upgrade install --force</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2019/10/helm/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/10/helm/" data-id="ck42byvuf000c0rl9dxn5b65i" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/charts/">charts</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
 
 
   <nav id="page-nav">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">__('next') &raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">__('next') &raquo;</a>
   </nav>
 </section>
         
@@ -653,7 +613,7 @@ service HelloService {
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
     </div>
   </div>
 
@@ -664,10 +624,6 @@ service HelloService {
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
-        
-          <li>
-            <a href="/2019/12/btree/">(no title)</a>
-          </li>
         
           <li>
             <a href="/2019/11/ldap-pbkdf2/">迁移gogs用户到openldap</a>
@@ -683,6 +639,10 @@ service HelloService {
         
           <li>
             <a href="/2019/11/k8s-migration-1/"> 测试服务迁移k8s集群记录 (一)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/hexo/">使用hexo管理博客</a>
           </li>
         
       </ul>
