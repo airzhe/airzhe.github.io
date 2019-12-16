@@ -35,3 +35,16 @@ payment_queue_length{name="order_notify"} 90
 
 解除报警
 ![6](/img/grafana-alerting/6.png)
+
+
+钉钉报警api
+```
+curl 'https://oapi.dingtalk.com/robot/send?access_token=762627b8d3fdfe3951dc***733e9e59ff59***7515c3' \
+-H 'Content-Type: application/json' \
+-d '{"msgtype": "text",
+"text": {
+	"content": "业务报警测试"
+}
+}
+```
+

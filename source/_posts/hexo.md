@@ -52,7 +52,7 @@ $ curl -o- -L https://yarnpkg.com/install.sh | bash
 Done in 112.25s.
 INFO  Start blogging with Hexo!
 ```
-<!-- more -->`
+<!-- more -->
 
 初始化完成生成目录如下：
 

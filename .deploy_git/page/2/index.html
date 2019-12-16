@@ -62,6 +62,50 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-helm" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/helm/" class="article-date">
+  <time datetime="2019-10-16T17:35:10.000Z" itemprop="datePublished">2019-10-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/helm/">helm 命令介绍及使用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>命令</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">helm repo list</span><br><span class="line">helm search </span><br><span class="line">helm list #列出已经按照项目</span><br><span class="line">helm del --purge istio-init #删除</span><br><span class="line">helm fetch stable/grafana #下载到本地</span><br><span class="line">helm push mysql-0.3.5.tgz myrepo</span><br><span class="line">helm repo add  myrepo https://xx.xx.xx.xx/chartrepo/charts #添加仓库</span><br><span class="line">helm repo add bitnami https://charts.bitnami.com/bitnami  #添加仓库</span><br><span class="line"></span><br><span class="line">helm list --deleted</span><br><span class="line">helm rollback nginx-ingress 1</span><br><span class="line"></span><br><span class="line">helm create hello_test</span><br><span class="line">helm package ./hello_test/ #打包</span><br><span class="line">helm install ./hello_test-0.1.0.tgz --debug --dry-run #调试</span><br><span class="line">helm get manifest #这条命令可以通过 release 名来打印其相关yaml信息</span><br><span class="line">helm status wintering-rodent</span><br><span class="line"></span><br><span class="line">helm plugin install https://github.com/chartmuseum/helm-push #安装push插件</span><br><span class="line">helm repo add mylibrary http://harbor.local.com:8082/chartrepo/library</span><br><span class="line">helm push --username=runner --password=745632Bn hello_test mylibrary</span><br><span class="line"></span><br><span class="line">helm fetch stable/redis</span><br><span class="line">helm push redis-8.1.2.tgz -urunner -p745632Bn  mylibrary  -v 0.2.0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">docker run -ti --rm --entrypoint /bin/sh alpine/helm:2.9.0</span><br><span class="line">export HELM_HOST=10.102.49.77:44134 #修改 tiller 地址 10.111.8.171:44134</span><br><span class="line">helm list</span><br><span class="line">helm init --client-only</span><br><span class="line"></span><br><span class="line">helm upgrade -f panda.yaml happpy-panda stable/mariadb #更新</span><br><span class="line">helm temlate helm/istio -name istio -namespace istio-system -f my-values.yaml &gt; my-isti.yaml #根据模板生成部署清单，不用依赖 tiller 服务端。</span><br><span class="line">helm template istio -name istio -f book-values.yaml -namespace istio-system | kubectl apply -f</span><br><span class="line"></span><br><span class="line">helm delete --purge #版本存储在 kube-system 命名空间内的ConfigMaps中</span><br><span class="line">helm status </span><br><span class="line"></span><br><span class="line">helm inspect values . #查看charts的配置选项</span><br><span class="line">helm inspect values yhdx/community --version 0.2.0</span><br><span class="line">helm get values zeroed-gnat -a #查看 release 的配置值</span><br><span class="line"></span><br><span class="line">helm --set a=b,c=d </span><br><span class="line">helm --set name=&#123;a,b,c&#125; </span><br><span class="line">helm --set server[0].port = 80</span><br><span class="line"></span><br><span class="line">--timeout</span><br><span class="line">--wait</span><br><span class="line"></span><br><span class="line">helm init --service-account </span><br><span class="line">helm install . --debug --dry-run --set favoriteDrink=tea #set 替换</span><br><span class="line">helm install stable/drupal --set image=my-registry/drupal:0.1.0 --set livenessProbe.exec.command=[cat,docroot/CHANGELOG.txt] --set livenessProbe.httpGet=null</span><br><span class="line">helm upgrade sanguine-panther --set image1.tag=0.3 --set imagePullPolicy=Always . </span><br><span class="line">helm upgrade nginx-ingress -f ingress-nginx.yaml  stable/nginx-ingress</span><br><span class="line"></span><br><span class="line">#启动本地 chartmuseum 仓库</span><br><span class="line">docker run --rm -itd \</span><br><span class="line">  -p 8089:8080 \</span><br><span class="line">  -e DEBUG=1 \</span><br><span class="line">  -e STORAGE=local \</span><br><span class="line">  -e STORAGE_LOCAL_ROOTDIR=/charts \</span><br><span class="line">  -v /home/runner/work/k8s/chartmuseum/charts:/charts \</span><br><span class="line"> --name my_chartmuseum  chartmuseum/chartmuseum:latest</span><br><span class="line">helm repo add myChartMuseum http://172.16.101.197:8089</span><br><span class="line"></span><br><span class="line">helm upgrade install --force</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2019/10/helm/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/10/helm/" data-id="ck483rbtr000g2xl9c6thaznn" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/charts/">charts</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-grafana-alerting" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/10/grafana-alerting/" class="article-date">
@@ -95,66 +139,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/grafana-alerting/" data-id="ck3o7kueb000028l9qe6rx4gd" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/grafana-alerting/" data-id="ck483rbtf00052xl9wiuh16qm" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/报警/">报警</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-laravel" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/02/laravel/" class="article-date">
-  <time datetime="2019-02-27T00:00:00.000Z" itemprop="datePublished">2019-02-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/laravel/">laravel 学习</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="config"><a href="#config" class="headerlink" title="config"></a>config</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">php artisan config:cache</span><br><span class="line">php artisan config:clear</span><br></pre></td></tr></table></figure>
-<h4 id="维护模式"><a href="#维护模式" class="headerlink" title="[维护模式]"></a>[维护模式]</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan down --message=&quot;Upgrading Database&quot; --retry=60</span><br></pre></td></tr></table></figure>
-<p>要查看所有有效的命令，可以在终端中运行<code>php artisan list make</code>命令。</p>
-<p><strong>Events</strong>  事件类</p>
-<p><strong>Jobs</strong>  任务队列</p>
-<p><strong>Listeners</strong> 事件监听</p>
-<p><strong>Mail</strong> 发邮件</p>
-<p><strong>Notifications</strong> 发送通知</p>
-<p><strong>Policies</strong> 授权策略</p>
-<p><strong>Database </strong> 目录包含了数据迁移及填充文件，如果你喜欢的话还可以将其作为 SQLite 数据库存放目录；</p>
-<p>Eloquent 是 Laravel 的 ‘ORM’，即 ‘Object Relational Mapping’，对象关系映射。ORM 的出现是为了帮我们把对数据库的操作变得更加地方便。</p>
-<p>php artisan make:model Model/Test</p>
-<p>包含被软删除的模型  Test::withTrashed()-&gt;find(1);</p>
-<p>php artisan vendor:publish </p>
-        
-          <p class="article-more-link">
-            <a href="/2019/02/laravel/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/laravel/" data-id="ck3o7kuf7000k28l911oz5cgs" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/laravel/">laravel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li></ul>
 
     </footer>
   </div>
@@ -205,7 +193,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/btree/" data-id="ck3o7kueg000128l9jrfgilmt" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/btree/" data-id="ck483rbt700012xl98ob8km83" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/b树/">b树</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li></ul>
@@ -290,10 +278,66 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/nginx/" data-id="ck3o7kufb000q28l9o3me771k" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/nginx/" data-id="ck483rbu3000t2xl96zmp63h3" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openresty/">openresty</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-laravel" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/laravel/" class="article-date">
+  <time datetime="2019-02-27T00:00:00.000Z" itemprop="datePublished">2019-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/laravel/">laravel 学习</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="config"><a href="#config" class="headerlink" title="config"></a>config</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">php artisan config:cache</span><br><span class="line">php artisan config:clear</span><br></pre></td></tr></table></figure>
+<h4 id="维护模式"><a href="#维护模式" class="headerlink" title="[维护模式]"></a>[维护模式]</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan down --message=&quot;Upgrading Database&quot; --retry=60</span><br></pre></td></tr></table></figure>
+<p>要查看所有有效的命令，可以在终端中运行<code>php artisan list make</code>命令。</p>
+<p><strong>Events</strong>  事件类</p>
+<p><strong>Jobs</strong>  任务队列</p>
+<p><strong>Listeners</strong> 事件监听</p>
+<p><strong>Mail</strong> 发邮件</p>
+<p><strong>Notifications</strong> 发送通知</p>
+<p><strong>Policies</strong> 授权策略</p>
+<p><strong>Database </strong> 目录包含了数据迁移及填充文件，如果你喜欢的话还可以将其作为 SQLite 数据库存放目录；</p>
+<p>Eloquent 是 Laravel 的 ‘ORM’，即 ‘Object Relational Mapping’，对象关系映射。ORM 的出现是为了帮我们把对数据库的操作变得更加地方便。</p>
+<p>php artisan make:model Model/Test</p>
+<p>包含被软删除的模型  Test::withTrashed()-&gt;find(1);</p>
+<p>php artisan vendor:publish </p>
+        
+          <p class="article-more-link">
+            <a href="/2019/02/laravel/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/02/laravel/" data-id="ck483rbu5000v2xl9blbtef7u" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/laravel/">laravel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li></ul>
 
     </footer>
   </div>
@@ -370,7 +414,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/tcp/" data-id="ck3o7kufh000x28l9mqdhjlqq" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/tcp/" data-id="ck483rbu6000x2xl91crv3ky3" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li></ul>
@@ -422,7 +466,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/jenkins-introduction/" data-id="ck3o7kuet000828l9xeom46nv" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/jenkins-introduction/" data-id="ck483rbtl000b2xl9b0432okv" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pipeline/">pipeline</a></li></ul>
@@ -514,7 +558,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/prometheus/" data-id="ck3o7kufe000t28l9u0m8a3ad" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/prometheus/" data-id="ck483rbu800102xl9ped7jrc7" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/监控/">监控</a></li></ul>
@@ -581,7 +625,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/k8s-notes/" data-id="ck3o7kuf5000i28l98c8aj750" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/k8s-notes/" data-id="ck483rbtv000k2xl9a1z2q043" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
@@ -641,7 +685,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/microk8/" data-id="ck3o7kuf8000l28l9qex8anxd" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/microk8/" data-id="ck483rbtx000l2xl93mwrt66f" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/microk8s/">microk8s</a></li></ul>
@@ -653,59 +697,10 @@
 
 
   
-    <article id="post-k8s-introduction" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/01/k8s-introduction/" class="article-date">
-  <time datetime="2019-01-31T00:00:00.000Z" itemprop="datePublished">2019-01-31</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/k8s-introduction/">k8s 介绍</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="Kubernetes"><a href="#Kubernetes" class="headerlink" title="Kubernetes"></a>Kubernetes</h2><p>Kubernetes是一个开源的_用于管理云平台中多个主机上的容器化的应用_Kubernetes的目标是让部署容器化的应用简单并且高效<em>powerful__Kubernetes提供了应用部署</em>规划_更新_维护的一种机制</p>
-<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p><img src="/img/k8s/1.png" alt="image"></p>
-<p>集群中的机器划分为一个Master 节点和一群工作节点(Node)</p>
-<p>Master 节点，由三个紧密协作的独立组件组合而成，它们分别是负责 API 服务的 <strong>kube-apiserver</strong>、负责调度的 <strong>kube-scheduler</strong>，以及负责容器编排的 <strong>kube-controller-manager</strong>。整个集群的持久化数据，则由 kube-apiserver 处理后保存在 <strong>Ectd</strong> 中。</p>
-<p>node上运行着 kubelet、kube-proxy服务进程，负责pod的创建、启动、监控、重启、销毁、以及实现软件模式的负载均衡器。</p>
-<p>在 Kubernetes 项目中，kubelet 主要负责同容器运行时（比如 Docker 项目）打交道，只要你的这个容器运行时能够运行标准的容器镜像，它就可以通过实现 <strong>CRI</strong> 接入到 Kubernetes 项目当中。(比如 rkt)</p>
-<p>而kubelet 的另一个重要功能，则是调用网络插件和存储插件为容器配置网络和持久化存储。<br>
-        
-          <p class="article-more-link">
-            <a href="/2019/01/k8s-introduction/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/01/k8s-introduction/" data-id="ck3o7kuf0000d28l9mxretdpt" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
-    <a class="extend prev" rel="prev" href="/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">__('next') &raquo;</a>
   </nav>
 </section>
         
@@ -718,7 +713,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/b树/">b树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/charts/">charts</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coredns/">coredns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gogs/">gogs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/">grafana</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/">helm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/laravel/">laravel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ldap/">ldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loki/">loki</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/microk8s/">microk8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openldap/">openldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openresty/">openresty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/promtal/">promtal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/报警/">报警</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控/">监控</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/b树/">b树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/charts/">charts</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse/">clickhouse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coredns/">coredns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gogs/">gogs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/">grafana</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/">helm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/laravel/">laravel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ldap/">ldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loki/">loki</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/microk8s/">microk8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openldap/">openldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openresty/">openresty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/promtal/">promtal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/报警/">报警</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控/">监控</a></li></ul>
     </div>
   </div>
 
@@ -728,7 +723,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/b树/" style="font-size: 10px;">b树</a> <a href="/tags/charts/" style="font-size: 10px;">charts</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 10px;">jenkins</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/laravel/" style="font-size: 10px;">laravel</a> <a href="/tags/ldap/" style="font-size: 10px;">ldap</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/loki/" style="font-size: 12.5px;">loki</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/pipeline/" style="font-size: 10px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 12.5px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a>
+      <a href="/tags/b树/" style="font-size: 10px;">b树</a> <a href="/tags/charts/" style="font-size: 10px;">charts</a> <a href="/tags/clickhouse/" style="font-size: 10px;">clickhouse</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 10px;">jenkins</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/laravel/" style="font-size: 10px;">laravel</a> <a href="/tags/ldap/" style="font-size: 10px;">ldap</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/loki/" style="font-size: 12.5px;">loki</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/pipeline/" style="font-size: 10px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 12.5px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a>
     </div>
   </div>
 
@@ -737,7 +732,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
     </div>
   </div>
 
@@ -748,6 +743,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/12/clickhouse/">ClickHouse 入门笔记</a>
+          </li>
         
           <li>
             <a href="/2019/11/ldap-pbkdf2/">迁移gogs用户到openldap</a>
@@ -763,10 +762,6 @@
         
           <li>
             <a href="/2019/11/k8s-migration-1/"> 测试服务迁移k8s集群记录 (一)</a>
-          </li>
-        
-          <li>
-            <a href="/2019/10/hexo/">使用hexo管理博客</a>
           </li>
         
       </ul>

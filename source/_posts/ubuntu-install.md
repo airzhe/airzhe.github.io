@@ -52,7 +52,6 @@ https://github.com/tomaspinho/rtl8821ce
 - chrome
 - [Nutstore](https://www.jianguoyun.com/)  #坚果网盘 导入备份数据
 - [google 拼音](https://ywnz.com/linuxjc/2891.html) 
-- [phpstorm](https://www.jetbrains.com/phpstorm/)
 - sublime
 - vim
 - git 别名设置
@@ -60,7 +59,8 @@ https://github.com/tomaspinho/rtl8821ce
 - docker.io
 - postman
 - gimp
-
+- bleachbit
+- vsCode
 
 ![1.png](/img/ubuntu/1.png)
 
