@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Runner的小站">
 <meta property="og:description" content="k8s 容器出现大量 Evicted 1234567891011$kubectl describe node/runner-e480Normal   NodeHasNoDiskPressure    6m19s (x8 over 6m19s)  kubelet, runner-e480     Node runner-e480 status is now: NodeHasNoDiskPressur">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-11-14T03:42:15.150Z">
+<meta property="og:updated_time" content="2019-12-17T07:36:17.737Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="k8s 笔记">
 <meta name="twitter:description" content="k8s 容器出现大量 Evicted 1234567891011$kubectl describe node/runner-e480Normal   NodeHasNoDiskPressure    6m19s (x8 over 6m19s)  kubelet, runner-e480     Node runner-e480 status is now: NodeHasNoDiskPressur">
@@ -116,11 +116,16 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://stackoverflow.com/questions/47770676/how-to-create-a-kubectl-config-file-for-serviceaccount</span><br></pre></td></tr></table></figure>
 <p><strong>create-kubectl-by-user</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://docs.bitnami.com/kubernetes/how-to/configure-rbac-in-your-kubernetes-cluster/</span><br></pre></td></tr></table></figure>
+<p><strong>同一个service开2个端口</strong></p>
+<p>一般我们只有一个端口的时候，在service的yaml文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ports:</span><br><span class="line">  - nodePort: 8482</span><br><span class="line">    port: 8080</span><br><span class="line">    protocol: TCP</span><br><span class="line">    targetPort: 8080</span><br></pre></td></tr></table></figure>
+<p>而如果你想开两个端口，直接复制粘贴可不行，k8s会提示你必须要加上name。所以,如果要开多端口，要为每个port都指定一个name，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ports:</span><br><span class="line">  - name: http</span><br><span class="line">    nodePort: 8482</span><br><span class="line">    port: 8080</span><br><span class="line">    protocol: TCP</span><br><span class="line">    targetPort: 8080</span><br></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/k8s-notes/" data-id="ck484h4k5000k3sl9ildec6cl" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/k8s-notes/" data-id="ck4dya1m5000o0ol90ley45jq" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
