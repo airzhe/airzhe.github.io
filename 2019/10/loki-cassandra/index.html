@@ -3,15 +3,20 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>Tag: charts | Runner的小站</title>
+  <title>loki使用cassandra作存储 | Runner的小站</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Runner的小站">
-<meta property="og:url" content="http://airzhe.github.io/tags/charts/index.html">
+  <meta name="description" content="cassandra 配置开启帐号密码认证 打开 cassandra.yaml 文件并且搜索 authenticator 关键词，将 authenticator:AllowAllAuthenticator，改成 authenticator:PasswordAuthenticator。测试默认帐号密码认证： 1cqlsh –u cassandra –p cassandra 修改loki配置 12345">
+<meta name="keywords" content="loki,cassandra">
+<meta property="og:type" content="article">
+<meta property="og:title" content="loki使用cassandra作存储">
+<meta property="og:url" content="http://airzhe.github.io/2019/10/loki-cassandra/index.html">
 <meta property="og:site_name" content="Runner的小站">
+<meta property="og:description" content="cassandra 配置开启帐号密码认证 打开 cassandra.yaml 文件并且搜索 authenticator 关键词，将 authenticator:AllowAllAuthenticator，改成 authenticator:PasswordAuthenticator。测试默认帐号密码认证： 1cqlsh –u cassandra –p cassandra 修改loki配置 12345">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-12-23T11:24:04.378Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Runner的小站">
+<meta name="twitter:title" content="loki使用cassandra作存储">
+<meta name="twitter:description" content="cassandra 配置开启帐号密码认证 打开 cassandra.yaml 文件并且搜索 authenticator 关键词，将 authenticator:AllowAllAuthenticator，改成 authenticator:PasswordAuthenticator。测试默认帐号密码认证： 1cqlsh –u cassandra –p cassandra 修改loki配置 12345">
   
     <link rel="alternate" href="/atom.xml" title="Runner的小站" type="application/atom+xml">
   
@@ -60,39 +65,72 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2019/10/helm/" class="archive-article-date">
-  <time datetime="2019-10-16T17:35:10.000Z" itemprop="datePublished">Oct 16</time>
+        <section id="main"><article id="post-loki-cassandra" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/loki-cassandra/" class="article-date">
+  <time datetime="2019-10-23T16:09:10.000Z" itemprop="datePublished">2019-10-23</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/helm/">helm 命令介绍及使用</a>
+    <h1 class="article-title" itemprop="name">
+      loki使用cassandra作存储
     </h1>
   
 
-    </header>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>cassandra 配置开启帐号密码认证</strong></p>
+<p>打开 <code>cassandra.yaml</code> 文件并且搜索 <code>authenticator</code> 关键词，将 <code>authenticator:AllowAllAuthenticator</code>，改成 <code>authenticator:PasswordAuthenticator</code>。测试默认帐号密码认证：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cqlsh –u cassandra –p cassandra</span><br></pre></td></tr></table></figure>
+<p><strong>修改loki配置</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">schema_config:</span><br><span class="line">  configs:</span><br><span class="line">  - from: 2018-04-15</span><br><span class="line">    store: cassandra</span><br><span class="line">    object_store: filesystem</span><br><span class="line">    schema: v9</span><br><span class="line">    index:</span><br><span class="line">      prefix: cassandra_table</span><br><span class="line">      period: 168h</span><br><span class="line">storage_config:</span><br><span class="line">  cassandra:</span><br><span class="line">    username: cassandra</span><br><span class="line">    password: cassandra</span><br><span class="line">    addresses: cassandra.kube-public #不需要配置端口，日志显示链接9042端口</span><br><span class="line">    auth: true</span><br><span class="line">    keyspace: lokiindex</span><br><span class="line">  filesystem:</span><br><span class="line">    directory: /data/loki/chunks #注意此处的数据也要保持，重启loki加载历史数据时会用到</span><br></pre></td></tr></table></figure>
+<p><strong>启动服务，cqlsh 查询</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">describe tables;</span><br><span class="line">use lokiindex;</span><br><span class="line">describe table cassandra_table2589;</span><br></pre></td></tr></table></figure>
+<p>参考资料：</p>
+<p><a href="https://www.ibm.com/developerworks/cn/opensource/os-cn-apache-cassandra3x5/index.html" target="_blank" rel="noopener">https://www.ibm.com/developerworks/cn/opensource/os-cn-apache-cassandra3x5/index.html</a></p>
+<p><a href="https://github.com/grafana/loki/blob/904bf2fcc9a0357c961893b72c2e28f3aa2146a9/docs/configuration/examples.md" target="_blank" rel="noopener">https://github.com/grafana/loki/blob/904bf2fcc9a0357c961893b72c2e28f3aa2146a9/docs/configuration/examples.md</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/10/loki-cassandra/" data-id="ck4icrpjd000k16l9748tqwe9" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li></ul>
+
+    </footer>
   </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/10/hexo/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          使用hexo管理博客
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/10/grafana-variables/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">grafana 模板变量配置</div>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-  
-    </div></section>
-  
 
 </section>
         

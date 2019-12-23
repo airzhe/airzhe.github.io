@@ -3,11 +3,11 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>Tag: charts | Runner的小站</title>
+  <title>Runner的小站</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta property="og:type" content="website">
 <meta property="og:title" content="Runner的小站">
-<meta property="og:url" content="http://airzhe.github.io/tags/charts/index.html">
+<meta property="og:url" content="http://airzhe.github.io/page/3/index.html">
 <meta property="og:site_name" content="Runner的小站">
 <meta property="og:locale" content="default">
 <meta name="twitter:card" content="summary">
@@ -62,38 +62,60 @@
       <div class="outer">
         <section id="main">
   
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2019/10/helm/" class="archive-article-date">
-  <time datetime="2019-10-16T17:35:10.000Z" itemprop="datePublished">Oct 16</time>
+    <article id="post-k8s-introduction" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/k8s-introduction/" class="article-date">
+  <time datetime="2019-01-31T00:00:00.000Z" itemprop="datePublished">2019-01-31</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
     <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/helm/">helm 命令介绍及使用</a>
+      <a class="article-title" href="/2019/01/k8s-introduction/">k8s 介绍</a>
     </h1>
   
 
-    </header>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Kubernetes"><a href="#Kubernetes" class="headerlink" title="Kubernetes"></a>Kubernetes</h2><p>Kubernetes是一个开源的_用于管理云平台中多个主机上的容器化的应用_Kubernetes的目标是让部署容器化的应用简单并且高效<em>powerful__Kubernetes提供了应用部署</em>规划_更新_维护的一种机制</p>
+<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p><img src="/img/k8s/1.png" alt="image"></p>
+<p>集群中的机器划分为一个Master 节点和一群工作节点(Node)</p>
+<p>Master 节点，由三个紧密协作的独立组件组合而成，它们分别是负责 API 服务的 <strong>kube-apiserver</strong>、负责调度的 <strong>kube-scheduler</strong>，以及负责容器编排的 <strong>kube-controller-manager</strong>。整个集群的持久化数据，则由 kube-apiserver 处理后保存在 <strong>Ectd</strong> 中。</p>
+<p>node上运行着 kubelet、kube-proxy服务进程，负责pod的创建、启动、监控、重启、销毁、以及实现软件模式的负载均衡器。</p>
+<p>在 Kubernetes 项目中，kubelet 主要负责同容器运行时（比如 Docker 项目）打交道，只要你的这个容器运行时能够运行标准的容器镜像，它就可以通过实现 <strong>CRI</strong> 接入到 Kubernetes 项目当中。(比如 rkt)</p>
+<p>而kubelet 的另一个重要功能，则是调用网络插件和存储插件为容器配置网络和持久化存储。<br>
+        
+          <p class="article-more-link">
+            <a href="/2019/01/k8s-introduction/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/01/k8s-introduction/" data-id="ck4icrpkh000z16l939d9tcht" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
+
+    </footer>
   </div>
+  
 </article>
-  
-  
-    </div></section>
+
+
   
 
+
+  <nav id="page-nav">
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+  </nav>
 </section>
         
           <aside id="sidebar">
