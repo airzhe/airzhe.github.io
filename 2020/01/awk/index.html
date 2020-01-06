@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>使用awk处理csv文件 | Runner的小站</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="上周有个处理对账单的需求，从微信、招行下载每天的对账单，然后把订单号转成数据库里对应的商城单号，需求比较简单，打算用 shell 命令来写。 首先考虑了 join 命令，实现左连接、内连接都是没有问题的。 12345678910111213141516171819$ cat 1.csv No,Con1,aaa2,bbb5,ccc$ cat 2.csvNo,S_id1,0005555,0001113">
+<meta name="keywords" content="awk,csv">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用awk处理csv文件">
+<meta property="og:url" content="http://airzhe.github.io/2020/01/awk/index.html">
+<meta property="og:site_name" content="Runner的小站">
+<meta property="og:description" content="上周有个处理对账单的需求，从微信、招行下载每天的对账单，然后把订单号转成数据库里对应的商城单号，需求比较简单，打算用 shell 命令来写。 首先考虑了 join 命令，实现左连接、内连接都是没有问题的。 12345678910111213141516171819$ cat 1.csv No,Con1,aaa2,bbb5,ccc$ cat 2.csvNo,S_id1,0005555,0001113">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-01-06T07:02:38.641Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用awk处理csv文件">
+<meta name="twitter:description" content="上周有个处理对账单的需求，从微信、招行下载每天的对账单，然后把订单号转成数据库里对应的商城单号，需求比较简单，打算用 shell 命令来写。 首先考虑了 join 命令，实现左连接、内连接都是没有问题的。 12345678910111213141516171819$ cat 1.csv No,Con1,aaa2,bbb5,ccc$ cat 2.csvNo,S_id1,0005555,0001113">
+  
+    <link rel="alternate" href="/atom.xml" title="Runner的小站" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Runner的小站</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://airzhe.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-awk" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/awk/" class="article-date">
+  <time datetime="2020-01-06T15:00:00.000Z" itemprop="datePublished">2020-01-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      使用awk处理csv文件
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>上周有个处理对账单的需求，从微信、招行下载每天的对账单，然后把订单号转成数据库里对应的商城单号，需求比较简单，打算用 shell 命令来写。</p>
+<p>首先考虑了 join 命令，实现左连接、内连接都是没有问题的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ cat 1.csv </span><br><span class="line">No,Con</span><br><span class="line">1,aaa</span><br><span class="line">2,bbb</span><br><span class="line">5,ccc</span><br><span class="line"></span><br><span class="line">$ cat 2.csv</span><br><span class="line">No,S_id</span><br><span class="line">1,000555</span><br><span class="line">5,000111</span><br><span class="line">3,000333</span><br><span class="line">8,000111</span><br><span class="line"></span><br><span class="line"># 对1.csv、2.csv排序，使用逗号作为分隔符，用两个文件的第一列，跳过header，-a左连接。</span><br><span class="line">$ join -t, -1 1 -2 1 -a 1 --header --nocheck-order &lt;(sort -k 1 -n 1.csv) &lt;(sort -k 1 -n 2.csv) </span><br><span class="line">No,Con,S_id</span><br><span class="line">1,aaa,000555</span><br><span class="line">2,bbb</span><br><span class="line">5,ccc,000111</span><br></pre></td></tr></table></figure>
+<p>上面结果No = 2时后面没有补充逗号，而且格式化各列还需要 awk 再处理下，于是搜了下使用 awk 来实现 join<br><a id="more"></a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">head 1.csv 2.csv </span><br><span class="line">==&gt; 1.csv &lt;==</span><br><span class="line">1,aaa,,</span><br><span class="line">2,bbb,,</span><br><span class="line">5,ccc,r1,rrrr</span><br><span class="line"></span><br><span class="line">==&gt; 2.csv &lt;==</span><br><span class="line">1,000111</span><br><span class="line">5,000555</span><br><span class="line">3,000333</span><br><span class="line">8,000111</span><br><span class="line">r1,XXXR1</span><br><span class="line"></span><br><span class="line"># FNR == NR 第一个文件时用第一列作数组 a 的下标，后面根据第二个文件的第一列是否在数组中，来则替换为对应的 value，循环+数组，感觉可以搞定一切.</span><br><span class="line">awk &apos;BEGIN &#123;</span><br><span class="line">    FS = OFS = &quot;,&quot;;</span><br><span class="line">&#125;</span><br><span class="line">FNR == NR&#123;</span><br><span class="line">  	a[$1] = $2;</span><br><span class="line">  	next </span><br><span class="line">&#125;</span><br><span class="line">&#123;</span><br><span class="line">	shop_id = $1;</span><br><span class="line">	refund_id = $3;</span><br><span class="line">	if ($1 in a) &#123;</span><br><span class="line">		shop_id = a[$1]</span><br><span class="line">	&#125;;</span><br><span class="line">	if ($3 in a) &#123;</span><br><span class="line">		refund_id=a[$3]</span><br><span class="line">	&#125;;</span><br><span class="line">	print shop_id&quot;,&quot;$2&quot;,&quot;refund_id&quot;,&quot;$4</span><br><span class="line">&#125;&apos; 2.csv 1.csv</span><br></pre></td></tr></table></figure>
+<p><strong>生产使用</strong> 其中 {} 里的为 php 变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">#列筛选</span><br><span class="line">awk &apos;BEGIN &#123;</span><br><span class="line">    FS = OFS = &quot;,&quot;;</span><br><span class="line">&#125;</span><br><span class="line">&#123;</span><br><span class="line">    #清除列末尾空格</span><br><span class="line">    gsub(/[ ]+$/, &quot;&quot;, $18);</span><br><span class="line">    #字符串链接</span><br><span class="line">    $3  = (&quot;&#123;$date&#125; &quot;$3);</span><br><span class="line">    #负数转正</span><br><span class="line">    $16 = ($16 &gt; 0) ? $16 :(-1) * $16;</span><br><span class="line">    $26 = ($26 &gt; 0) ? $26 :(-1) * $26;</span><br><span class="line">    trade_no = $10 ; refund_no = &quot;&quot;;</span><br><span class="line">    if ($23 == &quot;退款&quot;) &#123;</span><br><span class="line">        #获取对应的支付中心单号</span><br><span class="line">        refund_no = trade_no;</span><br><span class="line">        trade_no = &quot;&quot;;</span><br><span class="line">        $23 = &quot;REFUND&quot;;</span><br><span class="line">        $38 = ($38 == &quot;S&quot; ? &quot;SUCCESS&quot; : $38);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        $23 = &quot;SUCCESS&quot;;</span><br><span class="line">        $38 = &quot;&quot;;</span><br><span class="line">    &#125;;</span><br><span class="line">    #支付中心单号放最后面</span><br><span class="line">    printf &quot;%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\\n&quot;,</span><br><span class="line">    $3,$4,$5,$8,&quot;&quot;,&quot;JSAPI&quot;,$23,$16,$24,&quot;&quot;,$26,$38,$27,$17,$18,trade_no,refund_no</span><br><span class="line">&#125;&apos; &#123;$billFile&#125; \</span><br><span class="line">| sed &apos;1d;N;\$d;P;D&apos; &gt; &#123;$tmpFile&#125;</span><br><span class="line"></span><br><span class="line">#join 多个文件,通过 FNR==1 第一行时 &#123;f++&#125; 来判断是第几个文件</span><br><span class="line">awk &apos;BEGIN &#123;</span><br><span class="line">    FS = OFS =&quot;,&quot;;</span><br><span class="line">    printf &quot;%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\\n&quot;,</span><br><span class="line">    &quot;交易时间&quot;,&quot;公众账号ID&quot;,&quot;商户号&quot;,&quot;招行订单号&quot;,&quot;商城订单id&quot;,&quot;交易类型&quot;,&quot;交易状态&quot;,&quot;应结订单金额&quot;,&quot;招行退款单号&quot;,&quot;商城退单号&quot;,&quot;退款金额&quot;,&quot;退款状态&quot;,&quot;商品名称&quot;,&quot;手续费&quot;,&quot;费率&quot;,&quot;支付中心订单号&quot;,&quot;支付中心退单号&quot;</span><br><span class="line">&#125;</span><br><span class="line">FNR == 1 &#123; </span><br><span class="line">    f++</span><br><span class="line">&#125; </span><br><span class="line">f == 1 &#123; </span><br><span class="line">    rno2tno[$1] = $2;</span><br><span class="line">    next</span><br><span class="line">&#125;</span><br><span class="line">f == 2 &#123; </span><br><span class="line">    no2id[$1] = $2;</span><br><span class="line">    next</span><br><span class="line">&#125;</span><br><span class="line">&#123;    </span><br><span class="line">    refund_no = $17;</span><br><span class="line">    #根据refund_no取trade_no做兼容</span><br><span class="line">    if (refund_no in rno2tno) &#123;</span><br><span class="line">        $16 = rno2tno[refund_no]</span><br><span class="line">    &#125;</span><br><span class="line">    trade_no = $16;</span><br><span class="line">    if (trade_no in no2id) &#123;</span><br><span class="line">        $5 = no2id[trade_no]</span><br><span class="line">    &#125;;</span><br><span class="line">    if (refund_no in no2id) &#123;</span><br><span class="line">        $10 = no2id[refund_no]</span><br><span class="line">    &#125;;</span><br><span class="line">    print $0</span><br><span class="line">&#125;&apos; &#123;$refundTradeMappingFile&#125; &#123;$mappingFile&#125; &#123;$tmpFile&#125; &gt; &#123;$targetFile&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>其他的一些命令</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cut -f1,3,6,7,9,10,13,15-17,19-21,23-26 -d&quot;,&quot; wx-20191221.csv &gt; a.csv #使用cut来选择列</span><br><span class="line">sed &apos;1d;N;$d;P;D&apos; a.csv #删除第一行和最后两行</span><br></pre></td></tr></table></figure>
+<p><strong>使用 GuzzleHttp\Client 来存储文件</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$client</span> = new \GuzzleHttp\Client();</span><br><span class="line"><span class="comment">#$params[\GuzzleHttp\RequestOptions::TIMEOUT] = -1; 不能设置超时时间</span></span><br><span class="line"><span class="variable">$params</span>[<span class="string">'sink'</span>] = <span class="string">'/path/to/file'</span>;</span><br><span class="line"><span class="variable">$response</span> = <span class="variable">$client</span>-&gt;request(<span class="variable">$method</span>, <span class="variable">$url</span>, <span class="variable">$params</span>);</span><br></pre></td></tr></table></figure>
+<p>参考:</p>
+<p><a href="https://stackoverflow.com/questions/42443801/how-to-join-3-files-using-awk" target="_blank" rel="noopener">https://stackoverflow.com/questions/42443801/how-to-join-3-files-using-awk</a></p>
+<p><a href="https://stackoverflow.com/questions/27600967/merge-csv-files-using-join-awk-sed" target="_blank" rel="noopener">https://stackoverflow.com/questions/27600967/merge-csv-files-using-join-awk-sed</a></p>
+<p><a href="http://docs.guzzlephp.org/en/stable/request-options.html#sink" target="_blank" rel="noopener">http://docs.guzzlephp.org/en/stable/request-options.html#sink</a></p>
+<p><a href="https://github.com/dilshod/xlsx2csv" target="_blank" rel="noopener">https://github.com/dilshod/xlsx2csv</a> </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="ck523mbv500000vl9acozcbt6" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/awk/">awk</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/csv/">csv</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/12/loki-cassandra/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">loki使用cassandra作存储</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/b树/">b树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/charts/">charts</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse/">clickhouse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coredns/">coredns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/csv/">csv</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gogs/">gogs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/">grafana</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/">helm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ldap/">ldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loki/">loki</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/microk8s/">microk8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openldap/">openldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openresty/">openresty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/promtal/">promtal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/报警/">报警</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控/">监控</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/b树/" style="font-size: 10px;">b树</a> <a href="/tags/cassandra/" style="font-size: 10px;">cassandra</a> <a href="/tags/charts/" style="font-size: 10px;">charts</a> <a href="/tags/clickhouse/" style="font-size: 10px;">clickhouse</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/csv/" style="font-size: 10px;">csv</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 10px;">jenkins</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/ldap/" style="font-size: 10px;">ldap</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/loki/" style="font-size: 15px;">loki</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/pipeline/" style="font-size: 10px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 12.5px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/01/awk/">使用awk处理csv文件</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/loki-cassandra/">loki使用cassandra作存储</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/clickhouse/">ClickHouse 入门笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/ldap-pbkdf2/">迁移gogs用户到openldap</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/ubuntu-install/">ubuntu18.04安装</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 air_zhe@163.com<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
