@@ -408,3 +408,25 @@ https://docs.bitnami.com/kubernetes/how-to/configure-rbac-in-your-kubernetes-clu
 
 
 
+**同一个service开2个端口**
+
+一般我们只有一个端口的时候，在service的yaml文件：
+
+```
+ports:
+  - nodePort: 8482
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+```
+
+而如果你想开两个端口，直接复制粘贴可不行，k8s会提示你必须要加上name。所以,如果要开多端口，要为每个port都指定一个name，如：
+
+```
+ports:
+  - name: http
+    nodePort: 8482
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+```

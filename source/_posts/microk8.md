@@ -56,7 +56,7 @@ persistentVolume
 
 ```
 $ microk8s.enable dashboard dns metrics-server registry istio
-$ microk8s.ctr -n k8s.io images pull docker.io/grafana/grafana:6.4.4
+$ microk8s.ctr -n k8s.io images pull docker.io/library/cassandra:latest
 $ microk8s.ctr -n k8s.io images rm docker.io/kubernetesui/dashboard:v2.0.0-beta4 --sync
 $ microk8s.ctr -n k8s.io images ls | grep -v @sha256 | awk '{print $1,$4$5}'
 ```

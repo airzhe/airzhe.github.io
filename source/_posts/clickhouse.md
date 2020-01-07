@@ -267,6 +267,15 @@ FROM mysql('172.16.200.4:3306', 'soa_behavior', 'order_behavior_log', 'root', 'p
 GROUP BY data1
 ```
 
+**跳过错误** (忽略csv标题行)
+
+```
+clickhouse-client --input_format_allow_errors_num=1 \
+--input_format_allow_errors_ratio=0.1 \
+--query="INSERT INTO bill SELECT *
+FROM url('http://payment-hotfix-duizhangdan.t1.nicetuan.net/order/downloadbill?bill_date=20200106&agg_platform=wx', CSV, 'created_date DateTime, wx_app_id String , mch_id String, order_id String , shop_order_id String, trade_type String, trade_status String, total_fee Float64 , refund_id String, shop_refund_id String ,refund_fee  Float64, refund_status String, goods_name String, fees Float64, rates String , trade_no String , refund_no String')"
+```
+
 **分布式**
 
 ```

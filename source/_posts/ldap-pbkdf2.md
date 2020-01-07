@@ -83,7 +83,7 @@ $ slappasswd -o module-load=pw-pbkdf2.la -h {PBKDF2-SHA256} -s secret123
 执行如下 ldapsearch 命令，有返回，没有提示验证错误，说明我们的支持 pw-pbkdf2 加密的 ldap 已经搭起来了 :)
 
 ```
-$ ldapsearch -x -D 'cn=root,dc=youhaodongxi,dc=com' -w 'YHDX123.com'
+$ ldapsearch -x -D 'cn=root,dc=youhaodongxi,dc=com' -w 'secret123'
 # extended LDIF
 #
 # LDAPv3
