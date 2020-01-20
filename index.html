@@ -62,6 +62,53 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-docker-web-shell-1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/docker-web-shell-1/" class="article-date">
+  <time datetime="2020-01-20T14:17:10.000Z" itemprop="datePublished">2020-01-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/01/docker-web-shell-1/">Docker web shell 实现一</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>通过 docker 原生 接口 <a href="https://docs.docker.com/engine/api/v1.30/#operation/ContainerAttach" target="_blank" rel="noopener">Attach to a container via a websocket</a> 实现</strong></p>
+<p>首先开启 Remote API 访问 2375 端口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># vim /usr/lib/systemd/system/docker.service</span><br><span class="line">[Service]</span><br><span class="line">ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix://var/run/docker.sock</span><br><span class="line"></span><br><span class="line"># curl 0.0.0.0:2375</span><br><span class="line">&#123;&quot;message&quot;:&quot;page not found&quot;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>启动容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd --name alpine alpine /bin/sh</span><br></pre></td></tr></table></figure>
+<p>前端网页代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line"></span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;Docker Web Shell&lt;/title&gt;</span><br><span class="line">    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.bootcss.com/xterm/3.14.5/xterm.css&quot; /&gt;</span><br><span class="line">    &lt;script src=&quot;https://cdn.bootcss.com/xterm/3.14.5/xterm.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;div id=&quot;container-terminal&quot;&gt;&lt;/div&gt;</span><br><span class="line">    &lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">        body &#123;</span><br><span class="line">            width: 100%;</span><br><span class="line">            height: 100%;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        #container-terminal &#123;</span><br><span class="line">            width: 100%;</span><br><span class="line">            height: 100%;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        .terminal &#123;</span><br><span class="line">            height: 100%;</span><br><span class="line">            width: 100%;</span><br><span class="line">            font-size: 18px;</span><br><span class="line">        &#125;</span><br><span class="line">    &lt;/style&gt;</span><br><span class="line">    &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">        var term;</span><br><span class="line">        var url = &quot;ws://0.0.0.0:2375/containers/alpine/attach/ws?stream=1&amp;stdout=1&quot;;</span><br><span class="line">        xterm = new Terminal(&#123;</span><br><span class="line">            rows: 38,</span><br><span class="line">            cursorBlink: true</span><br><span class="line">        &#125;);</span><br><span class="line">        ws = new WebSocket(url);</span><br><span class="line">        ws.binaryType = &apos;arraybuffer&apos;;</span><br><span class="line">        xterm.on(&apos;data&apos;, function (data) &#123;</span><br><span class="line">            ws.send(data);</span><br><span class="line">        &#125;);</span><br><span class="line">        xterm.open(document.getElementById(&quot;container-terminal&quot;), true);</span><br><span class="line">        ws.onopen = function () &#123;</span><br><span class="line">            console.log(&apos;ws connected&apos;);</span><br><span class="line">            ws.send(&quot;\n&quot;);</span><br><span class="line">        &#125;;</span><br><span class="line">        ws.onerror = function () &#123;</span><br><span class="line">            console.log(&apos;ws error&apos;);</span><br><span class="line">        &#125;;</span><br><span class="line">        ws.onclose = function () &#123;</span><br><span class="line">            xterm.writeln(&apos;socket已断开连接，请重连&apos;)</span><br><span class="line">            console.log(&apos;ws closed&apos;);</span><br><span class="line">        &#125;;</span><br><span class="line">        ws.onmessage = function (evt) &#123;</span><br><span class="line">            console.log(evt.data);</span><br><span class="line">            var decoder = new TextDecoder(&apos;utf-8&apos;);</span><br><span class="line">            var data = decoder.decode(evt.data);</span><br><span class="line">            xterm.write(data);</span><br><span class="line">        &#125;;</span><br><span class="line">    &lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>效果图:</p>
+<p><img src="/img/docker/ws1.png" alt></p>
+<p>上面的方式是通过 attach 方式连接到容器内，优点是原生接口、简单，缺点是1号进程必须是 shell 命令，无权限验证功能，后面介绍另外一种方式，满足多用户同时操作，可以添加权限验证。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="ck5m5a42q000522l9zu38moj6" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-angular-js" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/01/angular-js/" class="article-date">
@@ -109,10 +156,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ck5ke3md200000ll9kpctf6rx" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ck5m5a42c000022l9mp3ruqyz" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angular/">angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/js/">js</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angular-js/">angular js</a></li></ul>
 
     </footer>
   </div>
@@ -155,10 +202,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="ck5ke3md800010ll9zj6lhitj" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="ck5m5a42h000122l94k53qtjx" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/awk/">awk</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/csv/">csv</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/awk/">awk</a></li></ul>
 
     </footer>
   </div>
@@ -203,7 +250,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/loki-cassandra/" data-id="ck5ke3me2000p0ll91x3rq28j" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/loki-cassandra/" data-id="ck5m5a43c000r22l9ume34qen" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li></ul>
@@ -259,7 +306,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ck5ke3mde00040ll9q79xshza" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ck5m5a42u000922l96xqfa71v" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse/">clickhouse</a></li></ul>
@@ -308,10 +355,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ck5ke3me9000y0ll9r4qevrwp" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ck5m5a43e000t22l9sdft1shx" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gogs/">gogs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ldap/">ldap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openldap/">openldap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gogs/">gogs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openldap/">openldap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li></ul>
 
     </footer>
   </div>
@@ -372,7 +419,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ubuntu-install/" data-id="ck5ke3mec00110ll965u4lf0u" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/ubuntu-install/" data-id="ck5m5a43l001322l9ut558mq5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -418,7 +465,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ck5ke3mdn000a0ll9kiot1pzt" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ck5m5a431000f22l9zjasqofh" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li></ul>
@@ -495,7 +542,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/k8s-migration-1/" data-id="ck5ke3mdx000k0ll9f75e4sfr" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/k8s-migration-1/" data-id="ck5m5a43a000o22l9dntbu0xn" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
@@ -544,56 +591,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/hexo/" data-id="ck5ke3mdu000g0ll9es59e45e" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/hexo/" data-id="ck5m5a437000k22l905t52186" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-grafana-variables" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/10/grafana-variables/" class="article-date">
-  <time datetime="2019-10-22T20:23:10.000Z" itemprop="datePublished">2019-10-22</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/grafana-variables/">grafana 模板变量配置</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>重新安装了日志采集器，生成了所有日志文件的 metrics 统计信息，在 grafana 中显示如图，比较混乱</p>
-<p><img src="/img/grafana/1.png" alt="1.png"></p>
-<p>prometheus 中按标签查询结果，显示了该标签有多个查询结果</p>
-<p><img src="/img/grafana/2.png" alt="2.png"><br>
-        
-          <p class="article-more-link">
-            <a href="/2019/10/grafana-variables/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/grafana-variables/" data-id="ck5ke3mdp000c0ll9xh0jy7k4" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/promtal/">promtal</a></li></ul>
 
     </footer>
   </div>
@@ -618,7 +619,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/angular/">angular</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/b树/">b树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/charts/">charts</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse/">clickhouse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coredns/">coredns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/csv/">csv</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gogs/">gogs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/">grafana</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/">helm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js/">js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ldap/">ldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loki/">loki</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/microk8s/">microk8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openldap/">openldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openresty/">openresty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/promtal/">promtal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/报警/">报警</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控/">监控</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/angular-js/">angular js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/b树/">b树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse/">clickhouse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coredns/">coredns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gogs/">gogs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/">grafana</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/">helm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loki/">loki</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/microk8s/">microk8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openldap/">openldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openresty/">openresty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/promtal/">promtal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webshell/">webshell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/报警/">报警</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控/">监控</a></li></ul>
     </div>
   </div>
 
@@ -628,7 +629,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/angular/" style="font-size: 10px;">angular</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/b树/" style="font-size: 10px;">b树</a> <a href="/tags/cassandra/" style="font-size: 10px;">cassandra</a> <a href="/tags/charts/" style="font-size: 10px;">charts</a> <a href="/tags/clickhouse/" style="font-size: 10px;">clickhouse</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/csv/" style="font-size: 10px;">csv</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 10px;">jenkins</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/ldap/" style="font-size: 10px;">ldap</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/loki/" style="font-size: 15px;">loki</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/pipeline/" style="font-size: 10px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 12.5px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a>
+      <a href="/tags/angular-js/" style="font-size: 10px;">angular js</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/b树/" style="font-size: 10px;">b树</a> <a href="/tags/cassandra/" style="font-size: 10px;">cassandra</a> <a href="/tags/clickhouse/" style="font-size: 10px;">clickhouse</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 10px;">jenkins</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/loki/" style="font-size: 15px;">loki</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/pipeline/" style="font-size: 10px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 12.5px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/webshell/" style="font-size: 12.5px;">webshell</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a>
     </div>
   </div>
 
@@ -650,6 +651,10 @@
       <ul>
         
           <li>
+            <a href="/2020/01/docker-web-shell-1/">Docker web shell 实现一</a>
+          </li>
+        
+          <li>
             <a href="/2020/01/angular-js/">angular js 基本使用</a>
           </li>
         
@@ -663,10 +668,6 @@
         
           <li>
             <a href="/2019/12/clickhouse/">ClickHouse 入门笔记</a>
-          </li>
-        
-          <li>
-            <a href="/2019/11/ldap-pbkdf2/">迁移gogs用户到openldap</a>
           </li>
         
       </ul>

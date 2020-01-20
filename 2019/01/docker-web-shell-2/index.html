@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Docker web shell (二) | Runner的小站</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="通过 docke exec start 实现 webshell 首先调用 exec 接口 传入参数 1&amp;#123;&amp;quot;AttachStdin&amp;quot;:true,&amp;quot;AttachStdout&amp;quot;:true,&amp;quot;AttachStderr&amp;quot;:true,&amp;quot;Tty&amp;quot;:true,&amp;quot;Cmd&amp;quot;:[&amp;quot;/bin/sh&amp;qu">
+<meta name="keywords" content="docker,webshell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker web shell (二)">
+<meta property="og:url" content="http://airzhe.github.io/2019/01/docker-web-shell-2/index.html">
+<meta property="og:site_name" content="Runner的小站">
+<meta property="og:description" content="通过 docke exec start 实现 webshell 首先调用 exec 接口 传入参数 1&amp;#123;&amp;quot;AttachStdin&amp;quot;:true,&amp;quot;AttachStdout&amp;quot;:true,&amp;quot;AttachStderr&amp;quot;:true,&amp;quot;Tty&amp;quot;:true,&amp;quot;Cmd&amp;quot;:[&amp;quot;/bin/sh&amp;qu">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://airzhe.github.io/img/docker/ws2.png">
+<meta property="og:image" content="http://airzhe.github.io/img/docker/ws3.png">
+<meta property="og:updated_time" content="2020-01-20T07:42:50.350Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker web shell (二)">
+<meta name="twitter:description" content="通过 docke exec start 实现 webshell 首先调用 exec 接口 传入参数 1&amp;#123;&amp;quot;AttachStdin&amp;quot;:true,&amp;quot;AttachStdout&amp;quot;:true,&amp;quot;AttachStderr&amp;quot;:true,&amp;quot;Tty&amp;quot;:true,&amp;quot;Cmd&amp;quot;:[&amp;quot;/bin/sh&amp;qu">
+<meta name="twitter:image" content="http://airzhe.github.io/img/docker/ws2.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Runner的小站" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Runner的小站</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://airzhe.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-docker-web-shell-2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/docker-web-shell-2/" class="article-date">
+  <time datetime="2019-01-20T15:35:10.000Z" itemprop="datePublished">2019-01-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Docker web shell (二)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>通过 docke exec start 实现 webshell</strong></p>
+<p>首先调用 <a href="https://docs.docker.com/engine/api/v1.30/#tag/Exec" target="_blank" rel="noopener">exec</a> 接口 传入参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;AttachStdin&quot;:true,&quot;AttachStdout&quot;:true,&quot;AttachStderr&quot;:true,&quot;Tty&quot;:true,&quot;Cmd&quot;:[&quot;/bin/sh&quot;]&#125;</span><br></pre></td></tr></table></figure>
+<p>用返回的 id 请求 start 接口，返回为 application/vnd.docker.raw-stream流， 附加 post 参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;&#123;&quot;Detach&quot;:false,&quot;Tty&quot;:true&#125;&apos;</span><br></pre></td></tr></table></figure>
+<p>我们使用 go 代码来完成上面的操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	_ &quot;io&quot;</span><br><span class="line">	&quot;log&quot;</span><br><span class="line">	&quot;net&quot;</span><br><span class="line">	&quot;os&quot;</span><br><span class="line">	&quot;regexp&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">//发送信息</span><br><span class="line">func sender(conn net.Conn) &#123;</span><br><span class="line">	buffer := make([]byte, 1024)</span><br><span class="line"></span><br><span class="line">	exec_req := fmt.Sprintf(`POST /containers/%s/exec HTTP/1.1</span><br><span class="line">Host: 0.0.0.0:2375</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Content-Length: 91</span><br><span class="line"></span><br><span class="line">&#123;&quot;AttachStdin&quot;:true,&quot;AttachStdout&quot;:true,&quot;AttachStderr&quot;:true,&quot;Tty&quot;:true,&quot;Cmd&quot;:[&quot;/bin/sh&quot;]&#125;</span><br><span class="line"></span><br><span class="line">`, &quot;alpine&quot;)</span><br><span class="line">	conn.Write([]byte(exec_req))</span><br><span class="line"></span><br><span class="line">	n, err := conn.Read(buffer)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		//</span><br><span class="line">	&#125;</span><br><span class="line">	rep := string(buffer[:n])</span><br><span class="line"></span><br><span class="line">	Log(rep)</span><br><span class="line">	reg1 := regexp.MustCompile(`.*?&#123;&quot;Id&quot;:&quot;(.*?)&quot;`)</span><br><span class="line">	res := reg1.FindAllStringSubmatch(rep, -1)</span><br><span class="line">	s_id := res[0][1]</span><br><span class="line"></span><br><span class="line">	start_req := fmt.Sprintf(`POST /exec/%s/start HTTP/1.1</span><br><span class="line">Host: 0.0.0.0:2375</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Content-Length: 27</span><br><span class="line"></span><br><span class="line">&#123;&quot;Detach&quot;:false,&quot;Tty&quot;:true&#125;</span><br><span class="line"></span><br><span class="line">`, s_id)</span><br><span class="line"></span><br><span class="line">	conn.Write([]byte(start_req))</span><br><span class="line">	time.Sleep(time.Second)</span><br><span class="line">	conn.Write([]byte(&quot;ls -l\n&quot;))</span><br><span class="line">	Log(&quot;send over&quot;)</span><br><span class="line"></span><br><span class="line">	for &#123;</span><br><span class="line">		//接收服务端反馈</span><br><span class="line">		n, err := conn.Read(buffer)</span><br><span class="line">		if err != nil &#123;</span><br><span class="line">			Log(conn.RemoteAddr().String(), &quot;waiting server back msg error: &quot;, err)</span><br><span class="line">			return</span><br><span class="line">		&#125;</span><br><span class="line">		Log(conn.RemoteAddr().String(), &quot;receive server back msg: &quot;, string(buffer[:n]), n)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//日志</span><br><span class="line">func Log(v ...interface&#123;&#125;) &#123;</span><br><span class="line">	log.Println(v...)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	server := &quot;0.0.0.0:2375&quot;</span><br><span class="line">	tcpAddr, err := net.ResolveTCPAddr(&quot;tcp4&quot;, server)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Fprintf(os.Stderr, &quot;Fatal error: %s&quot;, err.Error())</span><br><span class="line">		os.Exit(1)</span><br><span class="line">	&#125;</span><br><span class="line">	conn, err := net.DialTCP(&quot;tcp&quot;, nil, tcpAddr)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Fprintf(os.Stderr, &quot;Fatal error: %s&quot;, err.Error())</span><br><span class="line">		os.Exit(1)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Println(&quot;connection success&quot;)</span><br><span class="line">	sender(conn)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>执行效果:</p>
+<p><img src="/img/docker/ws2.png" alt></p>
+<p>上面实现了通过 tcp 连接访问 docker shell 的效果，我们想要的是通过web 浏览器来访问，这里通过一个开源的项目 <a href="https://github.com/zxb19890727/websocket_agent" target="_blank" rel="noopener">websocket_agent</a>，可以把 tcp 协议转为 websocket 协议，这样通过浏览器，访问 websocket 服务就可以与 docker shell 交互.</p>
+<p>贴一下需要在文件 <code>websocket_transfer_tcp.go</code> 添加的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">232 buffer := make([]byte, 1024)</span><br><span class="line">233 var s_id string</span><br><span class="line">234 exec_req := fmt.Sprintf(`POST /containers/%s/exec HTTP/1.1</span><br><span class="line">235 Host: 0.0.0.0:2375</span><br><span class="line">236 Content-Type: application/json</span><br><span class="line">237 Cache-Control: no-cache</span><br><span class="line">238 Content-Length: 90</span><br><span class="line">239 </span><br><span class="line">240 &#123;&quot;AttachStdin&quot;:true,&quot;AttachStdout&quot;:true,&quot;AttachStderr&quot;:true,&quot;Tty&quot;:true,&quot;Cmd&quot;:[&quot;/bin/sh&quot;]&#125;</span><br><span class="line">241 </span><br><span class="line">242 `,self.Container)</span><br><span class="line">243 conn.Write([]byte(exec_req))</span><br><span class="line">244 </span><br><span class="line">245 n, err := conn.Read(buffer)</span><br><span class="line">246 if(err != nil)&#123;</span><br><span class="line">247 log.Print(&quot;exec interface error!&quot;)</span><br><span class="line">248 &#125;</span><br><span class="line">249 rep := string(buffer[:n])</span><br><span class="line">250 </span><br><span class="line">251 log.Print(rep)</span><br><span class="line">252 reg1 := regexp.MustCompile(`.*?&#123;&quot;Id&quot;:&quot;(.*?)&quot;`)</span><br><span class="line">253 res := reg1.FindAllStringSubmatch(rep, -1)</span><br><span class="line">254 if(len(res) !=0 &amp;&amp; res[0] != nil)&#123;</span><br><span class="line">255 s_id = res[0][1]</span><br><span class="line">256 &#125;</span><br><span class="line">257 </span><br><span class="line">258 start_req := fmt.Sprintf(`POST /exec/%s/start HTTP/1.1</span><br><span class="line">259 Host: 127.0.0.1:2375</span><br><span class="line">260 Content-Type: application/json</span><br><span class="line">261 Cache-Control: no-cache</span><br><span class="line">262 Content-Length: 27</span><br><span class="line">263 </span><br><span class="line">264 &#123;&quot;Detach&quot;:false,&quot;Tty&quot;:true&#125;</span><br><span class="line">265 </span><br><span class="line">266 `,s_id)</span><br><span class="line">267 </span><br><span class="line">268 conn.Write([]byte(start_req))</span><br><span class="line">269 time.Sleep(100*time.Millisecond)</span><br><span class="line">270 n, err = conn.Read(buffer)</span><br><span class="line">271 </span><br><span class="line">272 self.TcpConn = conn</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">285     reg1 := regexp.MustCompile(`/\?c=(.*?) `)</span><br><span class="line">286 </span><br><span class="line">287     for &#123;</span><br><span class="line"></span><br><span class="line">296         str = string(line)</span><br><span class="line">297         //获取容器名</span><br><span class="line">298         if(self.Container == &quot;&quot;)&#123;</span><br><span class="line">299             res := reg1.FindAllStringSubmatch(str, -1)</span><br><span class="line">300             if(len(res) !=0  &amp;&amp; res[0] != nil)&#123;</span><br><span class="line">301                 self.Container = res[0][1]</span><br><span class="line">302             &#125;</span><br><span class="line">303         &#125;</span><br><span class="line">304</span><br></pre></td></tr></table></figure>
+<p>然后执行<code>./websocket_transfer_tcp 8088 0.0.0.0:2375</code> ，通过 8088 端口代理 2375  端口</p>
+<p>前端代码: 通过参数来访问相应的容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line"></span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;Docker Web Shell&lt;/title&gt;</span><br><span class="line">    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.bootcss.com/xterm/3.14.5/xterm.css&quot; /&gt;</span><br><span class="line">    &lt;script src=&quot;https://cdn.bootcss.com/xterm/3.14.5/xterm.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;div id=&quot;container-terminal&quot;&gt;&lt;/div&gt;</span><br><span class="line">    &lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">        body &#123;</span><br><span class="line">            width: 100%;</span><br><span class="line">            height: 100%;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        #container-terminal &#123;</span><br><span class="line">            width: 100%;</span><br><span class="line">            height: 100%;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        .terminal &#123;</span><br><span class="line">            height: 100%;</span><br><span class="line">            width: 100%;</span><br><span class="line">            font-size: 18px;</span><br><span class="line">        &#125;</span><br><span class="line">    &lt;/style&gt;</span><br><span class="line">    &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">        var term;</span><br><span class="line">        var container = GetQueryString(&quot;c&quot;)</span><br><span class="line">        if (container == &quot;&quot; || container == null) &#123;</span><br><span class="line">            alert(&quot;参数错误!没有容器名称&quot;);</span><br><span class="line">            throw (&quot;error&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        var url = &quot;ws://127.0.0.1:8088?c=&quot; + container;</span><br><span class="line">        xterm = new Terminal(&#123;</span><br><span class="line">            rows: 38,</span><br><span class="line">            cursorBlink: true</span><br><span class="line">        &#125;);</span><br><span class="line">        ws = new WebSocket(url);</span><br><span class="line">        ws.binaryType = &apos;arraybuffer&apos;;</span><br><span class="line">        xterm.on(&apos;data&apos;, function (data) &#123;</span><br><span class="line">            ws.send(data);</span><br><span class="line">        &#125;);</span><br><span class="line">        xterm.open(document.getElementById(&quot;container-terminal&quot;), true);</span><br><span class="line">        ws.onopen = function () &#123;</span><br><span class="line">            console.log(&apos;ws connected&apos;);</span><br><span class="line">            xterm.writeln(&quot;              _           _          _ _ &quot;)</span><br><span class="line">            xterm.writeln(&quot;             | |         | |        | | |&quot;)</span><br><span class="line">            xterm.writeln(&quot;__      _____| |__    ___| |__   ___| | |&quot;)</span><br><span class="line">            xterm.writeln(&quot;\\ \\ /\\ / / _ \\ &apos;_ \\  / __| &apos;_ \\ / _ \\ | |&quot;)</span><br><span class="line">            xterm.writeln(&quot; \\ V  V /  __/ |_) | \\__ \\ | | |  __/ | |&quot;)</span><br><span class="line">            xterm.writeln(&quot;  \\_/\\_/ \\___|_.__/  |___/_| |_|\\___|_|_|&quot;)</span><br><span class="line">            //ws.send(&quot;\n&quot;);</span><br><span class="line">        &#125;;</span><br><span class="line">        ws.onerror = function () &#123;</span><br><span class="line">            console.log(&apos;ws error&apos;);</span><br><span class="line">        &#125;;</span><br><span class="line">        ws.onclose = function () &#123;</span><br><span class="line">            xterm.writeln(&apos; &apos;)</span><br><span class="line">            xterm.writeln(&apos;=======================&apos;)</span><br><span class="line">            xterm.writeln(&apos; &apos;)</span><br><span class="line">            xterm.writeln(&apos; socket已断开连接，请重连&apos;)</span><br><span class="line">            xterm.writeln(&apos; &apos;)</span><br><span class="line">            xterm.writeln(&apos;=======================&apos;)</span><br><span class="line">            console.log(&apos;ws closed&apos;);</span><br><span class="line">        &#125;;</span><br><span class="line">        ws.onmessage = function (evt) &#123;</span><br><span class="line">            console.log(evt.data);</span><br><span class="line">            //var decoder = new TextDecoder(&apos;utf-8&apos;);</span><br><span class="line">            //var data = decoder.decode(evt.data);</span><br><span class="line">            xterm.write(evt.data);</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        function GetQueryString(name) &#123;</span><br><span class="line">            var reg = new RegExp(&quot;(^|&amp;)&quot; + name + &quot;=([^&amp;]*)(&amp;|$)&quot;);</span><br><span class="line">            var r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则</span><br><span class="line">            if (r != null) return unescape(r[2]); return null;</span><br><span class="line">        &#125;</span><br><span class="line">    &lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>效果图：</p>
+<p><img src="/img/docker/ws3.png" alt></p>
+<p>可以看到这种方式是新建的 /bin/sh 进程下工作的，同时访问就是多个 bash 进程，操作不影响，1号进程可以是我们自己的常驻服务，更能满足我们的使用场景。</p>
+<p>参考：<br><a href="https://blog.51cto.com/709151/2406150?source=dra" target="_blank" rel="noopener">https://blog.51cto.com/709151/2406150?source=dra</a><br><a href="https://docs.docker.com/engine/api/v1.30/#operation/ContainerAttach" target="_blank" rel="noopener">https://docs.docker.com/engine/api/v1.30/#operation/ContainerAttach</a><br><a href="https://github.com/zxb19890727/" target="_blank" rel="noopener">https://github.com/zxb19890727/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/01/docker-web-shell-2/" data-id="ck5m5a42w000b22l9yd19dcq2" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/01/k8s-introduction/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          k8s 介绍
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/angular-js/">angular js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/b树/">b树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse/">clickhouse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coredns/">coredns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gogs/">gogs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/">grafana</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/">helm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loki/">loki</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/microk8s/">microk8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openldap/">openldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openresty/">openresty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/promtal/">promtal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webshell/">webshell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/报警/">报警</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控/">监控</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/angular-js/" style="font-size: 10px;">angular js</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/b树/" style="font-size: 10px;">b树</a> <a href="/tags/cassandra/" style="font-size: 10px;">cassandra</a> <a href="/tags/clickhouse/" style="font-size: 10px;">clickhouse</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 10px;">jenkins</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/loki/" style="font-size: 15px;">loki</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/pipeline/" style="font-size: 10px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 12.5px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/webshell/" style="font-size: 12.5px;">webshell</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/01/docker-web-shell-1/">Docker web shell 实现一</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/angular-js/">angular js 基本使用</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/awk/">使用awk处理csv文件</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/loki-cassandra/">loki使用cassandra作存储</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/clickhouse/">ClickHouse 入门笔记</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 air_zhe@163.com<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
