@@ -62,6 +62,55 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-docker-web-shell-2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/docker-web-shell-2/" class="article-date">
+  <time datetime="2019-02-03T11:36:10.000Z" itemprop="datePublished">2019-02-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/docker-web-shell-2/">Docker web shell 实现二</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>通过 docke exec start 实现 webshell</strong></p>
+<p>首先调用 <a href="https://docs.docker.com/engine/api/v1.30/#tag/Exec" target="_blank" rel="noopener">exec</a> 接口 传入参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;AttachStdin&quot;:true,&quot;AttachStdout&quot;:true,&quot;AttachStderr&quot;:true,&quot;Tty&quot;:true,&quot;Cmd&quot;:[&quot;/bin/sh&quot;]&#125;</span><br></pre></td></tr></table></figure>
+<p>用返回的 id 请求 start 接口， 附加 post 参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;&#123;&quot;Detach&quot;:false,&quot;Tty&quot;:true&#125;&apos;</span><br></pre></td></tr></table></figure>
+<p>我们使用 go 代码来完成上面的操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	_ &quot;io&quot;</span><br><span class="line">	&quot;log&quot;</span><br><span class="line">	&quot;net&quot;</span><br><span class="line">	&quot;os&quot;</span><br><span class="line">	&quot;regexp&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">//发送信息</span><br><span class="line">func sender(conn net.Conn) &#123;</span><br><span class="line">	buffer := make([]byte, 1024)</span><br><span class="line"></span><br><span class="line">	exec_req := fmt.Sprintf(`POST /containers/%s/exec HTTP/1.1</span><br><span class="line">Host: 0.0.0.0:2375</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Content-Length: 91</span><br><span class="line"></span><br><span class="line">&#123;&quot;AttachStdin&quot;:true,&quot;AttachStdout&quot;:true,&quot;AttachStderr&quot;:true,&quot;Tty&quot;:true,&quot;Cmd&quot;:[&quot;/bin/sh&quot;]&#125;</span><br><span class="line"></span><br><span class="line">`, &quot;alpine&quot;)</span><br><span class="line">	conn.Write([]byte(exec_req))</span><br><span class="line"></span><br><span class="line">	n, err := conn.Read(buffer)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		//</span><br><span class="line">	&#125;</span><br><span class="line">	rep := string(buffer[:n])</span><br><span class="line"></span><br><span class="line">	Log(rep)</span><br><span class="line">	reg1 := regexp.MustCompile(`.*?&#123;&quot;Id&quot;:&quot;(.*?)&quot;`)</span><br><span class="line">	res := reg1.FindAllStringSubmatch(rep, -1)</span><br><span class="line">	s_id := res[0][1]</span><br><span class="line"></span><br><span class="line">	start_req := fmt.Sprintf(`POST /exec/%s/start HTTP/1.1</span><br><span class="line">Host: 0.0.0.0:2375</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Content-Length: 27</span><br><span class="line"></span><br><span class="line">&#123;&quot;Detach&quot;:false,&quot;Tty&quot;:true&#125;</span><br><span class="line"></span><br><span class="line">`, s_id)</span><br><span class="line"></span><br><span class="line">	conn.Write([]byte(start_req))</span><br><span class="line">	time.Sleep(time.Second)</span><br><span class="line">	conn.Write([]byte(&quot;ls -l\n&quot;))</span><br><span class="line">	Log(&quot;send over&quot;)</span><br><span class="line"></span><br><span class="line">	for &#123;</span><br><span class="line">		//接收服务端反馈</span><br><span class="line">		n, err := conn.Read(buffer)</span><br><span class="line">		if err != nil &#123;</span><br><span class="line">			Log(conn.RemoteAddr().String(), &quot;waiting server back msg error: &quot;, err)</span><br><span class="line">			return</span><br><span class="line">		&#125;</span><br><span class="line">		Log(conn.RemoteAddr().String(), &quot;receive server back msg: &quot;, string(buffer[:n]), n)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//日志</span><br><span class="line">func Log(v ...interface&#123;&#125;) &#123;</span><br><span class="line">	log.Println(v...)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	server := &quot;0.0.0.0:2375&quot;</span><br><span class="line">	tcpAddr, err := net.ResolveTCPAddr(&quot;tcp4&quot;, server)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Fprintf(os.Stderr, &quot;Fatal error: %s&quot;, err.Error())</span><br><span class="line">		os.Exit(1)</span><br><span class="line">	&#125;</span><br><span class="line">	conn, err := net.DialTCP(&quot;tcp&quot;, nil, tcpAddr)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Fprintf(os.Stderr, &quot;Fatal error: %s&quot;, err.Error())</span><br><span class="line">		os.Exit(1)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Println(&quot;connection success&quot;)</span><br><span class="line">	sender(conn)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2019/02/docker-web-shell-2/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/02/docker-web-shell-2/" data-id="ck65wkjze00040ll9yig2uxms" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-prometheus" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/02/prometheus/" class="article-date">
@@ -142,7 +191,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/prometheus/" data-id="ck5m5u7i700134ll9rzv01701" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/prometheus/" data-id="ck65wkk0b00150ll9mwvzz46b" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/监控/">监控</a></li></ul>
@@ -202,7 +251,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/microk8/" data-id="ck5m5u7hy000x4ll9pts47xr8" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/microk8/" data-id="ck65wkk06000z0ll9yi6pcsy1" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/microk8s/">microk8s</a></li></ul>
@@ -274,7 +323,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/k8s-notes/" data-id="ck5m5u7i400114ll93s9y52lm" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/k8s-notes/" data-id="ck65wkjzy000p0ll9f32lecpf" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
@@ -323,59 +372,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/01/k8s-introduction/" data-id="ck5m5u7h2000k4ll9ehmd3qbv" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/01/k8s-introduction/" data-id="ck65wkk04000x0ll94gbzi8g9" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-docker-web-shell-2" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/01/docker-web-shell-2/" class="article-date">
-  <time datetime="2019-01-20T15:35:10.000Z" itemprop="datePublished">2019-01-20</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/docker-web-shell-2/">Docker web shell 实现二</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>通过 docke exec start 实现 webshell</strong></p>
-<p>首先调用 <a href="https://docs.docker.com/engine/api/v1.30/#tag/Exec" target="_blank" rel="noopener">exec</a> 接口 传入参数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;AttachStdin&quot;:true,&quot;AttachStdout&quot;:true,&quot;AttachStderr&quot;:true,&quot;Tty&quot;:true,&quot;Cmd&quot;:[&quot;/bin/sh&quot;]&#125;</span><br></pre></td></tr></table></figure>
-<p>用返回的 id 请求 start 接口， 附加 post 参数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;&#123;&quot;Detach&quot;:false,&quot;Tty&quot;:true&#125;&apos;</span><br></pre></td></tr></table></figure>
-<p>我们使用 go 代码来完成上面的操作</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	_ &quot;io&quot;</span><br><span class="line">	&quot;log&quot;</span><br><span class="line">	&quot;net&quot;</span><br><span class="line">	&quot;os&quot;</span><br><span class="line">	&quot;regexp&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">//发送信息</span><br><span class="line">func sender(conn net.Conn) &#123;</span><br><span class="line">	buffer := make([]byte, 1024)</span><br><span class="line"></span><br><span class="line">	exec_req := fmt.Sprintf(`POST /containers/%s/exec HTTP/1.1</span><br><span class="line">Host: 0.0.0.0:2375</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Content-Length: 91</span><br><span class="line"></span><br><span class="line">&#123;&quot;AttachStdin&quot;:true,&quot;AttachStdout&quot;:true,&quot;AttachStderr&quot;:true,&quot;Tty&quot;:true,&quot;Cmd&quot;:[&quot;/bin/sh&quot;]&#125;</span><br><span class="line"></span><br><span class="line">`, &quot;alpine&quot;)</span><br><span class="line">	conn.Write([]byte(exec_req))</span><br><span class="line"></span><br><span class="line">	n, err := conn.Read(buffer)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		//</span><br><span class="line">	&#125;</span><br><span class="line">	rep := string(buffer[:n])</span><br><span class="line"></span><br><span class="line">	Log(rep)</span><br><span class="line">	reg1 := regexp.MustCompile(`.*?&#123;&quot;Id&quot;:&quot;(.*?)&quot;`)</span><br><span class="line">	res := reg1.FindAllStringSubmatch(rep, -1)</span><br><span class="line">	s_id := res[0][1]</span><br><span class="line"></span><br><span class="line">	start_req := fmt.Sprintf(`POST /exec/%s/start HTTP/1.1</span><br><span class="line">Host: 0.0.0.0:2375</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Content-Length: 27</span><br><span class="line"></span><br><span class="line">&#123;&quot;Detach&quot;:false,&quot;Tty&quot;:true&#125;</span><br><span class="line"></span><br><span class="line">`, s_id)</span><br><span class="line"></span><br><span class="line">	conn.Write([]byte(start_req))</span><br><span class="line">	time.Sleep(time.Second)</span><br><span class="line">	conn.Write([]byte(&quot;ls -l\n&quot;))</span><br><span class="line">	Log(&quot;send over&quot;)</span><br><span class="line"></span><br><span class="line">	for &#123;</span><br><span class="line">		//接收服务端反馈</span><br><span class="line">		n, err := conn.Read(buffer)</span><br><span class="line">		if err != nil &#123;</span><br><span class="line">			Log(conn.RemoteAddr().String(), &quot;waiting server back msg error: &quot;, err)</span><br><span class="line">			return</span><br><span class="line">		&#125;</span><br><span class="line">		Log(conn.RemoteAddr().String(), &quot;receive server back msg: &quot;, string(buffer[:n]), n)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//日志</span><br><span class="line">func Log(v ...interface&#123;&#125;) &#123;</span><br><span class="line">	log.Println(v...)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	server := &quot;0.0.0.0:2375&quot;</span><br><span class="line">	tcpAddr, err := net.ResolveTCPAddr(&quot;tcp4&quot;, server)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Fprintf(os.Stderr, &quot;Fatal error: %s&quot;, err.Error())</span><br><span class="line">		os.Exit(1)</span><br><span class="line">	&#125;</span><br><span class="line">	conn, err := net.DialTCP(&quot;tcp&quot;, nil, tcpAddr)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Fprintf(os.Stderr, &quot;Fatal error: %s&quot;, err.Error())</span><br><span class="line">		os.Exit(1)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Println(&quot;connection success&quot;)</span><br><span class="line">	sender(conn)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-        
-          <p class="article-more-link">
-            <a href="/2019/01/docker-web-shell-2/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/01/docker-web-shell-2/" data-id="ck5m5u7fr00054ll944qt04yl" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
 
     </footer>
   </div>
