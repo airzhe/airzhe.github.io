@@ -5,20 +5,20 @@
   
   <title>Docker web shell 实现二 | Runner的小站</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="通过 docke exec start 实现 webshell 首先调用 exec 接口 传入参数 1&amp;#123;&amp;quot;AttachStdin&amp;quot;:true,&amp;quot;AttachStdout&amp;quot;:true,&amp;quot;AttachStderr&amp;quot;:true,&amp;quot;Tty&amp;quot;:true,&amp;quot;Cmd&amp;quot;:[&amp;quot;/bin/sh&amp;qu">
+  <meta name="description" content="通过 docke exec start 实现 webshell 调用 exec 接口 传入参数 1&amp;#123;&amp;quot;AttachStdin&amp;quot;:true,&amp;quot;AttachStdout&amp;quot;:true,&amp;quot;AttachStderr&amp;quot;:true,&amp;quot;Tty&amp;quot;:true,&amp;quot;Cmd&amp;quot;:[&amp;quot;/bin/sh&amp;quot">
 <meta name="keywords" content="docker,webshell">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Docker web shell 实现二">
 <meta property="og:url" content="http://airzhe.github.io/2020/02/docker-web-shell-2/index.html">
 <meta property="og:site_name" content="Runner的小站">
-<meta property="og:description" content="通过 docke exec start 实现 webshell 首先调用 exec 接口 传入参数 1&amp;#123;&amp;quot;AttachStdin&amp;quot;:true,&amp;quot;AttachStdout&amp;quot;:true,&amp;quot;AttachStderr&amp;quot;:true,&amp;quot;Tty&amp;quot;:true,&amp;quot;Cmd&amp;quot;:[&amp;quot;/bin/sh&amp;qu">
+<meta property="og:description" content="通过 docke exec start 实现 webshell 调用 exec 接口 传入参数 1&amp;#123;&amp;quot;AttachStdin&amp;quot;:true,&amp;quot;AttachStdout&amp;quot;:true,&amp;quot;AttachStderr&amp;quot;:true,&amp;quot;Tty&amp;quot;:true,&amp;quot;Cmd&amp;quot;:[&amp;quot;/bin/sh&amp;quot">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://airzhe.github.io/img/docker/ws2.png">
 <meta property="og:image" content="http://airzhe.github.io/img/docker/ws3.png">
-<meta property="og:updated_time" content="2020-02-03T05:00:28.380Z">
+<meta property="og:updated_time" content="2020-02-03T05:01:46.950Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker web shell 实现二">
-<meta name="twitter:description" content="通过 docke exec start 实现 webshell 首先调用 exec 接口 传入参数 1&amp;#123;&amp;quot;AttachStdin&amp;quot;:true,&amp;quot;AttachStdout&amp;quot;:true,&amp;quot;AttachStderr&amp;quot;:true,&amp;quot;Tty&amp;quot;:true,&amp;quot;Cmd&amp;quot;:[&amp;quot;/bin/sh&amp;qu">
+<meta name="twitter:description" content="通过 docke exec start 实现 webshell 调用 exec 接口 传入参数 1&amp;#123;&amp;quot;AttachStdin&amp;quot;:true,&amp;quot;AttachStdout&amp;quot;:true,&amp;quot;AttachStderr&amp;quot;:true,&amp;quot;Tty&amp;quot;:true,&amp;quot;Cmd&amp;quot;:[&amp;quot;/bin/sh&amp;quot">
 <meta name="twitter:image" content="http://airzhe.github.io/img/docker/ws2.png">
   
     <link rel="alternate" href="/atom.xml" title="Runner的小站" type="application/atom+xml">
@@ -91,7 +91,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p><strong>通过 docke exec start 实现 webshell</strong></p>
-<p>首先调用 <a href="https://docs.docker.com/engine/api/v1.30/#tag/Exec" target="_blank" rel="noopener">exec</a> 接口 传入参数</p>
+<p>调用 <a href="https://docs.docker.com/engine/api/v1.30/#tag/Exec" target="_blank" rel="noopener">exec</a> 接口 传入参数</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;AttachStdin&quot;:true,&quot;AttachStdout&quot;:true,&quot;AttachStderr&quot;:true,&quot;Tty&quot;:true,&quot;Cmd&quot;:[&quot;/bin/sh&quot;]&#125;</span><br></pre></td></tr></table></figure>
 <p>用返回的 id 请求 start 接口， 附加 post 参数</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;&#123;&quot;Detach&quot;:false,&quot;Tty&quot;:true&#125;&apos;</span><br></pre></td></tr></table></figure>
@@ -114,7 +114,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="ck65zk59n00091hl9bjiu4xyq" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="ck65zlw6m000b2fl9onuyohbv" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
