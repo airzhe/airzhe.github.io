@@ -99,7 +99,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="ck65zlw6m000b2fl9onuyohbv" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="ck66kzn1d00090ll9ts580pyi" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -146,7 +146,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="ck65zlw6h00082fl9p7c21mlt" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="ck66kzn1b00080ll9ool4lg1v" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -205,7 +205,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ck65zlw6000012fl9w1retrvc" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ck66kzn0u00000ll96a5v69x4" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angular-js/">angular js</a></li></ul>
@@ -251,7 +251,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="ck65zlw5q00002fl9txepsfl5" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="ck66kzn1000010ll9wzlf2tjd" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/awk/">awk</a></li></ul>
@@ -299,7 +299,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/loki-cassandra/" data-id="ck65zlw7f000t2fl90qj0u4zi" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/loki-cassandra/" data-id="ck66kzn1z000y0ll9m9snq93t" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li></ul>
@@ -355,10 +355,68 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ck65zlw6d00052fl9okb9b5u2" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ck66kzn1800050ll99mptcdq6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse/">clickhouse</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-microk8" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/microk8/" class="article-date">
+  <time datetime="2019-12-01T19:38:10.000Z" itemprop="datePublished">2019-12-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/microk8/">MicroK8s 笔记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>MicroK8s是一种小型，快速，安全的单节点Kubernetes，几乎可以安装在任何Linux机器上。使用它进行脱机开发，原型制作，测试或在VM上用作CI / CD的小型，便宜，可靠的k8。对于设备来说，它也是一个很棒的k8-为k8开发您的IoT应用并将其部署到您的盒子上的MicroK8。</p>
+<p><strong>修改默认镜像</strong></p>
+<ul>
+<li>修改<code>/var/snap/microk8s/current/args/kubelet</code>。 添加<code>--pod-infra-container-image=s7799653/pause:3.1</code></li>
+<li>修改<code>/var/snap/microk8s/current/args/containerd-template.toml</code>的<code>plugins -&gt; plugins.cri -&gt; sandbox_image</code>为<code>s7799653/pause:3.1</code></li>
+<li>重启服务 <code>microk8s.stop</code>,<code>microk8s.start</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snap alias microk8s.kubectl kubectl</span><br></pre></td></tr></table></figure>
+<p><strong>dashboard</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">microk8s.enable dns dashboard</span><br><span class="line"></span><br><span class="line">token=$(microk8s.kubectl -n kube-system get secret | grep default-token | cut -d &quot; &quot; -f1)</span><br><span class="line">microk8s.kubectl -n kube-system describe secret $token</span><br></pre></td></tr></table></figure>
+<p><strong>配置./kube/config</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">microk8s.config</span><br><span class="line">kubectl config view</span><br><span class="line">修改 user,name 为kubernetes-dashboard</span><br><span class="line">修改 username,passwod 为token</span><br></pre></td></tr></table></figure>
+<p><strong>helm3</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm install nginx bitnami/nginx</span><br></pre></td></tr></table></figure>
+<p><strong>prometheus</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">* DaemonSet, Deployment, StatefulSet, and ReplicaSet resources will no longer be served from extensions/v1beta1, apps/v1beta1, or apps/v1beta2 by default in v1.16. Migrate to the apps/v1 API, available since v1.9. Existing persisted data can be retrieved/updated via the apps/v1 API.</span><br><span class="line"></span><br><span class="line">persistentVolume</span><br></pre></td></tr></table></figure>
+<p><strong>常用命令</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ microk8s.enable dashboard dns metrics-server registry istio</span><br><span class="line">$ microk8s.ctr -n k8s.io images pull docker.io/library/cassandra:latest</span><br><span class="line">$ microk8s.ctr -namespace k8s.io images rm docker.io/yandex/clickhouse-server:20 --sync</span><br><span class="line">$ microk8s.ctr --namespace k8s.io images ls | grep -v @sha256 | awk &apos;&#123;print $1,$4$5&#125;&apos;</span><br></pre></td></tr></table></figure>
+<p><strong>nginx-ingress 部署的两种方式</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">externalIPs: </span><br><span class="line">  - 192.168.2.12 #这是我的一台node的ip，通过kube-proxy监听</span><br><span class="line">或者</span><br><span class="line">hostNetwork: true</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/12/microk8/" data-id="ck66kzn2000100ll967wxbmgg" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/microk8s/">microk8s</a></li></ul>
 
     </footer>
   </div>
@@ -404,7 +462,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ck65zlw79000p2fl98qicksph" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ck66kzn1t000p0ll9goz60t4s" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gogs/">gogs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openldap/">openldap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li></ul>
@@ -468,7 +526,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ubuntu-install/" data-id="ck65zlw7u00152fl9v1yg4e4w" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/ubuntu-install/" data-id="ck66kzn2300120ll9xl56wnou" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -514,87 +572,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ck65zlw6w000g2fl9q4e4j5m8" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ck66kzn1j000f0ll9s8zy25dx" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-k8s-migration-1" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/k8s-migration-1/" class="article-date">
-  <time datetime="2019-11-08T18:40:10.000Z" itemprop="datePublished">2019-11-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/k8s-migration-1/"> 测试服务迁移k8s集群记录 (一)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>前言: 组内给了3台新机器，要把之前的服务全迁到新机器。共6个服务，2个在之前的 k8s 集群，其他4个在物理机。</p>
-<p>已经迁移完成，记录下实施过程，大致分3步: 新 k8s 集群搭建、监控日志系统部署、业务服务迁移。</p>
-<h3 id="k8s-集群搭建"><a href="#k8s-集群搭建" class="headerlink" title="k8s 集群搭建"></a>k8s 集群搭建</h3><p>因为是新机器，准备尝试下 k8s  master 高可用方案，运维给的3台机器信息如下，两个mastet 建立ssh 信任，服务规划参考老集群。</p>
-<table>
-<thead>
-<tr>
-<th>主机名</th>
-<th>IP</th>
-<th>角色</th>
-<th>服务</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>soa-test-a001</td>
-<td>10.2.4.34</td>
-<td>master01</td>
-<td>监控、日志</td>
-</tr>
-<tr>
-<td>soa-test-a002</td>
-<td>10.2.4.35</td>
-<td>master02</td>
-<td>CI、Ingress</td>
-</tr>
-<tr>
-<td>soa-test-a003</td>
-<td>10.2.4.36</td>
-<td>node01</td>
-<td>业务服务</td>
-</tr>
-</tbody>
-</table>
-<p>只有两台master， 我们使用的是堆叠式 etcd 拓扑结构，如图：</p>
-<p><img src="/img/k8s/5.svg" alt="kubeadm-ha-topology-stacked-etcd">机器已经安装 docker ，直接开始使用 kubeadm 安装 k8s<br>
-        
-          <p class="article-more-link">
-            <a href="/2019/11/k8s-migration-1/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/k8s-migration-1/" data-id="ck65zlw74000o2fl9uma3l9jz" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
 
     </footer>
   </div>

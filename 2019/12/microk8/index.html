@@ -9,11 +9,11 @@
 <meta name="keywords" content="k8s,microk8s">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MicroK8s 笔记">
-<meta property="og:url" content="http://airzhe.github.io/2019/02/microk8/index.html">
+<meta property="og:url" content="http://airzhe.github.io/2019/12/microk8/index.html">
 <meta property="og:site_name" content="Runner的小站">
 <meta property="og:description" content="MicroK8s是一种小型，快速，安全的单节点Kubernetes，几乎可以安装在任何Linux机器上。使用它进行脱机开发，原型制作，测试或在VM上用作CI / CD的小型，便宜，可靠的k8。对于设备来说，它也是一个很棒的k8-为k8开发您的IoT应用并将其部署到您的盒子上的MicroK8。 修改默认镜像  修改/var/snap/microk8s/current/args/kubelet。 添加">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-12-23T11:04:39.980Z">
+<meta property="og:updated_time" content="2020-02-03T14:59:05.676Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MicroK8s 笔记">
 <meta name="twitter:description" content="MicroK8s是一种小型，快速，安全的单节点Kubernetes，几乎可以安装在任何Linux机器上。使用它进行脱机开发，原型制作，测试或在VM上用作CI / CD的小型，便宜，可靠的k8。对于设备来说，它也是一个很棒的k8-为k8开发您的IoT应用并将其部署到您的盒子上的MicroK8。 修改默认镜像  修改/var/snap/microk8s/current/args/kubelet。 添加">
@@ -67,8 +67,8 @@
       <div class="outer">
         <section id="main"><article id="post-microk8" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/02/microk8/" class="article-date">
-  <time datetime="2019-02-01T19:38:10.000Z" itemprop="datePublished">2019-02-01</time>
+    <a href="/2019/12/microk8/" class="article-date">
+  <time datetime="2019-12-01T19:38:10.000Z" itemprop="datePublished">2019-12-01</time>
 </a>
     
   </div>
@@ -94,11 +94,9 @@
 <li>修改<code>/var/snap/microk8s/current/args/containerd-template.toml</code>的<code>plugins -&gt; plugins.cri -&gt; sandbox_image</code>为<code>s7799653/pause:3.1</code></li>
 <li>重启服务 <code>microk8s.stop</code>,<code>microk8s.start</code></li>
 </ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snap alias microk8s.kubectl kubectl</span><br></pre></td></tr></table></figure>
 <p><strong>dashboard</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">token=$(microk8s.kubectl -n kube-system get secret | grep default-token | cut -d &quot; &quot; -f1)</span><br><span class="line">microk8s.kubectl -n kube-system describe secret $token</span><br></pre></td></tr></table></figure>
-<p>Ps：heapster已经被 metrics-server取代，所以仅开启<code>dashboard-metrics-scraper</code> 就可以图形化显示 cpu 、内存信息了</p>
-<p><strong>端口转发</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl port-forward willing-lamb-grafana-75d49cb58c-7dn6d 2000:3000 #pod 2000转到主机3000</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">microk8s.enable dns dashboard</span><br><span class="line"></span><br><span class="line">token=$(microk8s.kubectl -n kube-system get secret | grep default-token | cut -d &quot; &quot; -f1)</span><br><span class="line">microk8s.kubectl -n kube-system describe secret $token</span><br></pre></td></tr></table></figure>
 <p><strong>配置./kube/config</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">microk8s.config</span><br><span class="line">kubectl config view</span><br><span class="line">修改 user,name 为kubernetes-dashboard</span><br><span class="line">修改 username,passwod 为token</span><br></pre></td></tr></table></figure>
 <p><strong>helm3</strong></p>
@@ -106,14 +104,14 @@
 <p><strong>prometheus</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">* DaemonSet, Deployment, StatefulSet, and ReplicaSet resources will no longer be served from extensions/v1beta1, apps/v1beta1, or apps/v1beta2 by default in v1.16. Migrate to the apps/v1 API, available since v1.9. Existing persisted data can be retrieved/updated via the apps/v1 API.</span><br><span class="line"></span><br><span class="line">persistentVolume</span><br></pre></td></tr></table></figure>
 <p><strong>常用命令</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ microk8s.enable dashboard dns metrics-server registry istio</span><br><span class="line">$ microk8s.ctr -n k8s.io images pull docker.io/library/cassandra:latest</span><br><span class="line">$ microk8s.ctr -n k8s.io images rm docker.io/kubernetesui/dashboard:v2.0.0-beta4 --sync</span><br><span class="line">$ microk8s.ctr -n k8s.io images ls | grep -v @sha256 | awk &apos;&#123;print $1,$4$5&#125;&apos;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ microk8s.enable dashboard dns metrics-server registry istio</span><br><span class="line">$ microk8s.ctr -n k8s.io images pull docker.io/library/cassandra:latest</span><br><span class="line">$ microk8s.ctr -namespace k8s.io images rm docker.io/yandex/clickhouse-server:20 --sync</span><br><span class="line">$ microk8s.ctr --namespace k8s.io images ls | grep -v @sha256 | awk &apos;&#123;print $1,$4$5&#125;&apos;</span><br></pre></td></tr></table></figure>
 <p><strong>nginx-ingress 部署的两种方式</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">externalIPs: </span><br><span class="line">  - 192.168.2.12 #这是我的一台node的ip，通过kube-proxy监听</span><br><span class="line">或者</span><br><span class="line">hostNetwork: true</span><br></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/microk8/" data-id="ck65zlw7h000w2fl908u1ifpd" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/microk8/" data-id="ck66kzn2000100ll967wxbmgg" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/microk8s/">microk8s</a></li></ul>
@@ -124,19 +122,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2019/02/k8s-notes/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/12/clickhouse/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          k8s 笔记
+          ClickHouse 入门笔记
         
       </div>
     </a>
   
   
-    <a href="/2019/01/k8s-introduction/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2019/11/ldap-pbkdf2/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">k8s 介绍</div>
+      <div class="article-nav-title">迁移gogs用户到openldap</div>
     </a>
   
 </nav>

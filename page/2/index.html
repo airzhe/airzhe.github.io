@@ -62,6 +62,83 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-k8s-migration-1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/k8s-migration-1/" class="article-date">
+  <time datetime="2019-11-08T18:40:10.000Z" itemprop="datePublished">2019-11-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/k8s-migration-1/"> 测试服务迁移k8s集群记录 (一)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>前言: 组内给了3台新机器，要把之前的服务全迁到新机器。共6个服务，2个在之前的 k8s 集群，其他4个在物理机。</p>
+<p>已经迁移完成，记录下实施过程，大致分3步: 新 k8s 集群搭建、监控日志系统部署、业务服务迁移。</p>
+<h3 id="k8s-集群搭建"><a href="#k8s-集群搭建" class="headerlink" title="k8s 集群搭建"></a>k8s 集群搭建</h3><p>因为是新机器，准备尝试下 k8s  master 高可用方案，运维给的3台机器信息如下，两个mastet 建立ssh 信任，服务规划参考老集群。</p>
+<table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>IP</th>
+<th>角色</th>
+<th>服务</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>soa-test-a001</td>
+<td>10.2.4.34</td>
+<td>master01</td>
+<td>监控、日志</td>
+</tr>
+<tr>
+<td>soa-test-a002</td>
+<td>10.2.4.35</td>
+<td>master02</td>
+<td>CI、Ingress</td>
+</tr>
+<tr>
+<td>soa-test-a003</td>
+<td>10.2.4.36</td>
+<td>node01</td>
+<td>业务服务</td>
+</tr>
+</tbody>
+</table>
+<p>只有两台master， 我们使用的是堆叠式 etcd 拓扑结构，如图：</p>
+<p><img src="/img/k8s/5.svg" alt="kubeadm-ha-topology-stacked-etcd">机器已经安装 docker ，直接开始使用 kubeadm 安装 k8s<br>
+        
+          <p class="article-more-link">
+            <a href="/2019/11/k8s-migration-1/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/11/k8s-migration-1/" data-id="ck66kzn1s000o0ll98525vwsv" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-hexo" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/10/hexo/" class="article-date">
@@ -99,7 +176,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/hexo/" data-id="ck65zlw6y000i2fl9kur3rsa4" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/hexo/" data-id="ck66kzn1r000m0ll9e0nejajw" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
@@ -145,7 +222,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/grafana-variables/" data-id="ck65zlw6u000f2fl9qfmig2c0" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/grafana-variables/" data-id="ck66kzn1m000g0ll9f9qqyiyd" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/promtal/">promtal</a></li></ul>
@@ -196,7 +273,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/loki/" data-id="ck65zlw7j000y2fl9if4nxrrm" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/loki/" data-id="ck66kzn1y000w0ll9jhjtxlsc" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/promtal/">promtal</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/日志/">日志</a></li></ul>
@@ -240,7 +317,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/core-dns/" data-id="ck65zlw6a00042fl9xllpgqvv" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/core-dns/" data-id="ck66kzn1600040ll9f59vlwdr" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/coredns/">coredns</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/etcd/">etcd</a></li></ul>
@@ -286,7 +363,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/gitrunner-helm-install/" data-id="ck65zlw6j00092fl9sj9ow1jj" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/gitrunner-helm-install/" data-id="ck66kzn1f000b0ll90z59rnws" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li></ul>
@@ -330,7 +407,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/helm/" data-id="ck65zlw70000k2fl9qm9y2091" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/helm/" data-id="ck66kzn1o000i0ll9bg305aco" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
@@ -375,95 +452,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/grafana-alerting/" data-id="ck65zlw6p000d2fl9fo1su6q4" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/grafana-alerting/" data-id="ck66kzn1g000d0ll9j1cknj5u" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/报警/">报警</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-nginx" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/02/nginx/" class="article-date">
-  <time datetime="2019-02-27T00:00:00.000Z" itemprop="datePublished">2019-02-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/nginx/">nginx 学习</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>POST_READ 阶段：</p>
-<p>x-forwarded-for x-real-ip </p>
-<p>realip 模块启用 </p>
-<p>return 302 /a.html</p>
-<p>302 浏览器缓存</p>
-<p>error_page 404=/404.php</p>
-<p>rewrite regex replacement</p>
-<p>如果 replacement 是以http开头，直接返回302</p>
-<p>last 持续 break 停止当前脚本指令执行,后面的指令不会执行，直接读取文件返回  redirect 302 permant 301</p>
-<p>http permanent 同时出现返回301</p>
-<p>rewrite log 指令 开启rewrite 日志</p>
-<p><strong>if 使用场景</strong></p>
-<ol>
-<li>检查变量为空或者值是否为0，直接使用</li>
-<li>将变量和字符串做匹配，使用=或者!=</li>
-<li>将变量与正则表达式做匹配 ~ 或~*</li>
-<li>检查文件是否存在 -f</li>
-<li>检查目录是否存在 -d</li>
-<li>检查文件、目录、软连是否存在 -e </li>
-<li>检查是否为可执行文件 -x</li>
-</ol>
-<ul>
-<li>忽略大小写</li>
-<li>^~ 禁止正则表达式匹配</li>
-</ul>
-<hr>
-<ul>
-<li>limit_conn 限制并发连接数以ip为单位</li>
-<li>limit_req 把突发的 流量限制为每秒多少请求 用户请求会变慢，不会被拒绝 nodelay 盆里的请求是否立即返回 burst=3没分钟请求3次，在limit_conn 之前</li>
-<li>mirror 流量拷贝</li>
-<li>sub 替换</li>
-<li>sub_filter </li>
-<li>additon 模块在响应前或后添加 自请求的内容</li>
-<li>referer 模块 对于大多数网站来说都是有效的</li>
-<li>valid_referers  if($invalid_referer){return 403}</li>
-<li>secure_link</li>
-<li>rewrite 不会修改 url地址，如dns cname记录 ，proxy_pass 会修改请求的url</li>
-<li>mirror_request body off</li>
-<li>map 模块</li>
-</ul>
-<hr>
-<ul>
-<li>nginx  Upstream Consistent Hash</li>
-<li>proxy_cache_use_state</li>
-<li>strace -p</li>
-<li>ngx_http_cache_purge_module 清除nginx缓存</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/nginx/" data-id="ck65zlw7l00102fl90rm9qhld" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openresty/">openresty</a></li></ul>
 
     </footer>
   </div>
@@ -540,7 +532,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/tcp/" data-id="ck65zlw7r00122fl9qwqyse43" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/tcp/" data-id="ck66kzn2600170ll94nxdm8sg" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li></ul>
@@ -594,7 +586,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/btree/" data-id="ck65zlw6600032fl9ac1y0zgs" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/btree/" data-id="ck66kzn1400030ll9nxlcz2a2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/b树/">b树</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li></ul>
