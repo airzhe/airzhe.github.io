@@ -62,9 +62,9 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-microk8" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-microk8s" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/11/microk8/" class="article-date">
+    <a href="/2019/11/microk8s/" class="article-date">
   <time datetime="2019-11-01T19:38:10.000Z" itemprop="datePublished">2019-11-01</time>
 </a>
     
@@ -76,7 +76,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/microk8/">MicroK8s 笔记</a>
+      <a class="article-title" href="/2019/11/microk8s/">MicroK8s 笔记</a>
     </h1>
   
 
@@ -91,11 +91,11 @@
 <li>修改<code>/var/snap/microk8s/current/args/containerd-template.toml</code>的<code>plugins -&gt; plugins.cri -&gt; sandbox_image</code>为<code>s7799653/pause:3.1</code></li>
 <li>重启服务 <code>microk8s.stop</code>,<code>microk8s.start</code></li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snap alias microk8s.kubectl kubectl</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export PATH=$PATH:/snap/bin #临时写入</span><br><span class="line">echo &quot;export PATH=$PATH:/snap/bin&quot; &gt;&gt; ~/.bashrc #永久写入</span><br><span class="line">snap alias microk8s.kubectl kubectl</span><br><span class="line">snap alias microk8s.ctr ctr</span><br><span class="line">sudo usermod -a -G microk8s $&#123;USER&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>dashboard</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">microk8s.enable dns dashboard</span><br><span class="line"></span><br><span class="line">token=$(microk8s.kubectl -n kube-system get secret | grep default-token | cut -d &quot; &quot; -f1)</span><br><span class="line">microk8s.kubectl -n kube-system describe secret $token</span><br></pre></td></tr></table></figure>
-<p><strong>配置./kube/config</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">microk8s.config</span><br><span class="line">kubectl config view</span><br><span class="line">修改 user,name 为kubernetes-dashboard</span><br><span class="line">修改 username,passwod 为token</span><br></pre></td></tr></table></figure>
+<p><strong>配置~/.kube/config</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">microk8s.config</span><br><span class="line">microk8s.kubectl config view --raw &gt; $HOME/.kube/config</span><br><span class="line">修改 user,name 为kubernetes-dashboard</span><br><span class="line">修改 username,passwod 为token</span><br></pre></td></tr></table></figure>
 <p><strong>helm3</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm install nginx bitnami/nginx</span><br></pre></td></tr></table></figure>
 <p><strong>prometheus</strong></p>
@@ -104,11 +104,15 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ microk8s.enable dashboard dns metrics-server registry istio</span><br><span class="line">$ microk8s.ctr -n k8s.io images pull docker.io/library/cassandra:latest</span><br><span class="line">$ microk8s.ctr -namespace k8s.io images rm docker.io/yandex/clickhouse-server:20 --sync</span><br><span class="line">$ microk8s.ctr --namespace k8s.io images ls | grep -v @sha256 | awk &apos;&#123;print $1,$4$5&#125;&apos;</span><br></pre></td></tr></table></figure>
 <p><strong>nginx-ingress 部署的两种方式</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">externalIPs: </span><br><span class="line">  - 192.168.2.12 #这是我的一台node的ip，通过kube-proxy监听</span><br><span class="line">或者</span><br><span class="line">hostNetwork: true</span><br></pre></td></tr></table></figure>
+<p>参考：</p>
+<p><a href="https://github.com/ubuntu/microk8s" target="_blank" rel="noopener">https://github.com/ubuntu/microk8s</a></p>
+<p><a href="https://www.jianshu.com/p/02fd2540fab2" target="_blank" rel="noopener">https://www.jianshu.com/p/02fd2540fab2</a></p>
+<p><a href="https://github.com/projectatomic/containerd/blob/master/docs/cli.md" target="_blank" rel="noopener">https://github.com/projectatomic/containerd/blob/master/docs/cli.md</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/microk8/" data-id="ck66l33nr000x1hl9s8pyauvs" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/microk8s/" data-id="ck7ym9cvv000x0ll9lz4ueg8y" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/microk8s/">microk8s</a></li></ul>
@@ -157,7 +161,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/hexo/" data-id="ck66l33nh000i1hl9modon6hi" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/hexo/" data-id="ck7ym9cvj000i0ll98z2zx67o" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
@@ -203,7 +207,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/grafana-variables/" data-id="ck66l33nd000f1hl9vrjd3nfl" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/grafana-variables/" data-id="ck7ym9cvh000g0ll9e840uaif" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/promtal/">promtal</a></li></ul>
@@ -254,7 +258,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/loki/" data-id="ck66l33nt000z1hl9fjfperql" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/loki/" data-id="ck7ym9cvu000v0ll9uud6h5mf" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/promtal/">promtal</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/日志/">日志</a></li></ul>
@@ -298,7 +302,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/core-dns/" data-id="ck66l33mz00031hl9jq2619u6" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/core-dns/" data-id="ck7ym9cv700090ll9bonmp4fw" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/coredns/">coredns</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/etcd/">etcd</a></li></ul>
@@ -344,7 +348,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/gitrunner-helm-install/" data-id="ck66l33n500081hl99c7nbwub" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/gitrunner-helm-install/" data-id="ck7ym9cv300050ll9iytnhl8g" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li></ul>
@@ -379,7 +383,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p><strong>命令</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">helm repo list</span><br><span class="line">helm search </span><br><span class="line">helm list #列出已经按照项目</span><br><span class="line">helm del --purge istio-init #删除</span><br><span class="line">helm fetch stable/grafana #下载到本地</span><br><span class="line">helm push mysql-0.3.5.tgz myrepo</span><br><span class="line">helm repo add  myrepo https://xx.xx.xx.xx/chartrepo/charts #添加仓库</span><br><span class="line">helm repo add bitnami https://charts.bitnami.com/bitnami  #添加仓库</span><br><span class="line"></span><br><span class="line">helm list --deleted</span><br><span class="line">helm rollback nginx-ingress 1</span><br><span class="line"></span><br><span class="line">helm create hello_test</span><br><span class="line">helm package ./hello_test/ #打包</span><br><span class="line">helm install ./hello_test-0.1.0.tgz --debug --dry-run #调试</span><br><span class="line">helm get manifest #这条命令可以通过 release 名来打印其相关yaml信息</span><br><span class="line">helm status wintering-rodent</span><br><span class="line"></span><br><span class="line">helm plugin install https://github.com/chartmuseum/helm-push #安装push插件</span><br><span class="line">helm repo add mylibrary http://harbor.local.com:8082/chartrepo/library</span><br><span class="line">helm push --username=runner --password=745632Bn hello_test mylibrary</span><br><span class="line"></span><br><span class="line">helm fetch stable/redis</span><br><span class="line">helm push redis-8.1.2.tgz -urunner -p745632Bn  mylibrary  -v 0.2.0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">docker run -ti --rm --entrypoint /bin/sh alpine/helm:2.9.0</span><br><span class="line">export HELM_HOST=10.102.49.77:44134 #修改 tiller 地址 10.111.8.171:44134</span><br><span class="line">helm list</span><br><span class="line">helm init --client-only</span><br><span class="line"></span><br><span class="line">helm upgrade -f panda.yaml happpy-panda stable/mariadb #更新</span><br><span class="line">helm temlate helm/istio -name istio -namespace istio-system -f my-values.yaml &gt; my-isti.yaml #根据模板生成部署清单，不用依赖 tiller 服务端。</span><br><span class="line">helm template istio -name istio -f book-values.yaml -namespace istio-system | kubectl apply -f</span><br><span class="line"></span><br><span class="line">helm delete --purge #版本存储在 kube-system 命名空间内的ConfigMaps中</span><br><span class="line">helm status </span><br><span class="line"></span><br><span class="line">helm inspect values . #查看charts的配置选项</span><br><span class="line">helm inspect values yhdx/community --version 0.2.0</span><br><span class="line">helm get values zeroed-gnat -a #查看 release 的配置值</span><br><span class="line"></span><br><span class="line">helm --set a=b,c=d </span><br><span class="line">helm --set name=&#123;a,b,c&#125; </span><br><span class="line">helm --set server[0].port = 80</span><br><span class="line"></span><br><span class="line">--timeout</span><br><span class="line">--wait</span><br><span class="line"></span><br><span class="line">helm init --service-account </span><br><span class="line">helm install . --debug --dry-run --set favoriteDrink=tea #set 替换</span><br><span class="line">helm install stable/drupal --set image=my-registry/drupal:0.1.0 --set livenessProbe.exec.command=[cat,docroot/CHANGELOG.txt] --set livenessProbe.httpGet=null</span><br><span class="line">helm upgrade sanguine-panther --set image1.tag=0.3 --set imagePullPolicy=Always . </span><br><span class="line">helm upgrade nginx-ingress -f ingress-nginx.yaml  stable/nginx-ingress</span><br><span class="line"></span><br><span class="line">#启动本地 chartmuseum 仓库</span><br><span class="line">docker run --rm -itd \</span><br><span class="line">  -p 8089:8080 \</span><br><span class="line">  -e DEBUG=1 \</span><br><span class="line">  -e STORAGE=local \</span><br><span class="line">  -e STORAGE_LOCAL_ROOTDIR=/charts \</span><br><span class="line">  -v /home/runner/work/k8s/chartmuseum/charts:/charts \</span><br><span class="line"> --name my_chartmuseum  chartmuseum/chartmuseum:latest</span><br><span class="line">helm repo add myChartMuseum http://172.16.101.197:8089</span><br><span class="line"></span><br><span class="line">helm upgrade install --force</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">helm repo list</span><br><span class="line">helm search </span><br><span class="line">helm list #列出已经按照项目</span><br><span class="line">helm del --purge istio-init #删除</span><br><span class="line">helm fetch stable/grafana #下载到本地</span><br><span class="line">helm push mysql-0.3.5.tgz myrepo</span><br><span class="line">helm repo add  myrepo https://xx.xx.xx.xx/chartrepo/charts #添加仓库</span><br><span class="line">helm repo add bitnami https://charts.bitnami.com/bitnami  #添加仓库</span><br><span class="line"></span><br><span class="line">helm list --deleted</span><br><span class="line">helm rollback nginx-ingress 1</span><br><span class="line"></span><br><span class="line">helm create hello_test</span><br><span class="line">helm package ./hello_test/ #打包</span><br><span class="line">helm install ./hello_test-0.1.0.tgz --debug --dry-run #调试</span><br><span class="line">helm get manifest #这条命令可以通过 release 名来打印其相关yaml信息</span><br><span class="line">helm status wintering-rodent</span><br><span class="line"></span><br><span class="line">helm plugin install https://github.com/chartmuseum/helm-push #安装push插件</span><br><span class="line">helm repo add mylibrary http://harbor.local.com:8082/chartrepo/library</span><br><span class="line">helm push --username=runner --password=745632Bn hello_test mylibrary</span><br><span class="line"></span><br><span class="line">helm fetch stable/redis</span><br><span class="line">helm push redis-8.1.2.tgz -urunner -p745632Bn  mylibrary  -v 0.2.0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">docker run -ti --rm --entrypoint /bin/sh alpine/helm:2.9.0</span><br><span class="line">export HELM_HOST=10.102.49.77:44134 #修改 tiller 地址 10.111.8.171:44134</span><br><span class="line">helm list</span><br><span class="line">helm init --client-only</span><br><span class="line"></span><br><span class="line">helm upgrade -f panda.yaml happpy-panda stable/mariadb #更新</span><br><span class="line">helm temlate helm/istio -name istio -namespace istio-system -f my-values.yaml &gt; my-isti.yaml #根据模板生成部署清单，不用依赖 tiller 服务端。</span><br><span class="line">helm template istio -name istio -f book-values.yaml -namespace istio-system | kubectl apply -f</span><br><span class="line"></span><br><span class="line">helm delete --purge #版本存储在 kube-system 命名空间内的ConfigMaps中</span><br><span class="line">helm status </span><br><span class="line"></span><br><span class="line">helm inspect values . #查看charts的配置选项</span><br><span class="line">helm inspect values yhdx/community --version 0.2.0</span><br><span class="line">helm get values zeroed-gnat -a #查看 release 的配置值</span><br><span class="line"></span><br><span class="line">helm --set a=b,c=d </span><br><span class="line">helm --set name=&#123;a,b,c&#125; </span><br><span class="line">helm --set server[0].port = 80</span><br><span class="line"></span><br><span class="line">--timeout</span><br><span class="line">--wait</span><br><span class="line"></span><br><span class="line">helm init --service-account </span><br><span class="line">helm install . --debug --dry-run --set favoriteDrink=tea #set 替换</span><br><span class="line">helm install stable/drupal --set image=my-registry/drupal:0.1.0 --set livenessProbe.exec.command=[cat,docroot/CHANGELOG.txt] --set livenessProbe.httpGet=null</span><br><span class="line">helm upgrade sanguine-panther --set image1.tag=0.3 --set imagePullPolicy=Always . </span><br><span class="line">helm upgrade nginx-ingress -f ingress-nginx.yaml  stable/nginx-ingress</span><br><span class="line"></span><br><span class="line">#启动本地 chartmuseum 仓库</span><br><span class="line">docker run --rm -itd \</span><br><span class="line">  -p 8089:8080 \</span><br><span class="line">  -e DEBUG=1 \</span><br><span class="line">  -e STORAGE=local \</span><br><span class="line">  -e STORAGE_LOCAL_ROOTDIR=/charts \</span><br><span class="line">  -v /home/runner/work/k8s/chartmuseum/charts:/charts \</span><br><span class="line"> --name my_chartmuseum  chartmuseum/chartmuseum:latest</span><br><span class="line">helm repo add myChartMuseum http://172.16.101.197:8089</span><br><span class="line"></span><br><span class="line">helm upgrade install --force</span><br><span class="line"></span><br><span class="line">sed -i &quot;s/api-monitor/hyperf-skelecton/g&quot; `grep payment -rl ./hyperf-skelecton`</span><br></pre></td></tr></table></figure>
         
           <p class="article-more-link">
             <a href="/2019/10/helm/#more">Read More</a>
@@ -388,7 +392,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/helm/" data-id="ck66l33nk000m1hl9hspyei4r" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/helm/" data-id="ck7ym9cvm000m0ll90t7rodw6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
@@ -433,7 +437,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/grafana-alerting/" data-id="ck66l33n700091hl9kubobmxl" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/grafana-alerting/" data-id="ck7ym9cvb000d0ll9j02uktmg" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/报警/">报警</a></li></ul>
@@ -487,7 +491,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/btree/" data-id="ck66l33n100041hl9x339fb18" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/btree/" data-id="ck7ym9cuz00030ll9chhzen1i" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/b树/">b树</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li></ul>
@@ -567,7 +571,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/tcp/" data-id="ck66l33nx00151hl9lier818m" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/tcp/" data-id="ck7ym9cw200170ll9kzmlfub1" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li></ul>
