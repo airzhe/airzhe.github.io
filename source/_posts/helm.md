@@ -1,7 +1,7 @@
 ---
 title: "helm 命令介绍及使用"
 date: 2019-10-16 17:35:10
-tags: [k8s,helm,charts]
+tags: [k8s,helm]
 share: true
 ---
 
@@ -74,6 +74,8 @@ docker run --rm -itd \
 helm repo add myChartMuseum http://172.16.101.197:8089
 
 helm upgrade install --force
+
+sed -i "s/api-monitor/hyperf-skelecton/g" `grep payment -rl ./hyperf-skelecton`
 ```
 <!-- more -->
 

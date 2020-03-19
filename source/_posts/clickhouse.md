@@ -32,8 +32,7 @@ ClickHouse包含访问控制配置，它们位于`users.xml`文件中(与'config
 **时区设置**
 
 ```
-sudo vim /etc/clickhouse-server/config.xml
-<timezone>Asia/Shanghai</timezone>
+sed "144 i<timezone>Asia/Shanghai</timezone>" -i /etc/clickhouse-server/config.xml
 ```
 <!-- more -->
 

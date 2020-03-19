@@ -1,7 +1,7 @@
 ---
 title: "MicroK8s 笔记"
 description: ""
-date: 2019-02-01 19:38:10
+date: 2019-11-01 19:38:10
 tags: [k8s,microk8s]
 comments: false
 share: true
@@ -15,28 +15,32 @@ MicroK8s是一种小型，快速，安全的单节点Kubernetes，几乎可以�
 - 修改`/var/snap/microk8s/current/args/containerd-template.toml`的`plugins -> plugins.cri -> sandbox_image`为`s7799653/pause:3.1`
 - 重启服务 `microk8s.stop`,`microk8s.start`
 
+```
+export PATH=$PATH:/snap/bin #临时写入
+echo "export PATH=$PATH:/snap/bin" >> ~/.bashrc #永久写入
+snap alias microk8s.kubectl kubectl
+snap alias microk8s.ctr ctr
+sudo usermod -a -G microk8s ${USER}
+```
+
 **dashboard**
 
 ```
+microk8s.enable dns dashboard
+
 token=$(microk8s.kubectl -n kube-system get secret | grep default-token | cut -d " " -f1)
 microk8s.kubectl -n kube-system describe secret $token
 ```
-Ps：heapster已经被 metrics-server取代，所以仅开启`dashboard-metrics-scraper` 就可以图形化显示 cpu 、内存信息了
 
-**端口转发**
-
-```
-kubectl port-forward willing-lamb-grafana-75d49cb58c-7dn6d 2000:3000 #pod 2000转到主机3000
-```
-
-**配置./kube/config**
+**配置~/.kube/config**
 
 ```
 microk8s.config
-kubectl config view
+microk8s.kubectl config view --raw > $HOME/.kube/config
 修改 user,name 为kubernetes-dashboard
 修改 username,passwod 为token
 ```
+
 
 **helm3**
 
@@ -57,8 +61,8 @@ persistentVolume
 ```
 $ microk8s.enable dashboard dns metrics-server registry istio
 $ microk8s.ctr -n k8s.io images pull docker.io/library/cassandra:latest
-$ microk8s.ctr -n k8s.io images rm docker.io/kubernetesui/dashboard:v2.0.0-beta4 --sync
-$ microk8s.ctr -n k8s.io images ls | grep -v @sha256 | awk '{print $1,$4$5}'
+$ microk8s.ctr -namespace k8s.io images rm docker.io/yandex/clickhouse-server:20 --sync
+$ microk8s.ctr --namespace k8s.io images ls | grep -v @sha256 | awk '{print $1,$4$5}'
 ```
 
 **nginx-ingress 部署的两种方式**
@@ -69,4 +73,12 @@ externalIPs:
 或者
 hostNetwork: true
 ```
+
+参考：
+
+https://github.com/ubuntu/microk8s
+
+https://www.jianshu.com/p/02fd2540fab2
+
+https://github.com/projectatomic/containerd/blob/master/docs/cli.md
 

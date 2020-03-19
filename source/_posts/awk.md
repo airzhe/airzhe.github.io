@@ -1,7 +1,7 @@
 ---
 title: "使用awk处理csv文件"
 date: 2020-01-06 15:00:00
-tags: [awk,csv]
+tags: [awk]
 share: true
 ---
 
