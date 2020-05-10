@@ -62,9 +62,9 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-btree" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-nginx" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/02/btree/" class="article-date">
+    <a href="/2019/02/nginx/" class="article-date">
   <time datetime="2019-02-27T00:00:00.000Z" itemprop="datePublished">2019-02-27</time>
 </a>
     
@@ -76,7 +76,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/btree/">B 树</a>
+      <a class="article-title" href="/2019/02/nginx/">nginx 学习</a>
     </h1>
   
 
@@ -84,30 +84,61 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>gRPC是一个高性能、通用的开源 RPC 框架，其由 Google 主要面向移动应用开发并基于HTTP/2协议标准而设计，基于ProtoBuf(Protocol Buffers) 序列化协议开发，且支持众多开发语言。 使用 protoc –go_out=. *.proto 把proto文件转成 go 文件，定义格式如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">message HelloRequest &#123;</span><br><span class="line">  string greeting = 1;</span><br><span class="line">&#125;</span><br><span class="line">message HelloResponse &#123;</span><br><span class="line">  string reply = 1;</span><br><span class="line">&#125;</span><br><span class="line">service HelloService &#123;</span><br><span class="line">  rpc SayHello(HelloRequest) returns (HelloResponse);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><a href="https://zhuanlan.zhihu.com/p/27700617" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/27700617</a></p>
-<p>B树中每一个内部节点会包含一定数量的键，键将节点的子树分开。例如，如果一个内部节点有3个子节点（子树），那么它就必须有两个键： a1 和 a2 。左边子树的所有值都必须小于 a1 ，中间子树的所有值都必须在 a1 和a2 之间，右边子树的所有值都必须大于 a2 。</p>
-<p>规则：</p>
-<p>（1）所有节点关键字是按递增次序排列，并遵循左小右大原则；</p>
-<p>（2）1&lt;子节点数量&lt;=M ，M&gt;=2，空树除外（注：m阶代表一个树节点最多有多少个查找路径，m阶=m路,当m=2则是2叉树,m=3则是3叉）；</p>
-<p>（3）非根节点关键字数量大于等于ceil(m/2)-1且小于等于m-1个；（注：ceil()是个朝正无穷方向取整的函数 如ceil(1.1)结果为2)</p>
-<p>（4）非叶节点有N个子节点，则该节点的关键字数等于N-1;</p>
-<p>（5）所有叶子节点均在同一层、叶子节点除了包含了关键字和关键字记录的指针外也有指向其子节点的指针只不过其指针地址都为null对应下图最后一层节点的空格子</p>
-<p>B+ 树特点</p>
-<p>1、相较于B树B+每个非叶子节点存储的关键字数更多，树的层级更少所以查询数据更快；</p>
-<p>2、B+所有关键字数据地址都存在叶子节点上，所以每次查找的次数都相同所以查询速度要比B树更稳定;</p>
-<p>3、B+树所有的叶子节点数据构成了一个有序链表，在查询大小区间的数据时候更方便，数据紧密性很高，缓存的命中率也会比B树高。</p>
-<p>4、B+树遍历整棵树只需要遍历所有的叶子节点即可，，而不需要像B树一样需要对每一层进行遍历。</p>
-<p>5、B树相对于B+树的优点是，如果经常访问的数据离根节点很近，而B树的非叶子节点本身存有关键字其数据的地址，所以这种数据检索的时候会要比B+树快。</p>
+        <p>POST_READ 阶段：</p>
+<p>x-forwarded-for x-real-ip </p>
+<p>realip 模块启用 </p>
+<p>return 302 /a.html</p>
+<p>302 浏览器缓存</p>
+<p>error_page 404=/404.php</p>
+<p>rewrite regex replacement</p>
+<p>如果 replacement 是以http开头，直接返回302</p>
+<p>last 持续 break 停止当前脚本指令执行,后面的指令不会执行，直接读取文件返回  redirect 302 permant 301</p>
+<p>http permanent 同时出现返回301</p>
+<p>rewrite log 指令 开启rewrite 日志</p>
+<p><strong>if 使用场景</strong></p>
+<ol>
+<li>检查变量为空或者值是否为0，直接使用</li>
+<li>将变量和字符串做匹配，使用=或者!=</li>
+<li>将变量与正则表达式做匹配 ~ 或~*</li>
+<li>检查文件是否存在 -f</li>
+<li>检查目录是否存在 -d</li>
+<li>检查文件、目录、软连是否存在 -e </li>
+<li>检查是否为可执行文件 -x</li>
+</ol>
+<ul>
+<li>忽略大小写</li>
+<li>^~ 禁止正则表达式匹配</li>
+</ul>
+<hr>
+<ul>
+<li>limit_conn 限制并发连接数以ip为单位</li>
+<li>limit_req 把突发的 流量限制为每秒多少请求 用户请求会变慢，不会被拒绝 nodelay 盆里的请求是否立即返回 burst=3没分钟请求3次，在limit_conn 之前</li>
+<li>mirror 流量拷贝</li>
+<li>sub 替换</li>
+<li>sub_filter </li>
+<li>additon 模块在响应前或后添加 自请求的内容</li>
+<li>referer 模块 对于大多数网站来说都是有效的</li>
+<li>valid_referers  if($invalid_referer){return 403}</li>
+<li>secure_link</li>
+<li>rewrite 不会修改 url地址，如dns cname记录 ，proxy_pass 会修改请求的url</li>
+<li>mirror_request body off</li>
+<li>map 模块</li>
+</ul>
+<hr>
+<ul>
+<li>nginx  Upstream Consistent Hash</li>
+<li>proxy_cache_use_state</li>
+<li>strace -p</li>
+<li>ngx_http_cache_purge_module 清除nginx缓存</li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/btree/" data-id="cka0vufcv00010ll9eolazqyp" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/nginx/" data-id="cka0vv15p00111al9fa369a38" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/b树/">b树</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openresty/">openresty</a></li></ul>
 
     </footer>
   </div>
@@ -184,7 +215,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/tcp/" data-id="cka0vufe200160ll929tuy69y" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/tcp/" data-id="cka0vv15q00121al92var30yi" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li></ul>
@@ -236,7 +267,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/jenkins-introduction/" data-id="cka0vufdl000m0ll9ay1zskft" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/jenkins-introduction/" data-id="cka0vv15e000m1al9ewrotuxt" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pipeline/">pipeline</a></li></ul>
@@ -328,7 +359,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/prometheus/" data-id="cka0vufe000140ll9i9b6g5vp" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/prometheus/" data-id="cka0vv15t00151al92rlxdd9v" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/监控/">监控</a></li></ul>
@@ -400,7 +431,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/k8s-notes/" data-id="cka0vufdy00110ll9m3le12s2" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/k8s-notes/" data-id="cka0vv15l000w1al98do7j90r" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
@@ -449,7 +480,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/01/k8s-introduction/" data-id="cka0vufdq000r0ll96hrqhrk1" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/01/k8s-introduction/" data-id="cka0vv15g000o1al91n5vssi2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
