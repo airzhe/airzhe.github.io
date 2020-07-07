@@ -14,7 +14,7 @@
 <meta property="og:description" content="ClickHouse是一个用于联机分析(OLAP)的列式数据库管理系统(DBMS) 版本 文章使用版本 docker pull yandex/clickhouse-server:19.15.3.6 SQL支持 支持的查询包括 GROUP BY，ORDER BY，IN，JOIN以及非相关子查询。 不支持窗口函数和相关子查询。 支持近似计算 用于近似计算的各类聚合函数，如：distinct value">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://airzhe.github.io/img/clickhouse/1.png">
-<meta property="og:updated_time" content="2020-06-30T06:12:28.285Z">
+<meta property="og:updated_time" content="2020-06-30T12:24:19.482Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ClickHouse 入门笔记">
 <meta name="twitter:description" content="ClickHouse是一个用于联机分析(OLAP)的列式数据库管理系统(DBMS) 版本 文章使用版本 docker pull yandex/clickhouse-server:19.15.3.6 SQL支持 支持的查询包括 GROUP BY，ORDER BY，IN，JOIN以及非相关子查询。 不支持窗口函数和相关子查询。 支持近似计算 用于近似计算的各类聚合函数，如：distinct value">
@@ -155,6 +155,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">    1574058600000 as t,</span><br><span class="line">    usage_user</span><br><span class="line">FROM $table</span><br><span class="line">WHERE $timeFilter</span><br><span class="line">ORDER BY t</span><br><span class="line"></span><br><span class="line">#查询最近7天数据</span><br><span class="line">SELECT</span><br><span class="line">    t,</span><br><span class="line">    groupArray((d,s)) AS groupArr</span><br><span class="line">FROM</span><br><span class="line">(</span><br><span class="line">  SELECT </span><br><span class="line">      (intDiv(toUInt32(created_date), 86400) * 86400) * 1000 AS t,</span><br><span class="line">      toDate(created_date) AS d, </span><br><span class="line">      sum(total_fee) / 100 AS s</span><br><span class="line">  FROM $table</span><br><span class="line">  WHERE (created_date &lt; toDateTime($to)) AND (created_date &gt; (toDate($to) - 7)) AND (state = 3)</span><br><span class="line">  GROUP BY t,d</span><br><span class="line">  ORDER BY t ASC</span><br><span class="line">)</span><br><span class="line">GROUP BY t</span><br><span class="line">ORDER BY t </span><br><span class="line"></span><br><span class="line">#七日数据</span><br><span class="line">SELECT</span><br><span class="line">    t + 86400000 * 7,</span><br><span class="line">    st AS `七日`</span><br><span class="line">FROM</span><br><span class="line">(</span><br><span class="line">  SELECT</span><br><span class="line">     (intDiv(toUInt32(created_date), $interval) * $interval) * 1000 AS t,</span><br><span class="line">     sum(total_fee)/100 as st</span><br><span class="line">  FROM $table</span><br><span class="line">  WHERE </span><br><span class="line">      (created_date &gt; toDateTime($from - 86400*7)) AND (created_date &lt; toDateTime($to - 86400*7))</span><br><span class="line">      $conditionalTest(AND agg_platform IN ($agg_platform),$agg_platform) </span><br><span class="line">  Group by t</span><br><span class="line">  ORDER BY t</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">#世界地图</span><br><span class="line">CREATE TABLE `worldmap_latlng` (</span><br><span class="line">   created_date Date DEFAULT today(),  </span><br><span class="line">   created_at DateTime DEFAULT now(),    </span><br><span class="line">  `lat` Float32,</span><br><span class="line">  `lng` Float32,</span><br><span class="line">  `name` String,</span><br><span class="line">  `value` Int32</span><br><span class="line"> ) ENGINE = MergeTree(created_date, created_at, 8192);</span><br><span class="line"> </span><br><span class="line">INSERT INTO `worldmap_latlng`(`lat`, `lng`, `name`, `value`) VALUES (31.24916171,121.487899486, &apos;上海&apos;, 2)</span><br></pre></td></tr></table></figure>
 <p><strong>高可用</strong></p>
 <a href="/2020/06/clickhouse-ha/" title="clickhouse高可用集群搭建">clickhouse高可用集群搭建</a>
+<p><strong>定时同步mysql</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">* * * * * sh /root/sh/sync_soa_behavior.sh</span><br><span class="line">0 0 * * * sh /root/sh/sync_soa_behavior_del_today.sh</span><br><span class="line"></span><br><span class="line">[root@node-a001 sh]# cat sync_soa_behavior_del_today.sh</span><br><span class="line"></span><br><span class="line">docker exec clickhouse clickhouse-client --database=soa_behavior --query=&quot;alter table order_behavior_log delete where created_date &gt;= yesterday()&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@node-a001 sh]# cat sync_soa_behavior.sh</span><br><span class="line"></span><br><span class="line">docker exec clickhouse clickhouse-client --database=soa_behavior --query=&quot;alter table order_behavior_log delete where created_date &gt;= toStartOfTenMinutes(now())&quot;</span><br><span class="line"></span><br><span class="line">sleep 5</span><br><span class="line"></span><br><span class="line">docker exec clickhouse clickhouse-client --database=soa_behavior --query=&quot;INSERT INTO order_behavior_log SELECT * FROM mysql(&apos;mysql.host&apos;, &apos;soa_behavior&apos;, &apos;order_behavior_log&apos;, &apos;username&apos;,&apos;password&apos;) WHERE id &gt;(SELECT max(id) FROM order_behavior_log)&quot;</span><br></pre></td></tr></table></figure></p>
 <p><strong>参考：</strong></p>
 <p><a href="https://clickhouse.yandex/docs/zh/" target="_blank" rel="noopener">https://clickhouse.yandex/docs/zh/</a><br><a href="https://www.altinity.com/blog/clickhouse-for-time-series" target="_blank" rel="noopener">https://www.altinity.com/blog/clickhouse-for-time-series</a><br><a href="https://clickhouse.yandex/docs/zh/getting_started/example_datasets/ontime/" target="_blank" rel="noopener">https://clickhouse.yandex/docs/zh/getting_started/example_datasets/ontime/</a><br><a href="https://www.altinity.com/blog/2018/2/12/aggregate-mysql-data-at-high-speed-with-clickhouse" target="_blank" rel="noopener">https://www.altinity.com/blog/2018/2/12/aggregate-mysql-data-at-high-speed-with-clickhouse</a></p>
 <p>多分片多副本高可用<br><a href="https://clickhouse.yandex/docs/zh/operations/table_engines/distributed/" target="_blank" rel="noopener">https://clickhouse.yandex/docs/zh/operations/table_engines/distributed/</a><br><a href="http://sineyuan.github.io/post/clickhouse-docker-quick-start/" target="_blank" rel="noopener">http://sineyuan.github.io/post/clickhouse-docker-quick-start/</a><br><a href="https://www.cnblogs.com/freeweb/p/9352947.html" target="_blank" rel="noopener">https://www.cnblogs.com/freeweb/p/9352947.html</a></p>
@@ -162,7 +163,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ckc1jnodh000d52pbbn48w0gz" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ckcbkuu3q000811pb8w4mpk0g" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse/">clickhouse</a></li></ul>
@@ -177,7 +178,7 @@
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          loki使用cassandra作存储
+          loki使用cassandra存储索引
         
       </div>
     </a>
@@ -223,7 +224,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
     </div>
   </div>
 
@@ -234,6 +235,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/07/shazam/">(no title)</a>
+          </li>
         
           <li>
             <a href="/2020/06/clickhouse-ha/">clickhouse单分片三副本高可用搭建</a>
@@ -249,10 +254,6 @@
         
           <li>
             <a href="/2020/01/docker-web-shell-1/">Docker web shell 实现一</a>
-          </li>
-        
-          <li>
-            <a href="/2020/01/angular-js/">angular js基本使用</a>
           </li>
         
       </ul>
