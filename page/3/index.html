@@ -95,64 +95,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/grafana-alerting/" data-id="ckcbkuu3z000e11pbwiv3zl3k" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/grafana-alerting/" data-id="ckcnaz4pu000h0opbabkdraeo" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/报警/">报警</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-btree" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/02/btree/" class="article-date">
-  <time datetime="2019-02-27T00:00:00.000Z" itemprop="datePublished">2019-02-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/btree/">B 树</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>gRPC是一个高性能、通用的开源 RPC 框架，其由 Google 主要面向移动应用开发并基于HTTP/2协议标准而设计，基于ProtoBuf(Protocol Buffers) 序列化协议开发，且支持众多开发语言。 使用 protoc –go_out=. *.proto 把proto文件转成 go 文件，定义格式如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">message HelloRequest &#123;</span><br><span class="line">  string greeting = 1;</span><br><span class="line">&#125;</span><br><span class="line">message HelloResponse &#123;</span><br><span class="line">  string reply = 1;</span><br><span class="line">&#125;</span><br><span class="line">service HelloService &#123;</span><br><span class="line">  rpc SayHello(HelloRequest) returns (HelloResponse);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><a href="https://zhuanlan.zhihu.com/p/27700617" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/27700617</a></p>
-<p>B树中每一个内部节点会包含一定数量的键，键将节点的子树分开。例如，如果一个内部节点有3个子节点（子树），那么它就必须有两个键： a1 和 a2 。左边子树的所有值都必须小于 a1 ，中间子树的所有值都必须在 a1 和a2 之间，右边子树的所有值都必须大于 a2 。</p>
-<p>规则：</p>
-<p>（1）所有节点关键字是按递增次序排列，并遵循左小右大原则；</p>
-<p>（2）1&lt;子节点数量&lt;=M ，M&gt;=2，空树除外（注：m阶代表一个树节点最多有多少个查找路径，m阶=m路,当m=2则是2叉树,m=3则是3叉）；</p>
-<p>（3）非根节点关键字数量大于等于ceil(m/2)-1且小于等于m-1个；（注：ceil()是个朝正无穷方向取整的函数 如ceil(1.1)结果为2)</p>
-<p>（4）非叶节点有N个子节点，则该节点的关键字数等于N-1;</p>
-<p>（5）所有叶子节点均在同一层、叶子节点除了包含了关键字和关键字记录的指针外也有指向其子节点的指针只不过其指针地址都为null对应下图最后一层节点的空格子</p>
-<p>B+ 树特点</p>
-<p>1、相较于B树B+每个非叶子节点存储的关键字数更多，树的层级更少所以查询数据更快；</p>
-<p>2、B+所有关键字数据地址都存在叶子节点上，所以每次查找的次数都相同所以查询速度要比B树更稳定;</p>
-<p>3、B+树所有的叶子节点数据构成了一个有序链表，在查询大小区间的数据时候更方便，数据紧密性很高，缓存的命中率也会比B树高。</p>
-<p>4、B+树遍历整棵树只需要遍历所有的叶子节点即可，，而不需要像B树一样需要对每一层进行遍历。</p>
-<p>5、B树相对于B+树的优点是，如果经常访问的数据离根节点很近，而B树的非叶子节点本身存有关键字其数据的地址，所以这种数据检索的时候会要比B+树快。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/btree/" data-id="ckcbkuu3d000111pbpl8yj3xz" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/b树/">b树</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li></ul>
 
     </footer>
   </div>
@@ -234,7 +180,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/nginx/" data-id="ckcbkuu4m001211pb7cgq5c7u" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/nginx/" data-id="ckcnaz4qw00150opbwxa52n2l" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openresty/">openresty</a></li></ul>
@@ -314,10 +260,64 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/tcp/" data-id="ckcbkuu4p001711pb5vrw9v1o" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/tcp/" data-id="ckcnaz4se003h0opbeebp07ru" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-btree" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/btree/" class="article-date">
+  <time datetime="2019-02-27T00:00:00.000Z" itemprop="datePublished">2019-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/btree/">B 树</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>gRPC是一个高性能、通用的开源 RPC 框架，其由 Google 主要面向移动应用开发并基于HTTP/2协议标准而设计，基于ProtoBuf(Protocol Buffers) 序列化协议开发，且支持众多开发语言。 使用 protoc –go_out=. *.proto 把proto文件转成 go 文件，定义格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">message HelloRequest &#123;</span><br><span class="line">  string greeting = 1;</span><br><span class="line">&#125;</span><br><span class="line">message HelloResponse &#123;</span><br><span class="line">  string reply = 1;</span><br><span class="line">&#125;</span><br><span class="line">service HelloService &#123;</span><br><span class="line">  rpc SayHello(HelloRequest) returns (HelloResponse);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="https://zhuanlan.zhihu.com/p/27700617" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/27700617</a></p>
+<p>B树中每一个内部节点会包含一定数量的键，键将节点的子树分开。例如，如果一个内部节点有3个子节点（子树），那么它就必须有两个键： a1 和 a2 。左边子树的所有值都必须小于 a1 ，中间子树的所有值都必须在 a1 和a2 之间，右边子树的所有值都必须大于 a2 。</p>
+<p>规则：</p>
+<p>（1）所有节点关键字是按递增次序排列，并遵循左小右大原则；</p>
+<p>（2）1&lt;子节点数量&lt;=M ，M&gt;=2，空树除外（注：m阶代表一个树节点最多有多少个查找路径，m阶=m路,当m=2则是2叉树,m=3则是3叉）；</p>
+<p>（3）非根节点关键字数量大于等于ceil(m/2)-1且小于等于m-1个；（注：ceil()是个朝正无穷方向取整的函数 如ceil(1.1)结果为2)</p>
+<p>（4）非叶节点有N个子节点，则该节点的关键字数等于N-1;</p>
+<p>（5）所有叶子节点均在同一层、叶子节点除了包含了关键字和关键字记录的指针外也有指向其子节点的指针只不过其指针地址都为null对应下图最后一层节点的空格子</p>
+<p>B+ 树特点</p>
+<p>1、相较于B树B+每个非叶子节点存储的关键字数更多，树的层级更少所以查询数据更快；</p>
+<p>2、B+所有关键字数据地址都存在叶子节点上，所以每次查找的次数都相同所以查询速度要比B树更稳定;</p>
+<p>3、B+树所有的叶子节点数据构成了一个有序链表，在查询大小区间的数据时候更方便，数据紧密性很高，缓存的命中率也会比B树高。</p>
+<p>4、B+树遍历整棵树只需要遍历所有的叶子节点即可，，而不需要像B树一样需要对每一层进行遍历。</p>
+<p>5、B树相对于B+树的优点是，如果经常访问的数据离根节点很近，而B树的非叶子节点本身存有关键字其数据的地址，所以这种数据检索的时候会要比B+树快。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/02/btree/" data-id="ckcnaz4ov00000opbjwiyunvr" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/b树/">b树</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li></ul>
 
     </footer>
   </div>
@@ -366,7 +366,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/jenkins-introduction/" data-id="ckcbkuu49000p11pbgqu7aip1" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/jenkins-introduction/" data-id="ckcnaz4q5000m0opbe4g6meuq" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pipeline/">pipeline</a></li></ul>
@@ -400,15 +400,12 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h3><p><strong>时序索引 </strong> 名称+标签</p>
+        <h3 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h3><p><strong>时序索引</strong> 名称+标签</p>
 <p><strong>时序样本</strong>  float64 值</p>
 <p><strong>格式</strong>: </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;metric name&gt;&#123;&lt;label name&gt;=&lt;label value&gt;, ...&#125;</span><br></pre></td></tr></table></figure>
 <p>Prometheus 时序数据分为 <a href="https://prometheus.io/docs/concepts/metric_types/#counter" target="_blank" rel="noopener">Counter</a>, <a href="https://prometheus.io/docs/concepts/metric_types/#gauge" target="_blank" rel="noopener">Gauge</a>, <a href="https://prometheus.io/docs/concepts/metric_types/#histogram" target="_blank" rel="noopener">Histogram</a>, <a href="https://prometheus.io/docs/concepts/metric_types/#summary" target="_blank" rel="noopener">Summary</a> 四种类型。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">metric_name [</span><br><span class="line">  &quot;&#123;&quot; label_name &quot;=&quot; `&quot;` label_value `&quot;` &#123; &quot;,&quot; label_name &quot;=&quot; `&quot;` label_value `&quot;` &#125; [ &quot;,&quot; ] &quot;&#125;&quot;</span><br><span class="line">] value [ timestamp ]</span><br></pre></td></tr></table></figure>
-<p>contab 每天凌晨清空</p>
-<p>统计：下单总数、成功支付总数</p>
-<p>每秒总数 counter</p>
 <p><strong>Counter</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 不同时间获取不同值，图形上按时间增量展示，如果后面时间戳不写，就使用当前时间，如果获取不到，就为空，图像表示为中间断了如图:   _- -</span><br><span class="line"># HELP sample_http_requests_total The total number of HTTP requests.</span><br><span class="line"># TYPE sample_http_requests_total counter</span><br><span class="line">sample_http_requests_total&#123;method=&quot;post&quot;,code=&quot;200&quot;&#125; 1027 1568018567000</span><br><span class="line">sample_http_requests_total&#123;method=&quot;post&quot;,code=&quot;400&quot;&#125;    3 1568018567000</span><br><span class="line">idelta(sample_http_requests_total[1m]) 获取和一分钟前的差距</span><br></pre></td></tr></table></figure>
 <p><strong>Gauge</strong></p>
@@ -454,11 +451,16 @@
 <p>对于HTTP状态代码，而不是<code>code~=&quot;4..&quot;</code>捕获401s，404s，405s等，您可以将它们组合为标签值<code>4xx</code>并使用相等匹配器<code>code=&quot;4xx&quot;</code>。</p>
 <p><strong>聚合运算符</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">sum without()(node_filesystem_size_bytes)</span><br><span class="line">sum by(job, instance, device)(node_filesystem_size_bytes)</span><br><span class="line">sum without(fstype, mountpoint, device)(node_filesystem_size_bytes)</span><br><span class="line">count without(device)(node_disk_read_bytes_total)</span><br><span class="line">avg without(cpu)(rate(node_cpu_seconds_total[5m]))</span><br><span class="line">等于</span><br><span class="line">  sum without(cpu)(rate(node_cpu_seconds_total[5m]))</span><br><span class="line">/</span><br><span class="line">  count without(cpu)(rate(node_cpu_seconds_total[5m]))</span><br><span class="line">max without(device, fstype, mountpoint)(node_filesystem_size_bytes)</span><br><span class="line"></span><br><span class="line">topk without(device, fstype, mountpoint)(2, node_filesystem_size_bytes)</span><br><span class="line">分位数</span><br><span class="line">quantile without(cpu)(0.9, rate(node_cpu_seconds_total&#123;mode=&quot;system&quot;&#125;[5m]))</span><br></pre></td></tr></table></figure>
+<p><strong>k8s服务发现</strong><br>要想自动发现集群中的 Service，就需要我们在 Service 的annotation区域添加：prometheus.io/scrape=true的声明<br>要想自动发现集群中的 pod，也需要我们在 pod 的annotation区域添加：prometheus.io/scrape=true的声明</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">kind: Service</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  annotations:</span><br><span class="line">    prometheus.io/scrape: &quot;true&quot;</span><br><span class="line">    prometheus.io/port: &quot;9121&quot;</span><br><span class="line">  name: redis</span><br><span class="line">  namespace: kube-system</span><br></pre></td></tr></table></figure>
+<p><strong>实战</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#两分钟的增长率×60,为什么×60呢？应为是按秒球的平均值，还原一分钟的就要乘以60，另外prometheus默认1分钟刮一次数据</span><br><span class="line">irate(user_behavior_request_counter[2m])*60</span><br></pre></td></tr></table></figure></p>
+<p>参考：</p>
+<p><a href="https://mojotv.cn/go/prometheus-client-for-go" target="_blank" rel="noopener">https://mojotv.cn/go/prometheus-client-for-go</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/prometheus/" data-id="ckcbkuu4r001911pb7qrdvcca" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/prometheus/" data-id="ckcnaz4qu00120opbasor15ym" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/监控/">监控</a></li></ul>
@@ -494,7 +496,7 @@
       
         <p><strong>k8s 容器出现大量 Evicted</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$kubectl describe node/runner-e480</span><br><span class="line"></span><br><span class="line">Normal   NodeHasNoDiskPressure    6m19s (x8 over 6m19s)  kubelet, runner-e480     Node runner-e480 status is now: NodeHasNoDiskPressure</span><br><span class="line"></span><br><span class="line">df -h 系统盘使用85%</span><br><span class="line"></span><br><span class="line">修改了docker 镜像存储路径</span><br><span class="line">https://blog.csdn.net/glongljl/article/details/80158297</span><br><span class="line"></span><br><span class="line">参考:</span><br><span class="line">https://blog.csdn.net/qq_21816375/article/details/82905660</span><br></pre></td></tr></table></figure>
-<h3 id="k8s-命令"><a href="#k8s-命令" class="headerlink" title="k8s 命令"></a>k8s 命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">#命令行自动补全</span><br><span class="line">source &lt;(kubectl completion bash)</span><br><span class="line">echo &quot;source &lt;(kubectl completion bash)&quot; &gt;&gt; ~/.bashrc</span><br><span class="line"></span><br><span class="line">kubectl get sa --all-namespaces=true</span><br><span class="line">kubectl get roles --all-namespaces=true</span><br><span class="line">kubectl get RoleBinding  --all-namespaces=true</span><br><span class="line">kubectl get secrets --all-namespaces=true</span><br><span class="line">kubectl describe  ClusterRole/cluster-admin</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#端口转发 本地2000端口映射到容器3000端口 &amp;……&amp; 目前只能用localhost访问</span><br><span class="line">export POD_NAME=$(kubectl get pods --namespace default -l &quot;app=grafana,release=willing-lamb&quot; -o jsonpath=&quot;&#123;.items[0].metadata.name&#125;&quot;)</span><br><span class="line">kubectl port-forward willing-lamb-grafana-75d49cb58c-7dn6d 2000:3000</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">kubectl get secrets -o json | kubectl update -f -</span><br><span class="line"></span><br><span class="line">kubectl exec POD_NAME -c CONTAINER_NAME reboot</span><br><span class="line">kubectl exec -it [POD_NAME] -c [CONTAINER_NAME] -- /bin/sh -c &quot;kill 1&quot;</span><br><span class="line"></span><br><span class="line">kubectl explain namespace</span><br><span class="line"></span><br><span class="line">kubectl get ns default --show-labels</span><br><span class="line">kubectl completion -h</span><br><span class="line"></span><br><span class="line">kubectl delete pod deviosow-1828 --namespace=kube-system --grace-period=0 --force</span><br><span class="line"></span><br><span class="line">docker images | grep &apos;&lt;none&gt;&apos;| awk &apos;&#123;print $3&#125;&apos; | xargs docker rmi</span><br><span class="line">kubectl -n kube-system get endpoints -o wide</span><br><span class="line"></span><br><span class="line">#dns 验证</span><br><span class="line">kubectl run curl --image=radial/busyboxplus:curl -it</span><br><span class="line">nslookup docker-dind-svc.gitlab-managed-apps</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#使用命令快速创建 deployment 和 service</span><br><span class="line">kubectl run nginx --image=nginx --replicas=2</span><br><span class="line">kubectl expose deployment nginx --port 80 --external-ip 172.17.8.201</span><br><span class="line"></span><br><span class="line">node 上使用 k8s 的core-dns 服务</span><br><span class="line">dig @10.152.183.10 grafana.istio-system.svc.cluster.local</span><br></pre></td></tr></table></figure>
+<h3 id="k8s-命令"><a href="#k8s-命令" class="headerlink" title="k8s 命令"></a>k8s 命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">#命令行自动补全</span><br><span class="line">source &lt;(kubectl completion bash)</span><br><span class="line">echo &quot;source &lt;(kubectl completion bash)&quot; &gt;&gt; ~/.bashrc</span><br><span class="line"></span><br><span class="line">kubectl get sa --all-namespaces=true</span><br><span class="line">kubectl get roles --all-namespaces=true</span><br><span class="line">kubectl get RoleBinding  --all-namespaces=true</span><br><span class="line">kubectl get secrets --all-namespaces=true</span><br><span class="line">kubectl describe  ClusterRole/cluster-admin</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#端口转发 本地2000端口映射到容器3000端口 &amp;……&amp; 目前只能用localhost访问</span><br><span class="line">export POD_NAME=$(kubectl get pods --namespace default -l &quot;app=grafana,release=willing-lamb&quot; -o jsonpath=&quot;&#123;.items[0].metadata.name&#125;&quot;)</span><br><span class="line">kubectl port-forward willing-lamb-grafana-75d49cb58c-7dn6d 2000:3000</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">kubectl get secrets -o json | kubectl update -f -</span><br><span class="line"></span><br><span class="line">kubectl exec POD_NAME -c CONTAINER_NAME reboot</span><br><span class="line">kubectl exec -it [POD_NAME] -c [CONTAINER_NAME] -- /bin/sh -c &quot;kill 1&quot;</span><br><span class="line"></span><br><span class="line">kubectl explain namespace</span><br><span class="line"></span><br><span class="line">kubectl get ns default --show-labels</span><br><span class="line">kubectl completion -h</span><br><span class="line"></span><br><span class="line">kubectl delete pod deviosow-1828 --namespace=kube-system --grace-period=0 --force</span><br><span class="line"></span><br><span class="line">docker images | grep &apos;&lt;none&gt;&apos;| awk &apos;&#123;print $3&#125;&apos; | xargs docker rmi</span><br><span class="line">kubectl -n kube-system get endpoints -o wide</span><br><span class="line"></span><br><span class="line">#dns 验证</span><br><span class="line">kubectl run curl --image=radial/busyboxplus:curl -it</span><br><span class="line">nslookup docker-dind-svc.gitlab-managed-apps</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#使用命令快速创建 deployment 和 service</span><br><span class="line">kubectl run nginx --image=nginx --replicas=2</span><br><span class="line">kubectl expose deployment nginx --port 80 --external-ip 172.17.8.201</span><br><span class="line"></span><br><span class="line">node 上使用 k8s 的core-dns 服务</span><br><span class="line">dig @10.152.183.10 grafana.istio-system.svc.cluster.local</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#查看资源yaml</span><br><span class="line">kubectl api-resources | grep pod</span><br><span class="line">kubectl explain podtemplates.template.spec.containers</span><br></pre></td></tr></table></figure>
 <p><strong>RBAC</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: ServiceAccount</span><br><span class="line">metadata:</span><br><span class="line">  namespace: default</span><br><span class="line">  name: example-sa</span><br><span class="line">---</span><br><span class="line">kind: Role</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  namespace: default</span><br><span class="line">  name: example-role</span><br><span class="line">rules:</span><br><span class="line">- apiGroups: [&quot;&quot;]</span><br><span class="line">  resources: [&quot;pods&quot;]</span><br><span class="line">  verbs: [&quot;get&quot;, &quot;watch&quot;, &quot;list&quot;]</span><br><span class="line">---</span><br><span class="line">kind: RoleBinding</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  name: example-rolebinding</span><br><span class="line">  namespace: default</span><br><span class="line">subjects:</span><br><span class="line">- kind: ServiceAccount</span><br><span class="line">  name: example-sa</span><br><span class="line">  namespace: default</span><br><span class="line">roleRef:</span><br><span class="line">  kind: Role</span><br><span class="line">  name: example-role</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">  </span><br><span class="line">---</span><br><span class="line">#管理员，角色配置可以参考 kubectl describe  ClusterRole/cluster-admin</span><br><span class="line">kind: Role</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  namespace: default</span><br><span class="line">  name: example-role</span><br><span class="line">rules:</span><br><span class="line">- apiGroups:</span><br><span class="line">  - &apos;*&apos;</span><br><span class="line">  resources:</span><br><span class="line">  - &apos;*&apos;</span><br><span class="line">  verbs:</span><br><span class="line">  - &apos;*&apos;</span><br><span class="line">  </span><br><span class="line">serviceAccountName</span><br><span class="line">serviceAccount #pod请求别的命名空间时的帐号</span><br><span class="line"></span><br><span class="line">Error: release community-feature-haozhe-wei failed: namespaces &quot;php-sht&quot; is forbidden: User &quot;system:serviceaccount:gitlab-managed-apps:default&quot; cannot get resource &quot;namespaces&quot; in API group &quot;&quot; in the namespace &quot;php-sht&quot;</span><br><span class="line"></span><br><span class="line">更新密钥要小心，因为帐号token会被其他服务关联，比如 tiller account</span><br></pre></td></tr></table></figure>
 <p><strong>跨namespace授权 </strong></p>
@@ -530,7 +532,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/k8s-notes/" data-id="ckcbkuu4i001011pbfr14ef72" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/k8s-notes/" data-id="ckcnaz4qf000s0opbblf42stc" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
@@ -579,7 +581,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/01/k8s-introduction/" data-id="ckcbkuu4f000v11pbwuqll6gj" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/01/k8s-introduction/" data-id="ckcnaz4qa000q0opbvqaxyi5s" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
