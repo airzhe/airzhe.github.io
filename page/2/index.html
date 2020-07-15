@@ -62,70 +62,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-ubuntu-install" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/ubuntu-install/" class="article-date">
-  <time datetime="2019-11-14T20:53:10.000Z" itemprop="datePublished">2019-11-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/ubuntu-install/">ubuntu18.04安装</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>镜像制作</strong></p>
-<p>工具：<a href="https://rufus.ie/" target="_blank" rel="noopener">https://rufus.ie/</a> </p>
-<p><strong>分区：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/ 50G 根分区(一般分配30G就可以)</span><br><span class="line">/boot 500MB 引导分区</span><br><span class="line">efi 500MB</span><br><span class="line">swap 4G 交换分区</span><br><span class="line">/home 个人数据分区</span><br></pre></td></tr></table></figure>
-<p>安装完成重启</p>
-<p><strong>修改163源并更新</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ cat /etc/apt/sources.list</span><br><span class="line">deb http://mirrors.163.com/ubuntu/ bionic main restricted universe multiverse</span><br><span class="line">deb http://mirrors.163.com/ubuntu/ bionic-security main restricted universe multiverse</span><br><span class="line">deb http://mirrors.163.com/ubuntu/ bionic-updates main restricted universe multiverse</span><br><span class="line">deb http://mirrors.163.com/ubuntu/ bionic-proposed main restricted universe multiverse</span><br><span class="line">deb http://mirrors.163.com/ubuntu/ bionic-backports main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.163.com/ubuntu/ bionic main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.163.com/ubuntu/ bionic-security main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.163.com/ubuntu/ bionic-updates main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.163.com/ubuntu/ bionic-proposed main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.163.com/ubuntu/ bionic-backports main restricted universe multiverse</span><br><span class="line">$ sudo apt update</span><br><span class="line">$ sudo apt upgrade</span><br></pre></td></tr></table></figure>
-<p><strong>安装网卡驱动 :(</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/tomaspinho/rtl8821ce</span><br></pre></td></tr></table></figure>
-<p><strong>常用软件</strong></p>
-<ul>
-<li>chrome</li>
-<li><a href="https://www.jianguoyun.com/" target="_blank" rel="noopener">Nutstore</a>  #坚果网盘 导入备份数据</li>
-<li><a href="https://ywnz.com/linuxjc/2891.html" target="_blank" rel="noopener">google 拼音</a> </li>
-<li>sublime</li>
-<li>vim</li>
-<li>git 别名设置</li>
-<li><a href="http://typora.io/" target="_blank" rel="noopener">typora</a> #markdown工具</li>
-<li>docker.io</li>
-<li>postman</li>
-<li>gimp</li>
-<li>bleachbit</li>
-<li>vsCode</li>
-</ul>
-<p><img src="/img/ubuntu/1.png" alt="1.png"></p>
-<p>总结：装个系统还是比较容易的，数据备份很重要，坚果网盘真的好用。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ubuntu-install/" data-id="ckcnaz4sb003f0opbqf9wb2p8" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
     <article id="post-grafana-mysql-source" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/11/grafana-mysql-source/" class="article-date">
@@ -160,7 +96,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ckcnaz4pi000a0opby8tb06an" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ckcnb6ilt000h3spbd954s145" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li></ul>
@@ -237,7 +173,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/k8s-migration-1/" data-id="ckcnaz4qk000v0opbiyv4hsnh" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/k8s-migration-1/" data-id="ckcnb6im1000q3spbynaht6m9" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
@@ -299,7 +235,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/microk8s/" data-id="ckcnaz4qq00100opb0oljbkw1" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/microk8s/" data-id="ckcnb6im900113spbci0xz25l" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/microk8s/">microk8s</a></li></ul>
@@ -348,7 +284,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/hexo/" data-id="ckcnaz4q2000l0opb2z40d9is" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/hexo/" data-id="ckcnb6ilz000p3spbbepaxadj" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
@@ -394,7 +330,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/grafana-variables/" data-id="ckcnaz4pz000j0opbeq9kyjju" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/grafana-variables/" data-id="ckcnb6ilv000j3spbvegjow6b" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/promtal/">promtal</a></li></ul>
@@ -445,7 +381,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/loki/" data-id="ckcnaz4qm000x0opbslyrc0yu" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/loki/" data-id="ckcnb6im800103spbzl7r98gj" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/promtal/">promtal</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/日志/">日志</a></li></ul>
@@ -489,7 +425,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/core-dns/" data-id="ckcnaz4pc00070opbjcoviyxe" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/core-dns/" data-id="ckcnb6ile00073spbhgzzhz79" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/coredns/">coredns</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/etcd/">etcd</a></li></ul>
@@ -535,7 +471,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/gitrunner-helm-install/" data-id="ckcnaz4pf00080opbhu6aeucf" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/gitrunner-helm-install/" data-id="ckcnb6ilk000a3spbnqss5jzf" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li></ul>
@@ -579,10 +515,55 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/helm/" data-id="ckcnaz4q7000p0opbz20vkwt9" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/helm/" data-id="ckcnb6ilx000l3spb3ga30q4w" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-grafana-alerting" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/grafana-alerting/" class="article-date">
+  <time datetime="2019-10-16T17:20:01.000Z" itemprop="datePublished">2019-10-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/grafana-alerting/">grafana alerting 报警</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>使用工具：<a href="https://github.com/prometheus/prometheus" target="_blank" rel="noopener">prometheus</a>、<a href="https://github.com/grafana/grafana" target="_blank" rel="noopener">grafana</a>、<a href="https://github.com/endclothing/prometheus_client_php" target="_blank" rel="noopener">prometheus_client_php</a></p>
+<p>通过 prometheus-php-client 客户端暴露监控元信息，如下表示 order_notify 队列长度为90<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># HELP payment_queue_length it sets</span><br><span class="line"># TYPE payment_queue_length gauge</span><br><span class="line">payment_queue_length&#123;name=&quot;order_notify&quot;&#125; 90</span><br></pre></td></tr></table></figure></p>
+<p>被 prometheus 采集<br><img src="/img/grafana-alerting/2.png" alt="2"><br>
+        
+          <p class="article-more-link">
+            <a href="/2019/10/grafana-alerting/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/10/grafana-alerting/" data-id="ckcnb6ilr000f3spbhotaom04" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/报警/">报警</a></li></ul>
 
     </footer>
   </div>
@@ -626,7 +607,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
     </div>
   </div>
 
@@ -637,10 +618,6 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
-        
-          <li>
-            <a href="/2020/07/shazam/">(no title)</a>
-          </li>
         
           <li>
             <a href="/2020/06/clickhouse-ha/">clickhouse单分片三副本高可用搭建</a>
@@ -656,6 +633,10 @@
         
           <li>
             <a href="/2020/01/docker-web-shell-1/">Docker web shell 实现一</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/angular-js/">angular js基本使用</a>
           </li>
         
       </ul>
