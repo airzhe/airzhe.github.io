@@ -14,7 +14,7 @@
 <meta property="og:description" content="数据模型时序索引 名称+标签 时序样本  float64 值 格式:  1&amp;lt;metric name&amp;gt;&amp;#123;&amp;lt;label name&amp;gt;=&amp;lt;label value&amp;gt;, ...&amp;#125; Prometheus 时序数据分为 Counter, Gauge, Histogram, Summary 四种类型。 123metric_name [  &amp;quot;&amp;#123">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/12621529-a47a2a3008428942.jpg?imageMogr2/auto-orient/strip|imageView2/2/w/134/format/webp">
-<meta property="og:updated_time" content="2020-07-13T13:23:22.847Z">
+<meta property="og:updated_time" content="2020-07-16T06:56:50.470Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Prometheus入门">
 <meta name="twitter:description" content="数据模型时序索引 名称+标签 时序样本  float64 值 格式:  1&amp;lt;metric name&amp;gt;&amp;#123;&amp;lt;label name&amp;gt;=&amp;lt;label value&amp;gt;, ...&amp;#125; Prometheus 时序数据分为 Counter, Gauge, Histogram, Summary 四种类型。 123metric_name [  &amp;quot;&amp;#123">
@@ -143,13 +143,16 @@
 <p><strong>k8s服务发现</strong><br>要想自动发现集群中的 Service，就需要我们在 Service 的annotation区域添加：prometheus.io/scrape=true的声明<br>要想自动发现集群中的 pod，也需要我们在 pod 的annotation区域添加：prometheus.io/scrape=true的声明</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">kind: Service</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  annotations:</span><br><span class="line">    prometheus.io/scrape: &quot;true&quot;</span><br><span class="line">    prometheus.io/port: &quot;9121&quot;</span><br><span class="line">  name: redis</span><br><span class="line">  namespace: kube-system</span><br></pre></td></tr></table></figure>
 <p><strong>实战</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#两分钟的增长率×60,为什么×60呢？应为是按秒球的平均值，还原一分钟的就要乘以60，另外prometheus默认1分钟刮一次数据</span><br><span class="line">irate(user_behavior_request_counter[2m])*60</span><br></pre></td></tr></table></figure></p>
+<p>通过增长率表示样本的变化情况</p>
+<p>increase(v range-vector)函数是PromQL中提供的众多内置函数之一。其中参数v是一个区间向量，increase函数获取区间向量中的第一个后最后一个样本并返回其增长量。因此，可以通过以下表达式Counter类型指标的增长率：</p>
+<p>increase(node_cpu[2m]) / 120</p>
 <p>参考：</p>
 <p><a href="https://mojotv.cn/go/prometheus-client-for-go" target="_blank" rel="noopener">https://mojotv.cn/go/prometheus-client-for-go</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/prometheus/" data-id="ckcnbakwv001951pbe7qikic3" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/prometheus/" data-id="ckcu53lk000150mpbkrcykths" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/监控/">监控</a></li></ul>
