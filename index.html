@@ -89,7 +89,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">manager.go</span><br><span class="line">//46</span><br><span class="line">mgr, err := CreateManager(cfg, namespaceConfigs)</span><br><span class="line">//154 init namespace</span><br><span class="line">m.namespaces[current] = CreateNamespaceManager(namespaceConfigs)</span><br><span class="line">//422</span><br><span class="line">namespace, err := NewNamespace(config)</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">namespace.go</span><br><span class="line">//82 NewNamespace init namespace</span><br><span class="line">func NewNamespace(namespaceConfig *models.Namespace) (*Namespace, error) &#123;</span><br><span class="line">	//151 init router</span><br><span class="line">	namespace.router, err = router.NewRouter(namespaceConfig)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">router.go</span><br><span class="line">//29</span><br><span class="line">func NewRouter(namespace *models.Namespace) (*Router, error) &#123;</span><br><span class="line">//63 </span><br><span class="line">rule, err := parseRule(shard)</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">rule.go</span><br><span class="line">//310 生成初始化数据subTableIndexs、tableToSlice等</span><br><span class="line">subTableIndexs, tableToSlice, shard, err := parseRuleSliceInfos(cfg)</span><br><span class="line">//400</span><br><span class="line">	case MycatModRuleType:</span><br><span class="line">		subTableIndexs, tableToSlice, err := parseMycatHashRuleSliceInfos(cfg.Locations, cfg.Slices, cfg.Databases)</span><br><span class="line">		//479</span><br><span class="line">		if len(locations) != len(slices) &#123;</span><br><span class="line">			return nil, nil, errors.ErrLocationsCount</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">rule.go</span><br><span class="line">//310 生成初始化数据subTableIndexs、tableToSlice等</span><br><span class="line">subTableIndexs, tableToSlice, shard, err := parseRuleSliceInfos(cfg)</span><br><span class="line">	//400</span><br><span class="line">	case MycatModRuleType:</span><br><span class="line">		subTableIndexs, tableToSlice, err := parseMycatHashRuleSliceInfos(cfg.Locations, cfg.Slices, cfg.Databases)</span><br><span class="line">		//479</span><br><span class="line">		if len(locations) != len(slices) &#123;</span><br><span class="line">			return nil, nil, errors.ErrLocationsCount</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>server.go</strong>  </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">onConnc //106 处理连接</span><br><span class="line">cc := newSession(s, c) //107 新建一个session,初始化部分字段</span><br><span class="line">Handshark //121 认证 </span><br><span class="line"></span><br><span class="line">session.go</span><br><span class="line">//56</span><br><span class="line">cc.c = NewClientConn(mysql.NewConn(tcpConn), s.manager) //66 每个客户端连接包装成结构体，包含salt加密字段</span><br><span class="line">cc.proxy = s</span><br><span class="line">cc.manager = s.manager</span><br><span class="line">cc.executor = newSessionExecutor(s.manager)</span><br><span class="line"></span><br><span class="line">//148 通过握手确定session db、namespace等信息</span><br><span class="line">func (cc *Session) handleHandshakeResponse(info HandshakeResponseInfo) error &#123;//148 </span><br><span class="line">	//设置认证握手时传入的 db 值</span><br><span class="line">	cc.executor.SetDatabase(info.Database)</span><br><span class="line">    //set namespace</span><br><span class="line">    namespace := cc.manager.GetNamespaceByUser(user, password)</span><br><span class="line">    cc.namespace = namespace</span><br><span class="line">    cc.executor.namespace = namespace</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">s.tw.Add(s.sessionTimeout, cc, cc.Close) //137 加入时间轮循，超时关闭</span><br><span class="line">cc.Run() //139</span><br></pre></td></tr></table></figure>
 <p><strong>session.go</strong></p>
@@ -127,7 +127,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/07/shazam_source_code/" data-id="ckd5c70h5001c0vpbhs446twe" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/07/shazam_source_code/" data-id="ckd5d0g50001724pb7pemtrnz" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gaea/">gaea</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shazam/">shazam</a></li></ul>
@@ -192,7 +192,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/06/clickhouse-ha/" data-id="ckd5c70fd00040vpbv4ys3w5d" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/06/clickhouse-ha/" data-id="ckd5d0g3r000424pbds84k5n4" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse-高可用/">clickhouse 高可用</a></li></ul>
@@ -244,7 +244,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/04/xorm_traceid/" data-id="ckd5c70h3001a0vpbzjihxsxf" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/04/xorm_traceid/" data-id="ckd5d0g53001a24pbp950atnp" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/golang/">golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/logrus/">logrus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xorm/">xorm</a></li></ul>
@@ -293,7 +293,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="ckd5c70fp000c0vpb5s2kd85w" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="ckd5d0g45000f24pbjmvelz1l" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -340,7 +340,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="ckd5c70fk00090vpbj0c0fw4d" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="ckd5d0g3s000524pb4is3m277" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -399,7 +399,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ckd5c70eu00000vpbakwnw4og" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ckd5d0g3k000124pb8ciwq0v8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angular-js/">angular js</a></li></ul>
@@ -445,7 +445,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="ckd5c70fa00030vpbwx3kznwe" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="ckd5d0g3f000024pb6fur3c2t" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/awk/">awk</a></li></ul>
@@ -493,7 +493,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/loki-cassandra/" data-id="ckd5c70gj000t0vpb53p75o7l" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/loki-cassandra/" data-id="ckd5d0g4t001024pbphyubj3s" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li></ul>
@@ -549,7 +549,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ckd5c70ff00050vpb2nekz2lb" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ckd5d0g3w000924pbgk17icoa" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse/">clickhouse</a></li></ul>
@@ -598,7 +598,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ckd5c70gn000x0vpbn8du5v99" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ckd5d0g4r000x24pb7v2vicn4" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gogs/">gogs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openldap/">openldap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li></ul>
