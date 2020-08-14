@@ -14,7 +14,7 @@
 <meta property="og:description" content="ClickHouse是一个用于联机分析(OLAP)的列式数据库管理系统(DBMS) 版本 文章使用版本 docker pull yandex/clickhouse-server:19.15.3.6 SQL支持 支持的查询包括 GROUP BY，ORDER BY，IN，JOIN以及非相关子查询。 不支持窗口函数和相关子查询。 支持近似计算 用于近似计算的各类聚合函数，如：distinct value">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://airzhe.github.io/img/clickhouse/1.png">
-<meta property="og:updated_time" content="2020-07-20T06:39:53.833Z">
+<meta property="og:updated_time" content="2020-08-14T03:08:39.359Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ClickHouse 入门笔记">
 <meta name="twitter:description" content="ClickHouse是一个用于联机分析(OLAP)的列式数据库管理系统(DBMS) 版本 文章使用版本 docker pull yandex/clickhouse-server:19.15.3.6 SQL支持 支持的查询包括 GROUP BY，ORDER BY，IN，JOIN以及非相关子查询。 不支持窗口函数和相关子查询。 支持近似计算 用于近似计算的各类聚合函数，如：distinct value">
@@ -117,6 +117,7 @@
 <p><strong>mergeTree 引擎</strong></p>
 <p>使用新的ClickHouse自定义分区，不需要创建单独的日期列即可将MySQL中的表映射到ClickHouse中的相​​同表结构</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE wikistat</span><br><span class="line">(</span><br><span class="line">    id bigint,</span><br><span class="line">    dt DateTime,</span><br><span class="line">    project String,</span><br><span class="line">    subproject String,</span><br><span class="line">    path String,</span><br><span class="line">    hits UInt64,</span><br><span class="line">    size UInt64</span><br><span class="line">)</span><br><span class="line">ENGINE = MergeTree</span><br><span class="line">PARTITION BY toYYYYMMDD(dt)</span><br><span class="line">ORDER BY dt</span><br></pre></td></tr></table></figure>
+<p><strong>ReplacingMergeTree 引擎</strong> (按主键进行合并)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE mergetree</span><br><span class="line">(</span><br><span class="line">    `msg_id` UInt64,</span><br><span class="line">    `msg_type` String,</span><br><span class="line">    `sync_time` DateTime DEFAULT now()</span><br><span class="line">)</span><br><span class="line">ENGINE = ReplacingMergeTree </span><br><span class="line">PARTITION BY toYYYYMMDD(sync_time)</span><br><span class="line">ORDER BY msg_id;</span><br><span class="line"># 插入数据</span><br><span class="line">insert into mergetree(msg_id,msg_type) values(1,&apos;aa&apos;) ;</span><br><span class="line"># 强制合并</span><br><span class="line">optimize table mergetree;</span><br></pre></td></tr></table></figure></p>
 <p><strong>JSON 函数</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#pay_data 是否有 appId 下标</span><br><span class="line">select visitParamHas(pay_data,&apos;appId&apos;) from `order` limit 1;</span><br><span class="line">#获取appId值</span><br><span class="line">select visitParamExtractRaw(pay_data,&apos;appId&apos;) from `order` limit 1;</span><br><span class="line">#获取值</span><br><span class="line">SELECT visitParamExtractString(return_data, &apos;body&apos;) FROM order_behavior_log LIMIT 10;</span><br></pre></td></tr></table></figure>
 <p><a href="https://clickhouse.yandex/docs/zh/query_language/functions/json_functions/" target="_blank" rel="noopener">https://clickhouse.yandex/docs/zh/query_language/functions/json_functions/</a></p>
@@ -166,7 +167,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ckd9upq5800080lpbt1134i9b" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ckdtnka3k00080lpb4cm7svu5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse/">clickhouse</a></li></ul>
