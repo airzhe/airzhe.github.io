@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Runner的小站">
 <meta property="og:description" content="3台机器，分别起3个 clickhosue 和 zookeeper 搭建一分片三副本高可用集群。 用到镜像yandex/clickhouse-server:19.15.3.6，zookeeper zookeeper 配置 zoo.cfg 增加server列表 1234567891011121314[root@node-a002 zookeeper]# cat zoo.cfgdataDir=/dat">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-30T06:22:18.948Z">
+<meta property="og:updated_time" content="2020-08-18T03:44:08.498Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="clickhouse单分片三副本高可用搭建">
 <meta name="twitter:description" content="3台机器，分别起3个 clickhosue 和 zookeeper 搭建一分片三副本高可用集群。 用到镜像yandex/clickhouse-server:19.15.3.6，zookeeper zookeeper 配置 zoo.cfg 增加server列表 1234567891011121314[root@node-a002 zookeeper]# cat zoo.cfgdataDir=/dat">
@@ -110,15 +110,18 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">insert into test values(1,&apos;2020 06 28 14:00:00&apos;) ;</span><br></pre></td></tr></table></figure>
 <p>到其他两台备份上分别查看数据是否同步 ✓</p>
 <p>停掉某一台 zookeeper 数据库是否能正常访问 ✓</p>
+<p><strong>其他表引擎</strong></p>
+<p>自动数据备份，是表的行为，ReplicatedXXX的表支持自动同步。</p>
+<p>Replicated前缀只用于MergeTree系列（MergeTree是最常用的引擎），即clickhouse支持以下几种自动备份的引擎：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ReplicatedMergeTree</span><br><span class="line">ReplicatedSummingMergeTree</span><br><span class="line">ReplicatedReplacingMergeTree</span><br><span class="line">ReplicatedAggregatingMergeTree</span><br><span class="line">ReplicatedCollapsingMergeTree</span><br><span class="line">ReplicatedGraphiteMergeTree</span><br></pre></td></tr></table></figure></p>
 <p><strong>参考：</strong></p>
 <a href="/2019/12/clickhouse/" title="clickhouse入门操作">clickhouse入门操作</a>
-<p><a href="https://blog.csdn.net/qq_33142257/article/details/79836645" target="_blank" rel="noopener">https://blog.csdn.net/qq_33142257/article/details/79836645</a></p>
-<p><a href="https://blog.csdn.net/linglingma9087/article/details/84666581" target="_blank" rel="noopener">https://blog.csdn.net/linglingma9087/article/details/84666581</a></p>
+<p><a href="https://blog.csdn.net/qq_33142257/article/details/79836645" target="_blank" rel="noopener">zookeeper集群启动报错</a></p>
+<p><a href="https://blog.csdn.net/linglingma9087/article/details/84666581" target="_blank" rel="noopener">Clickhouse集群应用、分片、复制</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/06/clickhouse-ha/" data-id="ckdtnka3d00030lpb74ats0gx" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/06/clickhouse-ha/" data-id="ckdzellxv00010lpbhndmyi65" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse-高可用/">clickhouse 高可用</a></li></ul>

@@ -131,7 +131,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/07/shazam_source_code/" data-id="ckdtnka4g00190lpbv0n6tj7g" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/07/shazam_source_code/" data-id="ckdzelm03003s0lpbibrrgs5y" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gaea/">gaea</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shazam/">shazam</a></li></ul>
@@ -188,15 +188,18 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">insert into test values(1,&apos;2020 06 28 14:00:00&apos;) ;</span><br></pre></td></tr></table></figure>
 <p>到其他两台备份上分别查看数据是否同步 ✓</p>
 <p>停掉某一台 zookeeper 数据库是否能正常访问 ✓</p>
+<p><strong>其他表引擎</strong></p>
+<p>自动数据备份，是表的行为，ReplicatedXXX的表支持自动同步。</p>
+<p>Replicated前缀只用于MergeTree系列（MergeTree是最常用的引擎），即clickhouse支持以下几种自动备份的引擎：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ReplicatedMergeTree</span><br><span class="line">ReplicatedSummingMergeTree</span><br><span class="line">ReplicatedReplacingMergeTree</span><br><span class="line">ReplicatedAggregatingMergeTree</span><br><span class="line">ReplicatedCollapsingMergeTree</span><br><span class="line">ReplicatedGraphiteMergeTree</span><br></pre></td></tr></table></figure></p>
 <p><strong>参考：</strong></p>
 <a href="/2019/12/clickhouse/" title="clickhouse入门操作">clickhouse入门操作</a>
-<p><a href="https://blog.csdn.net/qq_33142257/article/details/79836645" target="_blank" rel="noopener">https://blog.csdn.net/qq_33142257/article/details/79836645</a></p>
-<p><a href="https://blog.csdn.net/linglingma9087/article/details/84666581" target="_blank" rel="noopener">https://blog.csdn.net/linglingma9087/article/details/84666581</a></p>
+<p><a href="https://blog.csdn.net/qq_33142257/article/details/79836645" target="_blank" rel="noopener">zookeeper集群启动报错</a></p>
+<p><a href="https://blog.csdn.net/linglingma9087/article/details/84666581" target="_blank" rel="noopener">Clickhouse集群应用、分片、复制</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/06/clickhouse-ha/" data-id="ckdtnka3d00030lpb74ats0gx" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/06/clickhouse-ha/" data-id="ckdzellxv00010lpbhndmyi65" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse-高可用/">clickhouse 高可用</a></li></ul>
@@ -248,7 +251,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/04/xorm_traceid/" data-id="ckdtnka4j001d0lpbschkyndy" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/04/xorm_traceid/" data-id="ckdzelm04003t0lpbwx11ja45" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/golang/">golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/logrus/">logrus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xorm/">xorm</a></li></ul>
@@ -297,7 +300,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="ckdtnka4a00100lpbhd51k2xm" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="ckdzellyb000d0lpbpryn8ipy" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -344,7 +347,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="ckdtnka4d00150lpbsnig2713" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="ckdzellyh000h0lpbmog0vtdt" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -403,7 +406,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ckdtnka3h00050lpbgm1osz1z" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ckdzellxz00030lpbta8okrm1" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angular-js/">angular js</a></li></ul>
@@ -449,7 +452,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="ckdtnka3j00070lpb9ovhj5m9" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="ckdzellxq00000lpb8ei0gcpl" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/awk/">awk</a></li></ul>
@@ -497,7 +500,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/loki-cassandra/" data-id="ckdtnka45000t0lpbxtgnq41t" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/loki-cassandra/" data-id="ckdzellyr000s0lpbidem2hds" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li></ul>
@@ -553,7 +556,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ckdtnka3k00080lpb4cm7svu5" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ckdzellyj000j0lpbeoj4rkg2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse/">clickhouse</a></li></ul>
@@ -602,7 +605,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ckdtnka4e00170lpb2hco86g6" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ckdzellz100190lpbf6zzwq96" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gogs/">gogs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openldap/">openldap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li></ul>
