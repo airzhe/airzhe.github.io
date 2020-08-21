@@ -86,7 +86,7 @@
       
         <p><strong>和 Angularjs 比较</strong></p>
 <p>组件开发有更好的生态圈，如Element Ui</p>
-<h3 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">v-bind:class=&quot;[classA,classB]&quot; 绑定属性 简写 :class=&quot;[classA,classB]&quot;</span><br><span class="line"># 对于所有的数据绑定，Vue.js 都提供了完全的 JavaScript 表达式支持。</span><br><span class="line">&#123;&#123; ok ? &apos;YES&apos; : &apos;NO&apos; &#125;&#125;</span><br><span class="line">&#123;&#123; message.split(&apos;&apos;).reverse().join(&apos;&apos;) &#125;&#125;</span><br><span class="line"># 绑定对象，也可以设置成变量</span><br><span class="line">:class=&quot;&#123;current:true,focus:false&#125;&quot;</span><br><span class="line"># 绑定style</span><br><span class="line">:style=&quot;&#123;color:&apos;red&apos;,fontSize:&apos;18px&apos;&#125;&quot;</span><br><span class="line">&lt;span v-html=&quot;rawHtml&quot;&gt;&lt;/span&gt;</span><br><span class="line"></span><br><span class="line"># 返回对象的计算属性。这是一个常用且强大的模式：</span><br><span class="line">&lt;div v-bind:class=&quot;classObject&quot;&gt;&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">v-if</span><br><span class="line">v-else-if</span><br><span class="line">v-else</span><br><span class="line">// 对一组元素进行if判断</span><br><span class="line">&lt;template v-if=&quot;&quot;&gt;</span><br><span class="line">	&lt;div&gt;&lt;/div&gt;</span><br><span class="line">	&lt;div&gt;&lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;p v-for=&quot;&#123;(num,index) in items&#125;&quot; :key=&quot;index&quot;&gt;&#123;&#123;k + &apos;-&apos; +v&#125;&#125;&lt;/p&gt;</span><br><span class="line">&lt;p v-for=&quot;&#123;(value,key,index) in obj&#125;&quot; :key=&quot;index&quot;&gt;&#123;&#123;k + &apos;-&apos; +v&#125;&#125;&lt;/p&gt;</span><br><span class="line">类似于 v-if，你也可以利用带有 v-for 的 &lt;template&gt; 来循环渲染一段包含多个元素的内容。</span><br><span class="line"></span><br><span class="line">v-on:click=&quot;add&quot; 简写 @:click=&quot;add&quot;</span><br><span class="line"></span><br><span class="line">this.$set(newLlist,0,&#123;&#125;)  修改数组0索引值</span><br><span class="line"></span><br><span class="line">&lt;div v-once&gt;&lt;/div&gt; 确保这些内容只计算一次</span><br></pre></td></tr></table></figure>
+<h3 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">v-bind:class=&quot;[classA,classB]&quot; 绑定属性 简写 :class=&quot;[classA,classB]&quot;</span><br><span class="line"># 对于所有的数据绑定，Vue.js 都提供了完全的 JavaScript 表达式支持。</span><br><span class="line">&#123;&#123; ok ? &apos;YES&apos; : &apos;NO&apos; &#125;&#125;</span><br><span class="line">&#123;&#123; message.split(&apos;&apos;).reverse().join(&apos;&apos;) &#125;&#125;</span><br><span class="line"># 绑定对象，也可以设置成变量</span><br><span class="line">:class=&quot;&#123;current:true,focus:false&#125;&quot;</span><br><span class="line"># 绑定style</span><br><span class="line">:style=&quot;&#123;color:&apos;red&apos;,fontSize:&apos;18px&apos;&#125;&quot;</span><br><span class="line">&lt;span v-html=&quot;rawHtml&quot;&gt;&lt;/span&gt;</span><br><span class="line"></span><br><span class="line"># 返回对象的计算属性。这是一个常用且强大的模式：</span><br><span class="line">&lt;div v-bind:class=&quot;classObject&quot;&gt;&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">v-if</span><br><span class="line">v-else-if</span><br><span class="line">v-else</span><br><span class="line">// 对一组元素进行if判断</span><br><span class="line">&lt;template v-if=&quot;&quot;&gt;</span><br><span class="line">	&lt;div&gt;&lt;/div&gt;</span><br><span class="line">	&lt;div&gt;&lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;p v-for=&quot;&#123;(num,index) in items&#125;&quot; :key=&quot;index&quot;&gt;&#123;&#123;k + &apos;-&apos; +v&#125;&#125;&lt;/p&gt;</span><br><span class="line">&lt;p v-for=&quot;&#123;(value,key,index) in obj&#125;&quot; :key=&quot;index&quot;&gt;&#123;&#123;k + &apos;-&apos; +v&#125;&#125;&lt;/p&gt;</span><br><span class="line">类似于 v-if，你也可以利用带有 v-for 的 &lt;template&gt; 来循环渲染一段包含多个元素的内容。</span><br><span class="line"></span><br><span class="line">v-on:click=&quot;add&quot; 简写 @:click=&quot;add&quot;</span><br><span class="line">this.$set(newLlist,0,&#123;&#125;)  修改数组0索引值</span><br><span class="line">&lt;div v-once&gt;&lt;/div&gt; 确保这些内容只计算一次</span><br></pre></td></tr></table></figure>
         
           <p class="article-more-link">
             <a href="/2020/08/vue/#more">Read More</a>
@@ -95,7 +95,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/08/vue/" data-id="cke3zhwt4001d25pb1b6k0jiq" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/08/vue/" data-id="cke3zjzf0001e30pb7kdn6oit" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue、vuejs/">vue、vuejs</a></li></ul>
@@ -143,7 +143,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/07/shazam_source_code/" data-id="cke3zhwt1001a25pb1w2pywy6" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/07/shazam_source_code/" data-id="cke3zjzeu001a30pbijtuu3uy" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gaea/">gaea</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shazam/">shazam</a></li></ul>
@@ -212,7 +212,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/06/clickhouse-ha/" data-id="cke3zhwqq000825pbknw9hcee" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/06/clickhouse-ha/" data-id="cke3zjzd9000530pbmle5lo09" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse-高可用/">clickhouse 高可用</a></li></ul>
@@ -264,7 +264,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/04/xorm_traceid/" data-id="cke3zhwt6001f25pbl7ubmvw8" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/04/xorm_traceid/" data-id="cke3zjzex001c30pbxyv0ltbj" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/golang/">golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/logrus/">logrus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xorm/">xorm</a></li></ul>
@@ -313,7 +313,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="cke3zhwqt000925pb5wz4wef4" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="cke3zjzdp000e30pbg1p4g8ka" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -360,7 +360,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="cke3zhwql000525pbahoqonle" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="cke3zjzd7000430pbnvtcfu5z" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -419,7 +419,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="cke3zhwqi000425pbygavd8h7" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="cke3zjzd5000330pb4xyefi6j" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angular-js/">angular js</a></li></ul>
@@ -465,7 +465,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="cke3zhwq1000025pbzco0n22z" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="cke3zjzco000030pbplqegt36" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/awk/">awk</a></li></ul>
@@ -513,7 +513,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/loki-cassandra/" data-id="cke3zhwsg000z25pbdkbj5der" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/loki-cassandra/" data-id="cke3zjzeh000w30pbosjpkchk" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li></ul>
@@ -569,7 +569,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="cke3zhwr0000c25pb4bby3504" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="cke3zjzdh000b30pbcols6ix8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse/">clickhouse</a></li></ul>
