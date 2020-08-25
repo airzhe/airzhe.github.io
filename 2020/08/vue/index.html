@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Runner的小站">
 <meta property="og:description" content="和 Angularjs 比较 组件开发有更好的生态圈，如Element UI 指令1234567891011121314151617181920212223242526272829v-bind:class=&amp;quot;[classA,classB]&amp;quot; 绑定属性 简写 :class=&amp;quot;[classA,classB]&amp;quot;# 对于所有的数据绑定，Vue.js 都提供了完全的">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-08-21T09:05:39.509Z">
+<meta property="og:updated_time" content="2020-08-25T06:46:33.930Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="vue 入门笔记">
 <meta name="twitter:description" content="和 Angularjs 比较 组件开发有更好的生态圈，如Element UI 指令1234567891011121314151617181920212223242526272829v-bind:class=&amp;quot;[classA,classB]&amp;quot; 绑定属性 简写 :class=&amp;quot;[classA,classB]&amp;quot;# 对于所有的数据绑定，Vue.js 都提供了完全的">
@@ -147,6 +147,16 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node_modules/@vue/cli-service/lib/options.js:83:  publicPath: &apos;./&apos;,</span><br></pre></td></tr></table></figure>
 <p><strong>Element</strong></p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">npm i element-ui -S</span><br><span class="line"><span class="comment"># 按需引入</span></span><br><span class="line">npm install babel-plugin-component -D</span><br><span class="line">babel.config.js 里添加</span><br><span class="line"><span class="string">"plugins"</span>: [</span><br><span class="line">    [</span><br><span class="line">      <span class="string">"component"</span>,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"libraryName"</span>: <span class="string">"element-ui"</span>,</span><br><span class="line">        <span class="string">"styleLibraryName"</span>: <span class="string">"theme-chalk"</span></span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  ]</span><br></pre></td></tr></table></figure>
+<h2 id="组件开发"><a href="#组件开发" class="headerlink" title="组件开发"></a>组件开发</h2><p><strong>button</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">组件里的内容使用 solt 定义</span><br><span class="line">通过 props 定义按钮type 如: primary、success、info、warning</span><br><span class="line">:class=&quot;[`hm-button--$&#123;type&#125;`,&#123;&apos;is_plain&apos;:plain&#125;]&quot; #ES6 引入了模板字符串</span><br><span class="line">&lt;i v-if=&quot;icon&quot; :class=&quot;icon&quot;&gt;&lt;/i&gt; </span><br><span class="line">&lt;span v-if=&quot;$slots.default&quot;&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/span&gt; #判断插槽是否传值</span><br><span class="line">#父</span><br><span class="line">&lt;hm-button @click=&quot;fn&quot;&gt;&lt;/hm-button&gt;</span><br><span class="line">#子</span><br><span class="line">@click=&quot;handleClick&quot;</span><br><span class="line">methods:&#123;</span><br><span class="line">	handleClick(e)&#123;</span><br><span class="line">		this.$emit(&apos;click&apos;,e)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>dialog</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 父组件传solt参数就覆盖，不传就显示span里的内容</span><br><span class="line">&lt;slot name=&quot;title&quot;&gt;</span><br><span class="line">	&lt;span&gt;&#123;&#123;title&#125;&#125;&lt;/span&gt;</span><br><span class="line">&lt;/slot&gt;</span><br><span class="line">&lt;div :style=&quot;&#123;width:width,top:top&#125;&quot;&gt;&lt;/div&gt;</span><br><span class="line"></span><br><span class="line"># 提示框内容使用默认插槽</span><br><span class="line">&lt;h-dialog&gt;内容&lt;/h-dialog&gt;</span><br><span class="line"></span><br><span class="line">@click.self=&quot;fun3&quot; # 阻止冒泡</span><br></pre></td></tr></table></figure>
+<p><strong>sync修饰符</strong> 子组件修改父组件数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@click=&quot;fn&quot;</span><br><span class="line">this.$emit(&apos;aa&apos;,200 )</span><br><span class="line"></span><br><span class="line"># sync 语法糖，直接修改父组件值相当于</span><br><span class="line">&lt;hm-dialog :visable=&quot;visable&quot; @update:visable=&quot;fn1&quot;&gt;&lt;/hm-dialog&gt; </span><br><span class="line">&lt;hm-dialog :visable.sync=&quot;visable&quot;&gt;&lt;/hm-dialog&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>vue.compoent vs vue.use</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Vue.use(plugin), plugin格式为&#123;install: function () &#123;&#125;&#125;，则运行install方法，若plugin本身是function则直接运行。Vue.component才是真正的去注册组件。很多UI库用Vue.use来注册组件是因为在plugin的install方法中去执行Vue.component罢了</span><br></pre></td></tr></table></figure>
+<p><strong>v-model 是个语法糖</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;input type=&quot;text&quot; v-model=&quot;username&quot;&gt;</span><br><span class="line">&lt;input type=&quot;text&quot; :value=&quot;username&quot; @input=&quot;username=$event.targe.value&quot;</span><br><span class="line"></span><br><span class="line">实现 v-model</span><br><span class="line"># 子</span><br><span class="line">:value=&quot;value&quot;</span><br><span class="line">@input=&quot;handleInput&quot;</span><br><span class="line">handleInput(e)&#123;</span><br><span class="line">	this.$emit(&apos;input&apos;,e.target.value)</span><br><span class="line">&#125;</span><br><span class="line"># 父</span><br><span class="line">v-model=&quot;user&quot;</span><br><span class="line"></span><br><span class="line">// 切换input type</span><br><span class="line">:type=&quot;showPassword ? (passwordVisable ? &apos;text&apos;:&apos;password&apos;) : type&quot;</span><br></pre></td></tr></table></figure>
 <p>参考：</p>
 <p><a href="https://www.jianshu.com/p/7fbdd031fe85" target="_blank" rel="noopener">关于* core-js/modules/es.array.fill in</a></p>
 <p><a href="https://blog.csdn.net/l284969634/article/details/78595077" target="_blank" rel="noopener">组件传参数</a></p>
@@ -155,7 +165,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/08/vue/" data-id="cke53z8j4001e2qpbl44unbd1" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/08/vue/" data-id="cke9l6gqi001e0vpb449gp8i5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue、vuejs/">vue、vuejs</a></li></ul>
@@ -165,6 +175,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2020/08/clickhouse-3shard/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+           clickhouse 多分片集群搭建
+        
+      </div>
+    </a>
   
   
     <a href="/2020/07/shazam_source_code/" id="article-nav-older" class="article-nav-link-wrap">
@@ -198,7 +217,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/OLAP/" style="font-size: 10px;">OLAP</a> <a href="/tags/angular-js/" style="font-size: 10px;">angular js</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/b树/" style="font-size: 10px;">b树</a> <a href="/tags/cassandra/" style="font-size: 10px;">cassandra</a> <a href="/tags/clickhouse/" style="font-size: 10px;">clickhouse</a> <a href="/tags/clickhouse-高可用/" style="font-size: 10px;">clickhouse 高可用</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gaea/" style="font-size: 10px;">gaea</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 10px;">jenkins</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/logrus/" style="font-size: 10px;">logrus</a> <a href="/tags/loki/" style="font-size: 15px;">loki</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/pipeline/" style="font-size: 10px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 12.5px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/shazam/" style="font-size: 10px;">shazam</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/vue、vuejs/" style="font-size: 10px;">vue、vuejs</a> <a href="/tags/webshell/" style="font-size: 12.5px;">webshell</a> <a href="/tags/xorm/" style="font-size: 10px;">xorm</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a>
+      <a href="/tags/OLAP/" style="font-size: 10px;">OLAP</a> <a href="/tags/angular-js/" style="font-size: 10px;">angular js</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/b树/" style="font-size: 10px;">b树</a> <a href="/tags/cassandra/" style="font-size: 10px;">cassandra</a> <a href="/tags/clickhouse/" style="font-size: 12.5px;">clickhouse</a> <a href="/tags/clickhouse-高可用/" style="font-size: 10px;">clickhouse 高可用</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gaea/" style="font-size: 10px;">gaea</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 10px;">jenkins</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/logrus/" style="font-size: 10px;">logrus</a> <a href="/tags/loki/" style="font-size: 15px;">loki</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/pipeline/" style="font-size: 10px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 12.5px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/shazam/" style="font-size: 10px;">shazam</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/vue、vuejs/" style="font-size: 10px;">vue、vuejs</a> <a href="/tags/webshell/" style="font-size: 12.5px;">webshell</a> <a href="/tags/xorm/" style="font-size: 10px;">xorm</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a>
     </div>
   </div>
 
@@ -220,6 +239,10 @@
       <ul>
         
           <li>
+            <a href="/2020/08/clickhouse-3shard/"> clickhouse 多分片集群搭建</a>
+          </li>
+        
+          <li>
             <a href="/2020/08/vue/">vue 入门笔记</a>
           </li>
         
@@ -233,10 +256,6 @@
         
           <li>
             <a href="/2020/04/xorm_traceid/">xorm结合logrus记录traceId</a>
-          </li>
-        
-          <li>
-            <a href="/2020/02/docker-web-shell-2/">Docker web shell 实现二</a>
           </li>
         
       </ul>

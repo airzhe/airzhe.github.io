@@ -62,6 +62,73 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-clickhouse-3shard" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/clickhouse-3shard/" class="article-date">
+  <time datetime="2020-08-25T14:44:00.000Z" itemprop="datePublished">2020-08-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/08/clickhouse-3shard/"> clickhouse 多分片集群搭建</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>ck分布式集群，采用<code>本地表</code>、<code>分布式表</code> 形式实现。本地表作为分片，分布式表作为数据集合。对于分布式表的插入会随机分配到配置的分片上，查询则会得到所有的数据集合。</p>
+<p>本地表采用 Replicated 引擎，实现主备之间的数据同步，可以参考上篇文章 <a href="/2020/06/clickhouse-ha/" title="clickhouse单分片三副本高可用搭建">clickhouse单分片三副本高可用搭建</a>，分布表采用 Distributed 引擎。</p>
+<p>由于只有3台机器 a001、a002、a003，采用每台机器上起两个服务、一主一备，备服务 <code>config.xml</code> 端口配置</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">http_port</span>&gt;</span>8124<span class="tag">&lt;/<span class="name">http_port</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">tcp_port</span>&gt;</span>9001<span class="tag">&lt;/<span class="name">tcp_port</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">interserver_http_port</span>&gt;</span>9010<span class="tag">&lt;/<span class="name">interserver_http_port</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>metrika.xml</code>配置，下面是环形备份，实现一台机器挂了，分布式表查询不受影响</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">yandex</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 集群配置 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">clickhouse_remote_servers</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 3分片2备份 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">cluster_3shards_2replicas</span>&gt;</span></span><br><span class="line">      <span class="comment">&lt;!-- 数据分片1  --&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">shard</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">weight</span>&gt;</span>1<span class="tag">&lt;/<span class="name">weight</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 是否只写入所有replica中的一台，与ZooKeeper配合进行复制 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">internal_replication</span>&gt;</span>true<span class="tag">&lt;/<span class="name">internal_replication</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">replica</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">host</span>&gt;</span>a001<span class="tag">&lt;/<span class="name">host</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">port</span>&gt;</span>9000<span class="tag">&lt;/<span class="name">port</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">replica</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">replica</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">host</span>&gt;</span>a002<span class="tag">&lt;/<span class="name">host</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">port</span>&gt;</span>9001<span class="tag">&lt;/<span class="name">port</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">replica</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">shard</span>&gt;</span></span><br><span class="line">      <span class="comment">&lt;!-- 数据分片2  --&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">shard</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">weight</span>&gt;</span>1<span class="tag">&lt;/<span class="name">weight</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">internal_replication</span>&gt;</span>true<span class="tag">&lt;/<span class="name">internal_replication</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">replica</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">host</span>&gt;</span>a002<span class="tag">&lt;/<span class="name">host</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">port</span>&gt;</span>9000<span class="tag">&lt;/<span class="name">port</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">replica</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">replica</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">host</span>&gt;</span>a003<span class="tag">&lt;/<span class="name">host</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">port</span>&gt;</span>9001<span class="tag">&lt;/<span class="name">port</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">replica</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">shard</span>&gt;</span></span><br><span class="line">      <span class="comment">&lt;!-- 数据分片3  --&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">shard</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">weight</span>&gt;</span>1<span class="tag">&lt;/<span class="name">weight</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">internal_replication</span>&gt;</span>true<span class="tag">&lt;/<span class="name">internal_replication</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">replica</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">host</span>&gt;</span>a003<span class="tag">&lt;/<span class="name">host</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">port</span>&gt;</span>9000<span class="tag">&lt;/<span class="name">port</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">replica</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">replica</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">host</span>&gt;</span>a001<span class="tag">&lt;/<span class="name">host</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">port</span>&gt;</span>9001<span class="tag">&lt;/<span class="name">port</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">replica</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">shard</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">cluster_3shards_2replicas</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">clickhouse_remote_servers</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">zookeeper-servers</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">node</span> <span class="attr">index</span>=<span class="string">"1"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">host</span>&gt;</span>10.2.4.34<span class="tag">&lt;/<span class="name">host</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">port</span>&gt;</span>2181<span class="tag">&lt;/<span class="name">port</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">node</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">node</span> <span class="attr">index</span>=<span class="string">"2"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">host</span>&gt;</span>10.2.4.35<span class="tag">&lt;/<span class="name">host</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">port</span>&gt;</span>2181<span class="tag">&lt;/<span class="name">port</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">node</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">node</span> <span class="attr">index</span>=<span class="string">"3"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">host</span>&gt;</span>10.2.4.36<span class="tag">&lt;/<span class="name">host</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">port</span>&gt;</span>2181<span class="tag">&lt;/<span class="name">port</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">node</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">zookeeper-servers</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">macros</span>&gt;</span> <span class="comment">&lt;!--a001作为第3分片备份a003--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">layer</span>&gt;</span>01<span class="tag">&lt;/<span class="name">layer</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">shard</span>&gt;</span>03<span class="tag">&lt;/<span class="name">shard</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">replica</span>&gt;</span>cluster01-03-a001<span class="tag">&lt;/<span class="name">replica</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">macros</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">yandex</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>备服务启动脚本</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat d_clickhouse2.sh</span></span><br><span class="line">docker run -d \</span><br><span class="line">        --network=host \</span><br><span class="line">        -v /root/clickhouse2/conf/config.xml:/etc/clickhouse-server/config.xml \</span><br><span class="line">        -v /root/clickhouse2/conf/metrika.xml:/etc/clickhouse-server/metrika.xml \</span><br><span class="line">        -v /root/clickhouse2/data:/var/lib/clickhouse \</span><br><span class="line">        -v /root/clickhouse2/<span class="built_in">log</span>:/var/<span class="built_in">log</span>/clickhouse-server/ \</span><br><span class="line">        --name clickhouse2 \</span><br><span class="line">        yandex/clickhouse-server:19.14</span><br></pre></td></tr></table></figure>
+<p><strong>创建本地表</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> default.user_local <span class="keyword">ON</span> CLUSTER <span class="string">'cluster_3shards_2replicas'</span> (</span><br><span class="line">  ts_date DateTime <span class="keyword">DEFAULT</span> <span class="keyword">now</span>(),</span><br><span class="line">  user_id Int64</span><br><span class="line">)</span><br><span class="line"><span class="keyword">ENGINE</span> = ReplicatedMergeTree(<span class="string">'/clickhouse/tables/&#123;layer&#125;-&#123;shard&#125;/default/user_local'</span>,<span class="string">'&#123;replica&#125;'</span>)</span><br><span class="line"><span class="keyword">PARTITION</span> <span class="keyword">BY</span> toYYYYMMDD(ts_date)</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> (ts_date)</span><br><span class="line"><span class="keyword">SETTINGS</span> index_granularity = <span class="number">8192</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">---删除本地表</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> default.events_local <span class="keyword">ON</span> CLUSTER <span class="string">'cluster_3shards_2replicas'</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>创建分布式表</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> default.user_all <span class="keyword">ON</span> CLUSTER cluster_3shards_2replicas</span><br><span class="line"><span class="keyword">AS</span> default.user_local</span><br><span class="line"><span class="keyword">ENGINE</span> = <span class="keyword">Distributed</span>(cluster_3shards_2replicas,<span class="keyword">default</span>,user_local,<span class="keyword">rand</span>());</span><br><span class="line"></span><br><span class="line"><span class="comment">---插入数据</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> user_all (user_id) <span class="keyword">values</span>(<span class="number">888</span>);</span><br></pre></td></tr></table></figure>
+<p><strong>删除表</strong> （先删除 zookeeper 目录，再删除 clickhouse 硬盘文件）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/clickhouse/tables/ # zk</span><br><span class="line">/var/lib/clickhouse/data/data/default/ </span><br><span class="line">/var/lib/clickhouse/data/metadata/default/*.sql</span><br><span class="line">DROP TABLE user_local</span><br><span class="line">DETACH TABLE user_local</span><br></pre></td></tr></table></figure>
+<p><strong>客户端连接备服务</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clickhouse-client -m --port 9001</span><br></pre></td></tr></table></figure>
+<p><strong>测试</strong></p>
+<ul>
+<li><p>在 a001 本地表<code>user_local</code>插入数据，会自动通过到 a002 备服务本地表</p>
+</li>
+<li><p>在分布式表<code>user_all</code>插入数据，会分配到不同的分片上</p>
+</li>
+<li><p>停掉 a001 上的两个clickhouse 服务，查询user_all正常</p>
+</li>
+</ul>
+<p>参考：</p>
+<p><a href="https://www.jianshu.com/p/78271ba9969b" target="_blank" rel="noopener">ClickHouse高可用集群的安装与部署</a></p>
+<p><a href="https://www.jianshu.com/p/ab811cceb856" target="_blank" rel="noopener">ClickHouse复制表、分布式表机制与使用方法</a></p>
+<p><a href="http://sineyuan.github.io/post/clickhouse-docker-quick-start/" target="_blank" rel="noopener">用Docker快速上手Clickhouse</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2020/08/clickhouse-3shard/" data-id="cke9l6gp000040vpbx4eftab3" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse/">clickhouse</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-vue" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/08/vue/" class="article-date">
@@ -95,7 +162,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/08/vue/" data-id="cke53z8j4001e2qpbl44unbd1" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/08/vue/" data-id="cke9l6gqi001e0vpb449gp8i5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue、vuejs/">vue、vuejs</a></li></ul>
@@ -143,7 +210,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/07/shazam_source_code/" data-id="cke53z8iz00192qpbxg0t9j8h" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/07/shazam_source_code/" data-id="cke9l6gqc00190vpb9ghv7ruf" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gaea/">gaea</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shazam/">shazam</a></li></ul>
@@ -212,7 +279,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/06/clickhouse-ha/" data-id="cke53z8hm00042qpbs57yu7ms" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/06/clickhouse-ha/" data-id="cke9l6gp200050vpbqoipmrnf" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse-高可用/">clickhouse 高可用</a></li></ul>
@@ -264,7 +331,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/04/xorm_traceid/" data-id="cke53z8j3001c2qpbg93k3sdg" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/04/xorm_traceid/" data-id="cke9l6gqk001g0vpbl7rpm5al" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/golang/">golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/logrus/">logrus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xorm/">xorm</a></li></ul>
@@ -313,7 +380,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="cke53z8hx000b2qpbi5882ln7" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="cke9l6gpf000f0vpbq91s64ot" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -360,7 +427,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="cke53z8hs00082qpb04v2rz55" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="cke9l6gpa000b0vpb4740x5zi" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -419,7 +486,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="cke53z8h500002qpbdwafdtjq" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="cke9l6gol00000vpbuy3ilkqq" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angular-js/">angular js</a></li></ul>
@@ -465,7 +532,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="cke53z8hc00012qpbhby6xc9y" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="cke9l6gos00010vpbwpsahmfs" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/awk/">awk</a></li></ul>
@@ -513,66 +580,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/loki-cassandra/" data-id="cke53z8ip000x2qpbs4tibfav" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/loki-cassandra/" data-id="cke9l6gq4000z0vpbdg2vne5v" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-clickhouse" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/clickhouse/" class="article-date">
-  <time datetime="2019-12-16T14:22:10.000Z" itemprop="datePublished">2019-12-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/clickhouse/">ClickHouse 入门笔记</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>ClickHouse是一个用于联机分析(OLAP)的列式数据库管理系统(DBMS)</p>
-<p><strong>版本</strong></p>
-<p>文章使用版本 <code>docker pull yandex/clickhouse-server:19.15.3.6</code></p>
-<p><strong>SQL支持</strong></p>
-<p>支持的查询包括 GROUP BY，ORDER BY，IN，JOIN以及非相关子查询。 不支持窗口函数和相关子查询。</p>
-<p><strong>支持近似计算</strong></p>
-<p>用于近似计算的各类聚合函数，如：distinct values, medians(中位数), quantiles(分位数)</p>
-<p><strong>吞吐量</strong></p>
-<p>ClickHouse可以在单个服务器上每秒处理数百个查询（在最佳的情况下最多可以处理数千个），建议每秒最多查询100次。有一种流行的观点认为，想要有效的计算统计数据，必须要聚合数据，因为聚合将降低数据量。</p>
-<p><strong>访问控制</strong></p>
-<p>ClickHouse包含访问控制配置，它们位于<code>users.xml</code>文件中(与’config.xml’同目录)。 默认情况下，允许从任何地方使用默认的‘default’用户无密码的访问ClickHouse。</p>
-<p>默认情况下它使用‘default’用户无密码的与localhost:9000服务建立连接。 客户端也可以用于连接远程服务，例如：<code>clickhouse-client --host=example.com</code></p>
-<p><strong>时区设置</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed &quot;144 i&lt;timezone&gt;Asia/Shanghai&lt;/timezone&gt;&quot; -i /etc/clickhouse-server/config.xml</span><br></pre></td></tr></table></figure>
-        
-          <p class="article-more-link">
-            <a href="/2019/12/clickhouse/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="cke53z8i6000f2qpbr1sofxtq" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse/">clickhouse</a></li></ul>
 
     </footer>
   </div>
@@ -607,7 +618,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/OLAP/" style="font-size: 10px;">OLAP</a> <a href="/tags/angular-js/" style="font-size: 10px;">angular js</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/b树/" style="font-size: 10px;">b树</a> <a href="/tags/cassandra/" style="font-size: 10px;">cassandra</a> <a href="/tags/clickhouse/" style="font-size: 10px;">clickhouse</a> <a href="/tags/clickhouse-高可用/" style="font-size: 10px;">clickhouse 高可用</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gaea/" style="font-size: 10px;">gaea</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 10px;">jenkins</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/logrus/" style="font-size: 10px;">logrus</a> <a href="/tags/loki/" style="font-size: 15px;">loki</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/pipeline/" style="font-size: 10px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 12.5px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/shazam/" style="font-size: 10px;">shazam</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/vue、vuejs/" style="font-size: 10px;">vue、vuejs</a> <a href="/tags/webshell/" style="font-size: 12.5px;">webshell</a> <a href="/tags/xorm/" style="font-size: 10px;">xorm</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a>
+      <a href="/tags/OLAP/" style="font-size: 10px;">OLAP</a> <a href="/tags/angular-js/" style="font-size: 10px;">angular js</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/b树/" style="font-size: 10px;">b树</a> <a href="/tags/cassandra/" style="font-size: 10px;">cassandra</a> <a href="/tags/clickhouse/" style="font-size: 12.5px;">clickhouse</a> <a href="/tags/clickhouse-高可用/" style="font-size: 10px;">clickhouse 高可用</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gaea/" style="font-size: 10px;">gaea</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 10px;">jenkins</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/logrus/" style="font-size: 10px;">logrus</a> <a href="/tags/loki/" style="font-size: 15px;">loki</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/pipeline/" style="font-size: 10px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 12.5px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/shazam/" style="font-size: 10px;">shazam</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/vue、vuejs/" style="font-size: 10px;">vue、vuejs</a> <a href="/tags/webshell/" style="font-size: 12.5px;">webshell</a> <a href="/tags/xorm/" style="font-size: 10px;">xorm</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a>
     </div>
   </div>
 
@@ -629,6 +640,10 @@
       <ul>
         
           <li>
+            <a href="/2020/08/clickhouse-3shard/"> clickhouse 多分片集群搭建</a>
+          </li>
+        
+          <li>
             <a href="/2020/08/vue/">vue 入门笔记</a>
           </li>
         
@@ -642,10 +657,6 @@
         
           <li>
             <a href="/2020/04/xorm_traceid/">xorm结合logrus记录traceId</a>
-          </li>
-        
-          <li>
-            <a href="/2020/02/docker-web-shell-2/">Docker web shell 实现二</a>
           </li>
         
       </ul>
