@@ -95,7 +95,7 @@
 <p><strong>创建本地表</strong></p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> default.user_local <span class="keyword">ON</span> CLUSTER <span class="string">'cluster_3shards_2replicas'</span> (</span><br><span class="line">  ts_date DateTime <span class="keyword">DEFAULT</span> <span class="keyword">now</span>(),</span><br><span class="line">  user_id Int64</span><br><span class="line">)</span><br><span class="line"><span class="keyword">ENGINE</span> = ReplicatedMergeTree(<span class="string">'/clickhouse/tables/&#123;layer&#125;-&#123;shard&#125;/default/user_local'</span>,<span class="string">'&#123;replica&#125;'</span>)</span><br><span class="line"><span class="keyword">PARTITION</span> <span class="keyword">BY</span> toYYYYMMDD(ts_date)</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> (ts_date)</span><br><span class="line"><span class="keyword">SETTINGS</span> index_granularity = <span class="number">8192</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">---删除本地表</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> default.events_local <span class="keyword">ON</span> CLUSTER <span class="string">'cluster_3shards_2replicas'</span>;</span><br></pre></td></tr></table></figure>
 <p><strong>创建分布式表</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> default.user_all <span class="keyword">ON</span> CLUSTER cluster_3shards_2replicas</span><br><span class="line"><span class="keyword">AS</span> default.user_local</span><br><span class="line"><span class="keyword">ENGINE</span> = <span class="keyword">Distributed</span>(cluster_3shards_2replicas,<span class="keyword">default</span>,user_local,<span class="keyword">rand</span>());</span><br><span class="line"></span><br><span class="line"><span class="comment">---插入数据</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> user_all (user_id) <span class="keyword">values</span>(<span class="number">888</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> default.user_all <span class="keyword">ON</span> CLUSTER cluster_3shards_2replicas</span><br><span class="line"><span class="keyword">AS</span> default.user_local</span><br><span class="line"><span class="keyword">ENGINE</span> = <span class="keyword">Distributed</span>(cluster_3shards_2replicas,<span class="keyword">default</span>,user_local,<span class="keyword">rand</span>());</span><br><span class="line"></span><br><span class="line"><span class="comment">---插入数据</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> user_all (user_id) <span class="keyword">values</span>(<span class="number">888</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">---更新</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> user_local <span class="keyword">ON</span> CLUSTER cluster_3shards_2replicas <span class="keyword">UPDATE</span> user_id = <span class="string">'2'</span> <span class="keyword">WHERE</span> user_id = <span class="string">'1'</span></span><br></pre></td></tr></table></figure>
 <p><strong>删除表</strong> （先删除 zookeeper 目录，再删除 clickhouse 硬盘文件）</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/clickhouse/tables/ # zk</span><br><span class="line">/var/lib/clickhouse/data/data/default/ </span><br><span class="line">/var/lib/clickhouse/data/metadata/default/*.sql</span><br><span class="line">DROP TABLE user_local</span><br><span class="line">DETACH TABLE user_local</span><br></pre></td></tr></table></figure>
 <p><strong>客户端连接备服务</strong></p>
@@ -117,7 +117,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/08/clickhouse-3shard/" data-id="cke9l6gp000040vpbx4eftab3" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/08/clickhouse-3shard/" data-id="cke9lk7mw00041vpb9daq46ac" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse/">clickhouse</a></li></ul>
@@ -162,7 +162,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/08/vue/" data-id="cke9l6gqi001e0vpb449gp8i5" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/08/vue/" data-id="cke9lk7o3001g1vpbyktd4r15" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue、vuejs/">vue、vuejs</a></li></ul>
@@ -210,7 +210,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/07/shazam_source_code/" data-id="cke9l6gqc00190vpb9ghv7ruf" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/07/shazam_source_code/" data-id="cke9lk7nx00191vpbfyzu3le6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gaea/">gaea</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shazam/">shazam</a></li></ul>
@@ -279,7 +279,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/06/clickhouse-ha/" data-id="cke9l6gp200050vpbqoipmrnf" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/06/clickhouse-ha/" data-id="cke9lk7my00051vpb6o2nfvnr" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse-高可用/">clickhouse 高可用</a></li></ul>
@@ -331,7 +331,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/04/xorm_traceid/" data-id="cke9l6gqk001g0vpbl7rpm5al" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/04/xorm_traceid/" data-id="cke9lk7o1001e1vpble6fbx3m" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/golang/">golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/logrus/">logrus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xorm/">xorm</a></li></ul>
@@ -380,7 +380,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="cke9l6gpf000f0vpbq91s64ot" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="cke9lk7n4000b1vpbv8m3pw48" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -427,7 +427,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="cke9l6gpa000b0vpb4740x5zi" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="cke9lk7n6000c1vpbl99exjo6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -486,7 +486,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="cke9l6gol00000vpbuy3ilkqq" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="cke9lk7mj00001vpbkjnessyj" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angular-js/">angular js</a></li></ul>
@@ -532,7 +532,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="cke9l6gos00010vpbwpsahmfs" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="cke9lk7mu00031vpbnocnv1ph" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/awk/">awk</a></li></ul>
@@ -580,7 +580,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/loki-cassandra/" data-id="cke9l6gq4000z0vpbdg2vne5v" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/loki-cassandra/" data-id="cke9lk7nr00111vpbmt2dpyr6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li></ul>
