@@ -20,7 +20,7 @@
 <meta property="og:image" content="http://airzhe.github.io/img/grafana-alerting/4.png">
 <meta property="og:image" content="http://airzhe.github.io/img/grafana-alerting/5.png">
 <meta property="og:image" content="http://airzhe.github.io/img/grafana-alerting/6.png">
-<meta property="og:updated_time" content="2019-12-16T06:14:36.754Z">
+<meta property="og:updated_time" content="2020-09-07T07:35:41.014Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="grafana alerting 报警">
 <meta name="twitter:description" content="使用工具：prometheus、grafana、prometheus_client_php 通过 prometheus-php-client 客户端暴露监控元信息，如下表示 order_notify 队列长度为90123# HELP payment_queue_length it sets# TYPE payment_queue_length gaugepayment_queue_length&amp;#">
@@ -104,12 +104,13 @@
 <p>手动修改队列长度为120,触发报警<br><img src="/img/grafana-alerting/4.png" alt="4"></p>
 <p>收到报警邮件<br><img src="/img/grafana-alerting/5.png" alt="5"></p>
 <p>解除报警<br><img src="/img/grafana-alerting/6.png" alt="6"></p>
+<p>邮件报警配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[smtp]</span><br><span class="line">enabled = true</span><br><span class="line">host = smtp.exmail.qq.com:465</span><br><span class="line">user = system@exmail.com</span><br><span class="line"># If the password contains # or ; you have to wrap it with trippel quotes. Ex &quot;&quot;&quot;#password;&quot;&quot;&quot;</span><br><span class="line">password = ***********</span><br><span class="line">;cert_file =</span><br><span class="line">;key_file =</span><br><span class="line">skip_verify = false</span><br><span class="line">from_address = system@exmail.com</span><br></pre></td></tr></table></figure></p>
 <p>钉钉报警api<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">curl &apos;https://oapi.dingtalk.com/robot/send?access_token=762627b8d3fdfe3951dc***733e9e59ff59***7515c3&apos; \</span><br><span class="line">-H &apos;Content-Type: application/json&apos; \</span><br><span class="line">-d &apos;&#123;&quot;msgtype&quot;: &quot;text&quot;,</span><br><span class="line">&quot;text&quot;: &#123;</span><br><span class="line">	&quot;content&quot;: &quot;业务报警测试&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/grafana-alerting/" data-id="ckeaui66d000e30pbyst3mv9p" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/grafana-alerting/" data-id="cketl7ahb000g16pb388c0iun" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/报警/">报警</a></li></ul>
