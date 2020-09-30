@@ -9,7 +9,7 @@ share: true
 
 ### 数据模型
 
-**时序索引 ** 名称+标签
+**时序索引** 名称+标签
 
 **时序样本**  float64 值
 
@@ -28,14 +28,6 @@ metric_name [
 ```
 
 
-
-contab 每天凌晨清空
-
-统计：下单总数、成功支付总数
-
-
-
-每秒总数 counter
 
 **Counter**
 
@@ -271,4 +263,72 @@ quantile without(cpu)(0.9, rate(node_cpu_seconds_total{mode="system"}[5m]))
 ```
 
 
+**k8s服务发现**
+要想自动发现集群中的 Service，就需要我们在 Service 的annotation区域添加：prometheus.io/scrape=true的声明
+要想自动发现集群中的 pod，也需要我们在 pod 的annotation区域添加：prometheus.io/scrape=true的声明
 
+```
+kind: Service
+apiVersion: v1
+metadata:
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9121"
+  name: redis
+  namespace: kube-system
+```
+
+**实战**
+```
+#两分钟的增长率×60,为什么×60呢？应为是按秒球的平均值，还原一分钟的就要乘以60，另外prometheus默认1分钟刮一次数据
+irate(user_behavior_request_counter[2m])*60
+```
+
+通过增长率表示样本的变化情况
+
+increase(v range-vector)函数是PromQL中提供的众多内置函数之一。其中参数v是一个区间向量，increase函数获取区间向量中的第一个后最后一个样本并返回其增长量。因此，可以通过以下表达式Counter类型指标的增长率：
+
+increase(node_cpu[2m]) / 120
+
+**标签替换**
+```
+该函数会依次对 v 中的每一条时间序列进行处理，通过 regex 匹配 src_label 的值，并将匹配部分 relacement 写入到 dst_label 标签中。如下所示：
+
+label_replace(up, "host", "$1", "instance",  "(.*):.*")
+函数处理后，时间序列将包含一个 host 标签，host 标签的值为 Exporter 实例的 IP 地址：
+
+up{host="localhost",instance="localhost:8080",job="cadvisor"}   1
+up{host="localhost",instance="localhost:9090",job="prometheus"}   1
+up{host="localhost",instance="localhost:9100",job="node"}   1$$
+
+label_replace(BIW_SHT_QUEUE_DELIVERY_ORDER_OUT, "attr", "$1", "attr",  ".*_(.*)")
+```
+
+
+**consul 配置**
+```yaml
+    - consul_sd_configs:
+      - server: consul.kube-public:8500
+        services: []
+      job_name: consul-prometheus
+      relabel_configs:
+      - source_labels: [__meta_consul_tags]
+        regex: ^,,$
+        action: keep
+      - action: labelmap
+        regex: __meta_consul_service_metadata_(.+)
+    - consul_sd_configs:
+      - server: consul.kube-public:8500
+        services:
+        - redis-exporter
+      job_name: redis-exporter
+      relabel_configs:
+      - action: labelmap
+        regex: __meta_consul_service_metadata_(.+)
+```
+
+参考：
+
+https://mojotv.cn/go/prometheus-client-for-go
+
+[Prometheus 通过 consul 实现自动服务发现](https://blog.csdn.net/aixiaoyang168/article/details/103022342)

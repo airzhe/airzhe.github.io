@@ -15,6 +15,7 @@ helm del --purge istio-init #删除
 helm fetch stable/grafana #下载到本地
 helm push mysql-0.3.5.tgz myrepo
 helm repo add  myrepo https://xx.xx.xx.xx/chartrepo/charts #添加仓库
+helm repo add stable http://mirror.azure.cn/kubernetes/charts
 helm repo add bitnami https://charts.bitnami.com/bitnami  #添加仓库
 
 helm list --deleted
@@ -56,6 +57,8 @@ helm --set server[0].port = 80
 
 --timeout
 --wait
+
+helm rollback pgadm 2 -n kube-public
 
 helm init --service-account 
 helm install . --debug --dry-run --set favoriteDrink=tea #set 替换
@@ -214,7 +217,7 @@ docker run -it -v ~/.kube:/root/.kube dtzar/helm-kubectl
 
 
 
-Grafana 安装
+安装Grafana
 
 ```
 https://grafana.com/grafana/dashboards/7249
@@ -222,7 +225,11 @@ https://grafana.com/grafana/dashboards/7249
 helm upgrade --install loki loki/loki-stack --namespace monitoring
 
 helm install  stable/grafana -n grafana --namespace=monitoring
-helm upgrade grafana  stable/grafana  --set adminPassword=745632Bn123
+helm upgrade grafana  stable/grafana  --set adminPassword=abc123
 helm upgrade grafana  stable/grafana  --set ingress.enabled=true --set ingress.hosts[0]=grafana.t1.youhaodongxi.com
 ```
 
+
+参考：
+
+[使用github搭建chart仓库](https://blog.csdn.net/u013360850/article/details/103440483）

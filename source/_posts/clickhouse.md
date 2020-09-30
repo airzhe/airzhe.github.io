@@ -1,7 +1,7 @@
 ---
 title: "ClickHouse 入门笔记"
 date: 2019-12-16 14:22:10
-tags: [clickhouse]
+tags: [clickhouse,OLAP]
 share: true
 ---
 
@@ -92,6 +92,33 @@ PARTITION BY toYYYYMMDD(dt)
 ORDER BY dt
 ```
 
+**ReplacingMergeTree 引擎** (按主键进行合并)
+```
+CREATE TABLE mergetree
+(
+    `msg_id` UInt64,
+    `msg_type` String,
+    `sync_time` DateTime DEFAULT now()
+)
+ENGINE = ReplacingMergeTree 
+PARTITION BY toYYYYMMDD(sync_time)
+ORDER BY msg_id;
+# 插入数据
+insert into mergetree(msg_id,msg_type) values(1,'aa') ;
+# 强制合并
+optimize table mergetree final;
+```
+
+**SummingMergeTree** (按主键合并，SummingMergeTree(a) a求和)
+```
+CREATE TABLE smt_tab(date Date,id UInt8,name String,a UInt16) ENGINE=SummingMergeTree(a) PARTITION BY date ORDER BY (id,name) SAMPLE BY name
+#插入数据
+insert into smt_tab (date,id,name,a) values ('2019-12-12',1,'Jason',1)
+insert into smt_tab (date,id,name,a) values ('2019-12-12',1,'Jason',2)
+insert into smt_tab (date,id,name,a) values ('2019-12-12',1,'Jason',3)
+#结果只有一条，a列求和
+```
+
 **JSON 函数**
 
 ```
@@ -124,7 +151,7 @@ clickhouse-client -d default -f CSV --query="select * from ontime limit 1" >/var
 
 值得一提的是，还有一种用字典编码字符串的可能性：[Enums](https://clickhouse.yandex/docs/en/data_types/enum/)。ClickHouse完美支持枚举。从存储的角度来看，它可能甚至更有效率，因为枚举值存储在表定义上而不是存储在单独的数据文件中。枚举适用于静态字典。但是，如果插入了原始枚举之外的值，ClickHouse将引发异常。枚举值集中的每个更改都需要ALTER TABLE，这可能会带来很多麻烦。LowCardinality在这方面要灵活得多。
 
-**实时试图**
+**实时视图**
 
 将实时视图表与真实数据集一起使用 live view , 相比普通 view 除了实时还多了缓存
 
@@ -134,6 +161,9 @@ clickhouse-client -d default -f CSV --query="select * from ontime limit 1" >/var
 detach database payemnt #删除mysql引擎库
 alter table cpu update usage_user = 888 where usage_user=18 #update
 alter table cpu delete where usage_user = 888 #delete
+alter table user_behavior add column `operation` String after service; #add column
+alter table user_behavior drop column operator; #drop column
+rename table system_msg to system_msg_old
 ```
 
 **web 客户端tabix**
@@ -197,6 +227,8 @@ GROUP BY table
 
 ```
 cat data.csv | awk -F "," '{str=substr($NF,0,11);print $0","str}'
+#时间戳
+PARTITION BY toYYYYMMDD(toDateTime(create_date))
 ```
 
 **使用 mysql 函数将 mysql 数据导入clickhouse**
@@ -230,6 +262,10 @@ WHERE id >
     SELECT max(id)
     FROM order_behavior_log
 );
+
+#使用非交互模式
+clickhouse-client --input_format_allow_errors_num=10 \
+--query="INSERT INTO bill SELECT * FROM url('http://ck.t1.nicetuan.net/?database=default&query=select%20*%20from%20bill', TabSeparated, 'created_date DateTime, wx_app_id String, mch_id String, order_id String, shop_order_id String, trade_type String, trade_status String, total_fee Float64, refund_id String, shop_refund_id String, refund_fee Float64, refund_status String, goods_name String, fees Float64, rates String, trade_no String, refund_no String')"
 ```
 
 **使用 url 函数 clickhouseA 导入 clickhouseB**
@@ -255,7 +291,7 @@ LIMIT 3
 ```
 # 从api接口查询
 SELECT *
-FROM url('http://10.2.4.35:8123/?database=soa_behavior&query=select%20*%20from%20order_behavior_log', TabSeparated, '`id` Int64, `shop_order_id` Int64, `trade_no` Int64, `shop_id` Int32, `trace_id` String, `agg_platform` String, `deal_handler` String, `parameters` String, `total_fee` Int32, `state` Int8, `return_data` String, `execute_mic_time` String, `error_code` Int32, `error_msg` String, `created_at` Int32, `updated_at` Int32, `deleted_at` Nullable(Int32), `created_date` DateTime')
+FROM url('http://10.2.4.35:8123/?database=soa_behavior&query=select%20*%20from%20order_behavior_log&user=default&password=MXtqOeQcX', TabSeparated, '`id` Int64, `shop_order_id` Int64, `trade_no` Int64, `shop_id` Int32, `trace_id` String, `agg_platform` String, `deal_handler` String, `parameters` String, `total_fee` Int32, `state` Int8, `return_data` String, `execute_mic_time` String, `error_code` Int32, `error_msg` String, `created_at` Int32, `updated_at` Int32, `deleted_at` Nullable(Int32), `created_date` DateTime')
 LIMIT 3
 
 # 从远端mysql查询
@@ -266,6 +302,18 @@ FROM mysql('172.16.200.4:3306', 'soa_behavior', 'order_behavior_log', 'root', 'p
 GROUP BY data1
 ```
 
+**开启mysql客户端支持**
+
+```
+sed "145 i<mysql_port>9004</mysql_port>" -i /etc/clickhouse-server/config.xml
+
+## 导入mysql数据
+mysql --protocol tcp -u default -h 10.42.0.76 -P 9004   < /home/runner/work/clickhouse/clickhouse/tmp/sms_new_metrics.sql
+
+#查询
+SELECT (intDiv(toUInt32(created_at), 7200) * 7200) * 1000 as t, count(id) AS "id" FROM metrics WHERE  created_at BETWEEN  '2020-03-01 00:00:00'  AND  '2020-06-04 15:59:59'  GROUP BY t ORDER BY 1;
+```
+
 **跳过错误** (忽略csv标题行)
 
 ```
@@ -274,87 +322,6 @@ clickhouse-client --input_format_allow_errors_num=1 \
 --query="INSERT INTO bill SELECT *
 FROM url('http://payment-hotfix-duizhangdan.t1.nicetuan.net/order/downloadbill?bill_date=20200106&agg_platform=wx', CSV, 'created_date DateTime, wx_app_id String , mch_id String, order_id String , shop_order_id String, trade_type String, trade_status String, total_fee Float64 , refund_id String, shop_refund_id String ,refund_fee  Float64, refund_status String, goods_name String, fees Float64, rates String , trade_no String , refund_no String')"
 ```
-
-**分布式**
-
-```
-create table on cluster
-```
-
-**ReplicatedMergeTree** (互为主备)，配置：
-
-```
-config.xml 添加
-<include_from>/etc/clickhouse-server/metrika.xml</include_from>
-#主
-<yandex>
-    <zookeeper-servers>
-        <node index="1">
-            <host>10.2.4.34</host>
-            <port>2181</port>
-        </node>
-    </zookeeper-servers>
-    <macros>
-        <layer>01</layer>
-        <shard>01</shard>
-        <replica>cluster01-01-1</replica>
-    </macros>
-</yandex>
-#从
-<yandex>
-    <zookeeper-servers>
-        <node index="1">
-            <host>10.2.4.34</host>
-            <port>2181</port>
-        </node>
-    </zookeeper-servers>
-    <macros>
-        <layer>01</layer>
-        <shard>01</shard>
-        <replica>cluster01-01-2</replica>
-    </macros>
-</yandex>
-```
-分别创建表
-```
-CREATE TABLE soa_behavior.order_behavior_log
-(
-    `id` Int64,
-    `shop_order_id` Int64,
-    `trade_no` Int64,
-    `shop_id` Int32,
-    `trace_id` String,
-    `agg_platform` String,
-    `deal_handler` String,
-    `parameters` String,
-    `total_fee` Int32,
-    `state` Int8,
-    `return_data` String,
-    `execute_mic_time` String,
-    `error_code` Int32,
-    `error_msg` String,
-    `created_at` Int32,
-    `updated_at` Int32,
-    `deleted_at` Nullable(Int32),
-    `created_date` DateTime
-)
-ENGINE = ReplicatedMergeTree('/clickhouse/tables/{layer}-{shard}/order_behavior_log', '{replica}')
-PARTITION BY toYYYYMMDD(created_date)
-ORDER BY id
-SETTINGS index_granularity = 8192
-```
-启动脚本（由于容器去zookpeer上注册的是容器名，他们之间不能通过这个来通信，所以采用`host`网络模式）
-```
-docker run -d \
-        --network=host \
-        -v /root/clickhouse/conf/config.xml:/etc/clickhouse-server/config.xml \
-        -v /root/clickhouse/conf/metrika.xml:/etc/clickhouse-server/metrika.xml \
-        -v /root/clickhouse/data:/var/lib/clickhouse \
-        -v /root/clickhouse/log:/var/log/clickhouse-server/ \
-        --name clickhouse \
-        yandex/clickhouse-server:19.15.3.6
-```
-zookeeper 如果有问题表数据会变成只读模式，DML 操作和 DDL 操作也会在副本间同步
 
 **php 客户端**
 
@@ -436,6 +403,85 @@ CREATE TABLE `worldmap_latlng` (
 INSERT INTO `worldmap_latlng`(`lat`, `lng`, `name`, `value`) VALUES (31.24916171,121.487899486, '上海', 2)
 ```
 
+**高可用**
+
+{% post_link clickhouse-ha clickhouse高可用集群搭建%}
+
+
+**定时同步mysql**
+```
+* * * * * sh /root/sh/sync_soa_behavior.sh
+0 0 * * * sh /root/sh/sync_soa_behavior_del_today.sh
+
+[root@node-a001 sh]# cat sync_soa_behavior_del_today.sh
+
+docker exec clickhouse clickhouse-client --database=soa_behavior --query="alter table order_behavior_log delete where created_date >= yesterday()"
+
+
+[root@node-a001 sh]# cat sync_soa_behavior.sh
+
+docker exec clickhouse clickhouse-client --database=soa_behavior --query="alter table order_behavior_log delete where created_date >= toStartOfTenMinutes(now())"
+
+sleep 5
+
+docker exec clickhouse clickhouse-client --database=soa_behavior --query="INSERT INTO order_behavior_log SELECT * FROM mysql('mysql.host', 'soa_behavior', 'order_behavior_log', 'username','password') WHERE id >(SELECT max(id) FROM order_behavior_log)"
+
+```
+
+**抽样**
+同时我们还可以通过 ClickHouse 的抽样功能来辅助降低引擎查询压力。这里需要注意的是，只有在创建表结构时开启抽样查询功能，才能执行抽样查询 SQL 
+那么如何开启抽样查询功能呢，其实很简单，比如我们想以 datetime 维度进程抽样展示，只要在您的建表语句中包含 SAMPLE BY intHash64(datetime) ，同时，在您的主键中，也就是 ORDER BY 里面，必须包含抽样的字段。完成的建表语句如下:
+```
+CREATE TABLE soa.user_behavior
+(
+    `date` Date DEFAULT today(),
+    `datetime` DateTime DEFAULT now(),
+    `user` String,
+    `service` String,
+    `operation` String,
+    `content` String,
+    `extra` String,
+    `op_time` DateTime
+)
+ENGINE = ReplicatedMergeTree('/clickhouse/tables/{layer}-{shard}/user_behavior', '{replica}')
+PARTITION BY date
+ORDER BY (date, user, intHash64(datetime))
+SAMPLE BY intHash64(datetime)
+SETTINGS index_granularity = 8192
+```
+
+**grafana 7.0警报支持**
+```
+rm -rfv /var/lib/grafana/plugins/vertamedia-clickhouse/
+git clone https://github.com/Vertamedia/clickhouse-grafana /var/lib/grafana/plugins/vertamedia-clickhouse/
+echo "[plugins]\nallow_loading_unsigned_plugins = vertamedia-clickhouse-datasource" >> /etc/grafana/grafana.ini
+systemctl restart grafana
+
+# helm形式安装
+在 grafana 包 value.yaml 文件大概390行，添加：    
+allow_loading_unsigned_plugins: "vertamedia-clickhouse-datasource"
+```
+
+**物化视图**
+```
+CREATE MATERIALIZED VIEW mv_sms_year_month_cnt
+ENGINE = SummingMergeTree
+PARTITION BY year_month
+ORDER BY (year_month,channel) POPULATE AS
+SELECT
+    toYYYYMM(created_at) AS year_month,
+    channel,
+    count() AS cnt
+FROM sms_report
+GROUP BY
+    toYYYYMM(created_at),
+    channel
+```
+
+**备份**
+```
+clickhouse-client --host="localhost" --port="9000" --user="default" --password="*******" --max_threads="1"  --query="select * from biw.system_msg FORMAT CSV"  > /tmp/system_20200819.csv
+```
 
 **参考：**
 
@@ -443,9 +489,11 @@ https://clickhouse.yandex/docs/zh/
 https://www.altinity.com/blog/clickhouse-for-time-series
 https://clickhouse.yandex/docs/zh/getting_started/example_datasets/ontime/
 https://www.altinity.com/blog/2018/2/12/aggregate-mysql-data-at-high-speed-with-clickhouse
+https://developer.aliyun.com/article/739805
+[创建grafana面板](https://altinity.com/blog/2019/12/28/creating-beautiful-grafana-dashboards-on-clickhouse-a-tutorial)
 
 多分片多副本高可用
 https://clickhouse.yandex/docs/zh/operations/table_engines/distributed/
 http://sineyuan.github.io/post/clickhouse-docker-quick-start/
 https://www.cnblogs.com/freeweb/p/9352947.html
-
+https://www.jianshu.com/p/ab811cceb856

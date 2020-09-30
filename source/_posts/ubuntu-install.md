@@ -61,6 +61,7 @@ https://github.com/tomaspinho/rtl8821ce
 - gimp
 - bleachbit
 - vsCode
+- [flameshot](https://flameshot.js.org/)
 
 ![1.png](/img/ubuntu/1.png)
 

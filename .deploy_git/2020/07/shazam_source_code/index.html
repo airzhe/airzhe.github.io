@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>小米mysql中间件shaza源码注释 | Runner的小站</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="main.go 12345//45 init config of shazam proxycfg, err := models.ParseProxyConfigFromFile(*configFile)//57 init managermgr, err := server.LoadAndCreateManager(cfg) 1234567manager.go//46mgr, err := Crea">
+<meta name="keywords" content="shazam,gaea">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小米mysql中间件shaza源码注释">
+<meta property="og:url" content="http://airzhe.github.io/2020/07/shazam_source_code/index.html">
+<meta property="og:site_name" content="Runner的小站">
+<meta property="og:description" content="main.go 12345//45 init config of shazam proxycfg, err := models.ParseProxyConfigFromFile(*configFile)//57 init managermgr, err := server.LoadAndCreateManager(cfg) 1234567manager.go//46mgr, err := Crea">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-08-21T08:40:41.973Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="小米mysql中间件shaza源码注释">
+<meta name="twitter:description" content="main.go 12345//45 init config of shazam proxycfg, err := models.ParseProxyConfigFromFile(*configFile)//57 init managermgr, err := server.LoadAndCreateManager(cfg) 1234567manager.go//46mgr, err := Crea">
+  
+    <link rel="alternate" href="/atom.xml" title="Runner的小站" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Runner的小站</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://airzhe.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-shazam_source_code" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/shazam_source_code/" class="article-date">
+  <time datetime="2020-07-28T10:36:10.000Z" itemprop="datePublished">2020-07-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      小米mysql中间件shaza源码注释
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>main.go</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//45 init config of shazam proxy</span><br><span class="line">cfg, err := models.ParseProxyConfigFromFile(*configFile)</span><br><span class="line"></span><br><span class="line">//57 init manager</span><br><span class="line">mgr, err := server.LoadAndCreateManager(cfg)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">manager.go</span><br><span class="line">//46</span><br><span class="line">mgr, err := CreateManager(cfg, namespaceConfigs)</span><br><span class="line">//154 init namespace</span><br><span class="line">m.namespaces[current] = CreateNamespaceManager(namespaceConfigs)</span><br><span class="line">//422</span><br><span class="line">namespace, err := NewNamespace(config)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">namespace.go</span><br><span class="line">//82 NewNamespace init namespace</span><br><span class="line">func NewNamespace(namespaceConfig *models.Namespace) (*Namespace, error) &#123;</span><br><span class="line">	//151 init router</span><br><span class="line">	namespace.router, err = router.NewRouter(namespaceConfig)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">router.go</span><br><span class="line">//29</span><br><span class="line">func NewRouter(namespace *models.Namespace) (*Router, error) &#123;</span><br><span class="line">//63 </span><br><span class="line">rule, err := parseRule(shard)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">rule.go</span><br><span class="line">//310 生成初始化数据subTableIndexs、tableToSlice等</span><br><span class="line">// subTableIndexs 所有子表index，走全表查询时候用到; tableToSlice 根据index获取slice ，再根据 index获取database，或者tableindex获取database</span><br><span class="line">subTableIndexs, tableToSlice, shard, err := parseRuleSliceInfos(cfg)</span><br><span class="line">	//400 判断是mycatmod规则</span><br><span class="line">	case MycatModRuleType:</span><br><span class="line">		subTableIndexs, tableToSlice, err := parseMycatHashRuleSliceInfos(cfg.Locations, cfg.Slices, cfg.Databases)</span><br><span class="line">		//479</span><br><span class="line">		if len(locations) != len(slices) &#123;</span><br><span class="line">			return nil, nil, errors.ErrLocationsCount</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p><strong>server.go</strong>  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">onConnc //106 处理连接</span><br><span class="line">cc := newSession(s, c) //107 新建一个session,初始化部分字段</span><br><span class="line">Handshark //121 认证</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">session.go</span><br><span class="line">//56</span><br><span class="line">cc.c = NewClientConn(mysql.NewConn(tcpConn), s.manager) //66 每个客户端连接包装成结构体，包含salt加密字段</span><br><span class="line">cc.proxy = s</span><br><span class="line">cc.manager = s.manager</span><br><span class="line">cc.executor = newSessionExecutor(s.manager)</span><br><span class="line"></span><br><span class="line">//148 通过握手确定session db、namespace等信息</span><br><span class="line">func (cc *Session) handleHandshakeResponse(info HandshakeResponseInfo) error &#123;//148 </span><br><span class="line">	//设置认证握手时传入的 db 值</span><br><span class="line">	cc.executor.SetDatabase(info.Database)</span><br><span class="line">    //set namespace</span><br><span class="line">    namespace := cc.manager.GetNamespaceByUser(user, password)</span><br><span class="line">    cc.namespace = namespace</span><br><span class="line">    cc.executor.namespace = namespace</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">s.tw.Add(s.sessionTimeout, cc, cc.Close) //137 加入时间轮循，超时关闭</span><br><span class="line">cc.Run() //139</span><br></pre></td></tr></table></figure>
+<p><strong>session.go</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">type Session struct &#123;</span><br><span class="line">	sync.Mutex</span><br><span class="line">	c     *ClientConn</span><br><span class="line">	proxy *Server</span><br><span class="line">	manager *Manager</span><br><span class="line">	namespace string</span><br><span class="line">	executor *SessionExecutor</span><br><span class="line">	closed atomic.Value</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">data, err := cc.c.ReadEphemeralPacket() //226 读客户端发来的文本数据</span><br><span class="line">cc.proxy.tw.Add(cc.proxy.sessionTimeout, cc, cc.Close)  //232 会话超时关闭</span><br><span class="line">rs := cc.executor.ExecuteCommand(cmd, data) //237 执行客户发来的数据</span><br></pre></td></tr></table></figure>
+<p><strong>executor.go</strong> (start)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">// SessionExecutor is bound to a session, so requests are serializable</span><br><span class="line">type SessionExecutor struct &#123;</span><br><span class="line">	manager *Manager</span><br><span class="line"></span><br><span class="line">	namespace string</span><br><span class="line">	user      string</span><br><span class="line">	db        string</span><br><span class="line"></span><br><span class="line">	status       uint16</span><br><span class="line">	lastInsertID uint64</span><br><span class="line"></span><br><span class="line">	collation        mysql.CollationID</span><br><span class="line">	charset          string</span><br><span class="line">	sessionVariables *mysql.SessionVariables</span><br><span class="line"></span><br><span class="line">	txConns map[string]*backend.PooledConnection</span><br><span class="line">	txLock  sync.Mutex</span><br><span class="line"></span><br><span class="line">	stmtID uint32</span><br><span class="line">	stmts  map[uint32]*Stmt //prepare相关,client端到proxy的stmt</span><br><span class="line"></span><br><span class="line">	parser *parser.Parser</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">switch cmd &#123; //256 判断sql是哪种操作类型（见参考#1）</span><br><span class="line">se.handleQuery(sql) //266 如果是查询类型，执行 handleQuery</span><br></pre></td></tr></table></figure>
+<p><strong>executor_handle.go</strong> (start)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">reqCtx := util.NewRequestContext() //62 创建请求上下文</span><br><span class="line">if !ns.IsSQLAllowed(reqCtx, sql)  //65 黑名单检查</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">namespace.go</span><br><span class="line"></span><br><span class="line">fingerprint := mysql.GetFingerprint(sql) //235 格式化sql，去空格，大小写等</span><br><span class="line">md5 := mysql.GetMd5(fingerprint) //237 返回格式化后的md5 然后比较，是否在黑名单</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">stmtType := parser.Preview(sql) //75 预处理 判断 query 是增删改查哪一种 查询返回 StmtSelect（int 0)</span><br><span class="line">reqCtx.Set(util.StmtType, stmtType) //76 类型写入 reqCtx 上下文</span><br><span class="line">r, err = se.doQuery(reqCtx, sql) //78 </span><br><span class="line"></span><br><span class="line">if isSQLNotAllowedByUser(se, stmtType) //86 如果是只读用户, 且SQL是INSERT, UPDATE, DELETE, 则拒绝执行, 返回true</span><br><span class="line">if canHandleWithoutPlan(stmtType) //90 判断是否简单sql, 如show,set,begin,use等可以不走执行计划</span><br><span class="line"></span><br><span class="line">db := se.db //94 默认为认证时传入的db值，执行use db后，为选择的db</span><br><span class="line"></span><br><span class="line">p, err := se.getPlan(se.GetNamespace(), db, sql) //96 获取执行计划</span><br><span class="line"></span><br><span class="line">n, err := se.Parse(sql) //155 分析sql返回 ast.StmtNode 重要!</span><br><span class="line"></span><br><span class="line">p, err := plan.BuildPlan(n, phyDBs, db, sql, rt, seq) //163 根据ast，物理db，当前db,sql，分片路由，seq 构建 plan</span><br></pre></td></tr></table></figure>
+<p><strong>plan.go</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">//171 BuildPlan build plan for ast</span><br><span class="line">func BuildPlan(stmt ast.StmtNode, phyDBs map[string]string, db, sql string, router *router.Router, seq *sequence.SequenceManager) (Plan, error) &#123;</span><br><span class="line">	//180 NewChecker db为use db中设置的db名. 如果没有执行use db, 则为空字符串</span><br><span class="line">	checker := NewChecker(db, router)</span><br><span class="line">	stmt.Accept(checker)</span><br><span class="line">	if checker.IsDatabaseInvalid() &#123; //检查db是否可用，比如没有选db执行执行sql</span><br><span class="line">		return nil, fmt.Errorf(&quot;no database selected&quot;) // TODO: return standard MySQL error</span><br><span class="line">	&#125;</span><br><span class="line">	if checker.IsShard() &#123; //187 检查是否走分片，(根据db和table判断是否需要分表) 构建分片执行计划</span><br><span class="line">		return buildShardPlan(stmt, db, sql, router, seq)</span><br><span class="line">	&#125;</span><br><span class="line">	//190 构建不需要分片的执行计划，不需要分片的走 DefaultSlice Node</span><br><span class="line">	return CreateUnshardPlan(stmt, phyDBs, db, checker.GetUnshardTableNames())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//126</span><br><span class="line">func (s *Checker) hasShardTableInTableName(n *ast.TableName) bool &#123;</span><br><span class="line">	_, ok := s.router.GetShardRule(db, table)//132 router 根据db和table判断是否需要分表</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">router.go</span><br><span class="line">rule, ok := r.rules[db][table] //109 返回分片规则</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//193 返回查询类型的 查询计划</span><br><span class="line">func buildShardPlan(stmt ast.StmtNode, db string, sql string, router *router.Router, seq *sequence.SequenceManager) (Plan, error) &#123;</span><br><span class="line">	switch s := stmt.(type) &#123;</span><br><span class="line">	case *ast.SelectStmt:</span><br><span class="line">		plan := NewSelectPlan(db, sql, router) //196 新建查询计划</span><br><span class="line">		if err := HandleSelectStmt(plan, s); err != nil &#123; //197 处理查询计划</span><br><span class="line">			return nil, err</span><br><span class="line">		&#125;</span><br><span class="line">		return plan, nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>plan_select.go</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">//155 处理SelectStmt语法树, 改写其中一些节点, 并获取路由信息和结果聚合函数</span><br><span class="line">func HandleSelectStmt(p *SelectPlan, stmt *ast.SelectStmt) error  </span><br><span class="line"></span><br><span class="line">//160 如果这是一个分片表或关联表, 创建一个TableName的装饰器, 并替换原有节点,在此步骤返回所有subTableIndex</span><br><span class="line">handleTableRefs</span><br><span class="line">	//322</span><br><span class="line">	func handleJoin(p *TableAliasStmtInfo, join *ast.Join) error &#123;</span><br><span class="line">	//332</span><br><span class="line">	if err := rewriteTableSource(p, left); err != nil &#123;</span><br><span class="line">	//400</span><br><span class="line">	return rewriteTableNameInTableSource(p, tableSource)</span><br><span class="line">	//433 这是一个分片表或关联表, 创建一个TableName的装饰器, 并替换原有节点</span><br><span class="line">	d, err := CreateTableNameDecorator(tableName, rule, p.GetRouteResult())</span><br><span class="line">//190 </span><br><span class="line">handleWhere</span><br><span class="line">	//370</span><br><span class="line">	has, result, decorator, err := handleComparisonExpr(p.TableAliasStmtInfo, stmt.Where)</span><br><span class="line">	// 576 BinaryOperationExpr结构和json输出的一样</span><br><span class="line">	case *ast.BinaryOperationExpr </span><br><span class="line">	//637 判断操作符号</span><br><span class="line">	case opcode.EQ, opcode.NE, opcode.GT, opcode.GE, opcode.LT, opcode.LE:</span><br><span class="line">	//700</span><br><span class="line">	if lType == ColumnNameExpr  &#123;</span><br><span class="line">	//873</span><br><span class="line">	func handleBinaryOperationExprCompareLeftColumnRightValue</span><br><span class="line">	//875 根据列判断是否需要装饰ColumnName, 获取对应的rule规则 where payorder.id=refund.pid</span><br><span class="line">	rule, need, isAlias, err := NeedCreateColumnNameExprDecoratorInCondition(p, column)</span><br><span class="line">	//883 创建列装饰器</span><br><span class="line">	decorator := CreateColumnNameExprDecorator(column, rule, isAlias, p.GetRouteResult())</span><br><span class="line">	//896</span><br><span class="line">	tableIndexes, err := findTableIndexes(rule, column.Name.Name.L, v)</span><br><span class="line">	//793 根据规则计算出表index</span><br><span class="line">	index, err := rule.FindTableIndex(v)</span><br><span class="line">	</span><br><span class="line">	//374 把result写入routerResult，覆盖 handleTableRefs 阶段的 subTableIndex</span><br><span class="line">	if has &#123;</span><br><span class="line">		//设置 index 到 RouteResult 也可以在此存入其他值</span><br><span class="line">		p.GetRouteResult().Inter(result)</span><br><span class="line">		</span><br><span class="line">		util.go</span><br><span class="line">		//116 行判断index是否合法</span><br><span class="line">		func interList(l1 []int, l2 []int) []int &#123;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">//210 生成sql 返回</span><br><span class="line">sqls, err := generateShardingSQLs(p.stmt, p.result, p.router)</span><br><span class="line">	//504 </span><br><span class="line">    if err := stmt.Restore(ctx); err != nil &#123;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">decorator_table_name.go</span><br><span class="line"></span><br><span class="line">//78</span><br><span class="line">func (t *TableNameDecorator) Restore(ctx *format.RestoreCtx) error &#123;</span><br><span class="line"></span><br><span class="line">//88 如果原sql里带了dbName，mycat需要改写</span><br><span class="line">if t.origin.Schema.String() != &quot;&quot; &#123;</span><br><span class="line">	</span><br><span class="line">//115 如果是 kingshard 类型，重写表名</span><br><span class="line">ctx.WriteName(fmt.Sprintf(&quot;%s_%04d&quot;, t.origin.Name.String(), tableIndex))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//513 根据 index 获取slice dbName</span><br><span class="line">   sliceIndex := rule.GetSliceIndexFromTableIndex(index)</span><br><span class="line">sliceName := rule.GetSlice(sliceIndex)</span><br><span class="line">dbName, _ := rule.GetDatabaseNameByTableIndex(index)</span><br></pre></td></tr></table></figure>
+<p><strong>executor_handler.go</strong> (end)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//101 判断是否能在从库上执行</span><br><span class="line">if canExecuteFromSlave(se, sql) &#123;</span><br><span class="line">	reqCtx.Set(util.FromSlave, 1)</span><br><span class="line">&#125;</span><br><span class="line">//105 执行执行计划</span><br><span class="line">r, err := p.ExecuteIn(reqCtx, se)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">plan_select.go</span><br><span class="line"></span><br><span class="line">//65 ExecuteIn implement Plan</span><br><span class="line">func (s *SelectPlan) ExecuteIn(reqCtx *util.RequestContext, sess Executor) (*mysql.Result, error) &#123;</span><br><span class="line">	sqls := s.GetSQLs()</span><br><span class="line">	rs, err := sess.ExecuteSQLs(reqCtx, sqls) //80 执行sql </span><br><span class="line">	r, err := MergeSelectResult(s, s.stmt, rs) //85 merge查询结果</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">exector.go</span><br><span class="line"></span><br><span class="line">//695</span><br><span class="line">func (se *SessionExecutor) ExecuteSQLs</span><br><span class="line">//707</span><br><span class="line">rs, err := se.executeInMultiSlices(reqCtx, pcs, sqls)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">modifyResultStatus(r, se)</span><br></pre></td></tr></table></figure>
+<p><strong>executor.go</strong> (end)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return CreateResultResponse(se.status, r) //270</span><br></pre></td></tr></table></figure>
+<p><strong>session.go</strong> (end)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if err = cc.writeResponse(rs); err != nil  //240</span><br></pre></td></tr></table></figure>
+<p><strong>调试技巧</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">golang解决cannot convert a (type interface &#123;&#125;) to type *: need type assertion</span><br><span class="line"></span><br><span class="line">var a interface&#123;&#125; = int(10)</span><br><span class="line">var b MyInt = a.(MyInt)</span><br><span class="line"></span><br><span class="line">可以对对象分别使用 Printf(&quot;%#v&quot;) 和  json.Marshal 输出观察</span><br></pre></td></tr></table></figure>
+<p>使用tidb生成ast树，改写sql例子<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;strings&quot;</span><br><span class="line"></span><br><span class="line">	&quot;github.com/pingcap/parser&quot;</span><br><span class="line">	&quot;github.com/pingcap/parser/ast&quot;</span><br><span class="line">	&quot;github.com/pingcap/parser/format&quot;</span><br><span class="line">	_ &quot;github.com/pingcap/parser/test_driver&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">//TableNameDecorator test</span><br><span class="line">type TableNameDecorator struct &#123;</span><br><span class="line">	origin *ast.TableName</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Restore implement ast.Node</span><br><span class="line">func (t *TableNameDecorator) Restore(ctx *format.RestoreCtx) error &#123;</span><br><span class="line">	ctx.WriteName(t.origin.Name.String() + &quot;_202006&quot;)</span><br><span class="line">	return nil</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Accept implement ast.Node</span><br><span class="line">// do nothing and return current decorator</span><br><span class="line">func (t *TableNameDecorator) Accept(v ast.Visitor) (ast.Node, bool) &#123;</span><br><span class="line">	return t, true</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Text implement ast.Node</span><br><span class="line">func (t *TableNameDecorator) Text() string &#123;</span><br><span class="line">	return t.origin.Text()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// SetText implement ast.Node</span><br><span class="line">func (t *TableNameDecorator) SetText(text string) &#123;</span><br><span class="line">	t.origin.SetText(text)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	//原始sql</span><br><span class="line">	sql := &quot;SELECT /*+ TIDB_SMJ(employees) */ emp_no, first_name, last_name &quot; +</span><br><span class="line">		&quot;FROM employees USE INDEX (last_name) &quot; +</span><br><span class="line">		&quot;where last_name=&apos;Aamodt&apos; and gender=&apos;F&apos; and birth_date &gt; &apos;1960-01-01&apos;&quot;</span><br><span class="line"></span><br><span class="line">	p := parser.New()</span><br><span class="line"></span><br><span class="line">	//解析sql成一颗ast树</span><br><span class="line">	oneStmt, err := p.ParseOneStmt(sql, &quot;&quot;, &quot;&quot;)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Printf(&quot;parse error:\n%v\n%s&quot;, err, sql)</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	//如果是select查询转换成ast.SelectStmt类型</span><br><span class="line">	var tmp interface&#123;&#125;</span><br><span class="line">	tmp = oneStmt</span><br><span class="line">	var stmt *ast.SelectStmt = tmp.(*ast.SelectStmt)</span><br><span class="line"></span><br><span class="line">	tableRefs := stmt.From</span><br><span class="line">	join := tableRefs.TableRefs</span><br><span class="line"></span><br><span class="line">	//判断jon.Left节点是否ast.TableSource类型，如果是新建tableName装饰器，替换left.Source节点</span><br><span class="line">	switch left := join.Left.(type) &#123;</span><br><span class="line">	case *ast.TableSource:</span><br><span class="line">		tableName, _ := left.Source.(*ast.TableName)</span><br><span class="line">		d := &amp;TableNameDecorator&#123;tableName&#125;</span><br><span class="line">		left.Source = d</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	//创建builder</span><br><span class="line">	sb := &amp;strings.Builder&#123;&#125;</span><br><span class="line">	ctx := format.NewRestoreCtx(269, sb)</span><br><span class="line"></span><br><span class="line">	//遍历 ast 树各节点的 Restore 方法组装成sql</span><br><span class="line">	if err := stmt.Restore(ctx); err != nil &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	//原始sql</span><br><span class="line">	fmt.Println(sql)</span><br><span class="line">	//输出最后组装的sql</span><br><span class="line">	fmt.Println(sb)</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ cat go.mod </span><br><span class="line">module tidb</span><br><span class="line"></span><br><span class="line">go 1.13</span><br><span class="line"></span><br><span class="line">require github.com/pingcap/parser v0.0.0-20200424075042-8222d8b724a4</span><br></pre></td></tr></table></figure>
+<p>参考：</p>
+<ol>
+<li><a href="https://dev.mysql.com/doc/internals/en/text-protocol.html" target="_blank" rel="noopener">https://dev.mysql.com/doc/internals/en/text-protocol.html</a></li>
+<li><a href="https://pingcap.com/docs-cn/stable/sql-statements/sql-statement-select/" target="_blank" rel="noopener">https://pingcap.com/docs-cn/stable/sql-statements/sql-statement-select/</a> </li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2020/07/shazam_source_code/" data-id="ckf9fwxl100191hpbc6nw5nhf" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gaea/">gaea</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shazam/">shazam</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/08/vue/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          vue 入门笔记
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/clickhouse-ha/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">clickhouse单分片三副本高可用搭建</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/angular-js/">angular js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/b树/">b树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse/">clickhouse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse-高可用/">clickhouse 高可用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coredns/">coredns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gaea/">gaea</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gogs/">gogs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/">grafana</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/">helm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logrus/">logrus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loki/">loki</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/microk8s/">microk8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openldap/">openldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openresty/">openresty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/promtal/">promtal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shazam/">shazam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue、vuejs/">vue、vuejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webshell/">webshell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xorm/">xorm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/报警/">报警</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控/">监控</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/OLAP/" style="font-size: 10px;">OLAP</a> <a href="/tags/angular-js/" style="font-size: 10px;">angular js</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/b树/" style="font-size: 10px;">b树</a> <a href="/tags/cassandra/" style="font-size: 10px;">cassandra</a> <a href="/tags/clickhouse/" style="font-size: 12.5px;">clickhouse</a> <a href="/tags/clickhouse-高可用/" style="font-size: 10px;">clickhouse 高可用</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gaea/" style="font-size: 10px;">gaea</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 10px;">jenkins</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/logrus/" style="font-size: 10px;">logrus</a> <a href="/tags/loki/" style="font-size: 15px;">loki</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/pipeline/" style="font-size: 10px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 12.5px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/shazam/" style="font-size: 10px;">shazam</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/vue、vuejs/" style="font-size: 10px;">vue、vuejs</a> <a href="/tags/webshell/" style="font-size: 12.5px;">webshell</a> <a href="/tags/xorm/" style="font-size: 10px;">xorm</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/08/clickhouse-3shard/"> clickhouse 多分片集群搭建</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/vue/">vue 入门笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/shazam_source_code/">小米mysql中间件shaza源码注释</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/clickhouse-ha/">clickhouse单分片三副本高可用搭建</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/xorm_traceid/">xorm结合logrus记录traceId</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 air_zhe@163.com<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

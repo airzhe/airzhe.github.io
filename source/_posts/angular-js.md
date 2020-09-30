@@ -1,5 +1,5 @@
 ---
-title: "angular js 基本使用"
+title: "angular js基本使用"
 date: 2020-01-17 20:36:00
 tags: [angular js]
 share: true
@@ -26,7 +26,7 @@ app.controller('myCtrl', function ($scope, $http) {
 })
 ```
 
-- 下拉列表框、单选框数据绑定 `ng-model`、触发事件` ng-change`、是否可用`ng-disabled`
+- 下拉列表框、单选框数据绑定 `ng-model`、触发事件`ng-change`(ng-chnge必须要有ng-model绑定)、是否可用`ng-disabled`
 
 ```
 <select class="form-control" ng-model="list.filter.group_id"
@@ -86,6 +86,31 @@ var timer = $interval(function () {
 }, 1000)
 ```
 
+**表单**
+radio:
+```
+<label class="radio-inline" ng-repeat="method in data_source.method_list">
+    <input type="radio" name="method[]" value="{{method}}" ng-model="edit.method"
+    ng-click="edit.clear_data_body()" ng-disabled="edit.mode=='view'"
+    ng-change="edit.form_change()"> {{method}}
+</label>
+```
+
+checkbox
+```
+<label class="checkbox-inline" ng-repeat="(k,v) in data_source.group_list">
+    <input type="checkbox" ng-change="edit.form_change()" ng-model="edit.relation_group[k]"
+    ng-checked="edit.relation_group[k]" ng-disabled="edit.mode=='view'" ng-show="{{k!='请选择'}}">
+    <span ng-show="{{k!='请选择'}}">{{v}}</span>
+</label>
+```
+select
+```
+//数据源为map格式，key为字符
+<select class="form-control" ng-model="edit.group" ng-options="k as v for (k,v) in data_source.group_list"
+    ng-disabled="edit.mode=='view'" ng-change="edit.form_change()" required>
+</select>
+```
 
 
 **路由**
@@ -126,6 +151,31 @@ page b: {{params}}
 ```
 <script>
 var app = angular.module('app', ['ngRoute'])
+    .run(function ($rootScope, $location) {
+        var nav = {
+            data: ['监控主页', 'API列表', '服务列表', '关于'],
+            current: ""
+        }
+        $rootScope.nav = nav
+
+        /* 监听路由的状态变化 */
+        $rootScope.$on('$routeChangeStart', function (evt, next, current) {
+            //console.log('route begin change');
+        });
+        $rootScope.$on('$routeChangeSuccess', function (evt, current, previous) {
+            //console.log('route have already changed ：' + $location.path());
+            // 路由改变触发对应菜单选中状态
+            var path = $location.path()
+            strs = path.split("/")
+            if (strs.length > 1) {
+                if (strs.length == 2) {
+                    nav.current = strs[1]
+                } else {
+                    nav.current = strs[1] + '_' + strs[2]
+                }
+            }
+        });
+    })
     .controller('aController', ['$scope', function ($scope) {
         $scope.content = "page a";
     }])

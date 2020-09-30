@@ -36,6 +36,19 @@ payment_queue_length{name="order_notify"} 90
 解除报警
 ![6](/img/grafana-alerting/6.png)
 
+邮件报警配置
+```
+[smtp]
+enabled = true
+host = smtp.exmail.qq.com:465
+user = system@exmail.com
+# If the password contains # or ; you have to wrap it with trippel quotes. Ex """#password;"""
+password = ***********
+;cert_file =
+;key_file =
+skip_verify = false
+from_address = system@exmail.com
+```
 
 钉钉报警api
 ```

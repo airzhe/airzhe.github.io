@@ -9,25 +9,37 @@ share: true
 
 
 ```
+#下载包
 helm repo add gitlab https://charts.gitlab.io
+helm pull gitlab/gitlab-runner --untar
 
-helm upgrade git-runner-test --install --namespace gitlab \
+#打标签
+kubectl get nodes --show-labels 
+kubectl label nodes node-a002 ci=true
+
+安装gitlab-runner
+helm upgrade gitlab-runner-01 --install --namespace gitlab \
 --set checkInterval=2 \
---set runners.image=alpine:latest --set runners.imagePullPolicy=if-not-present \
---set gitlabUrl=https://gitlab.youhaodongxi.com,runnerRegistrationToken=sDz-pAK6qVpYxixxX1dG --set runners.privileged=true \
-gitlab/gitlab-runner
+--set runners.image=alpine:latest --set runners.imagePullPolicy=if-not-present --set runners.tag=k8s-01 \
+--set gitlabUrl=http://gitla.******.net/,runnerRegistrationToken=AxwjhfK7bb8eDCs5PN --set runners.privileged=true \
+--set gitRunnerCacheDir=/volume \
+--set nodeSelector.ci=true \
+.
 ```
 
-mount 目录 : 在configmap.yaml 里 entrypoint 最后增加
+**mount 目录** 
+
+在configmap.yaml 里 entrypoint 最后增加
 
 ```
+{{ if .Values.gitRunnerCacheDir }}
     cat >>/home/gitlab-runner/.gitlab-runner/config.toml <<EOF
       [[runners.kubernetes.volumes.host_path]]
-        name = "docker"
-        mount_path = "/volume"
-        host_path = "/volume"
-
+        name = "git-runner-cache"
+        mount_path = {{ .Values.gitRunnerCacheDir | quote }}
+        host_path  = {{ .Values.gitRunnerCacheDir | quote }}
     EOF
+{{- end }}
 ```
 
 提示没有权限创建job
@@ -69,7 +81,7 @@ roleRef:
 helm init --tiller-namespace php-sht --service-account=admin
 ```
 
-#跳过fetch 
+**跳过fetch **
 
 ```
 deploy_all:

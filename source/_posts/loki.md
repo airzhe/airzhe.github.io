@@ -12,8 +12,11 @@ loki 是 grafana 公司出的日志查询工具，区别es，只对标签不对�
 
 helm 源
 
-```helm repo add loki https://grafana.github.io/loki/charts
+```
+helm repo add loki https://grafana.github.io/loki/charts
 helm repo update
+
+loki 可以设置nodeSelector， promtail不要设置
 ```
 
 [查询语句](https://github.com/grafana/loki/blob/65ba42a6e7dc975d6f25b15fc6f9b8d72446b3e2/docs/logql.md)：
@@ -104,3 +107,8 @@ annotations:
 监控日志总数，warning日志、error日志增长速率:
 
 ![3.png](/img/loki/3.png)
+
+
+参考：
+
+https://github.com/google/re2/wiki/Syntax

@@ -1,5 +1,5 @@
 ---
-title: "loki使用cassandra作存储"
+title: "loki使用cassandra存储索引"
 date: 2019-12-23 19:24:10
 tags: [loki,cassandra]
 share: true

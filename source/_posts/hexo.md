@@ -126,8 +126,12 @@ share: true
 2.插入图片:  在 source 目录下新建 img 目录，markdown 中以`/img` 为根路径引入对应图片
 
 3.站内链接: {&#37; post_link loki  使用Loki查询日志 &#37;}
-4.更多: `<!-- more -->`
 
+4.跳过某个文件_config.yml里配置
+```
+skip_render: ["_posts/shazam.md"]
+```
+更多: `<!-- more -->`
 
 
 **文档**

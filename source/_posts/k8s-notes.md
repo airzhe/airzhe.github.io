@@ -69,6 +69,11 @@ kubectl expose deployment nginx --port 80 --external-ip 172.17.8.201
 node 上使用 k8s 的core-dns 服务
 dig @10.152.183.10 grafana.istio-system.svc.cluster.local
 
+
+#查看资源yaml
+kubectl api-resources | grep pod
+kubectl explain podtemplates.template.spec.containers
+
 ```
 
 
