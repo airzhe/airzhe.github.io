@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Runner的小站">
 <meta property="og:description" content="在线安装 1curl -sfL https://docs.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn sh - 离线安装 1234567891011121314151617181920212223242526#下载离线镜像wget https://github.com/rancher/k3s/releases/download/v1.">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-10-14T08:37:41.382Z">
+<meta property="og:updated_time" content="2020-10-14T09:20:05.101Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="K3S">
 <meta name="twitter:description" content="在线安装 1curl -sfL https://docs.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn sh - 离线安装 1234567891011121314151617181920212223242526#下载离线镜像wget https://github.com/rancher/k3s/releases/download/v1.">
@@ -94,7 +94,7 @@
 <p><strong>设置<code>kubeconfig</code>文件</strong></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> KUBECONFIG=/etc/rancher/k3s/k3s.yaml</span><br><span class="line">chown runner:runner -R /etc/rancher/k3s/k3s.yaml</span><br><span class="line">kubectl get pods --all-namespaces</span><br><span class="line">helm ls --all-namespaces</span><br></pre></td></tr></table></figure>
 <p><strong>网络</strong></p>
-<p>支持创建 LoadBalancer 类型的 Service</p>
+<p>支持创建 <a href="https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer" target="_blank" rel="noopener">LoadBalancer</a> 类型的 Service</p>
 <p><strong>重启</strong></p>
 <p>systemd 下手动重启：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart k3s</span><br></pre></td></tr></table></figure>
@@ -170,7 +170,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/10/k3s/" data-id="ckg956lqs000m4lpb6ve1y0bs" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/10/k3s/" data-id="ckg96p0n0000m5npbmujqnbgu" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/containerd/">containerd</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k3s/">k3s</a></li></ul>
