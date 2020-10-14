@@ -105,7 +105,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/10/ldap/" data-id="ckg90fuxf000w3apbeqgl0eme" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/10/ldap/" data-id="ckg956lr4000w4lpbfce3u237" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ldap/">ldap</a></li></ul>
@@ -145,7 +145,9 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">#下载离线镜像</span><br><span class="line">wget https://github.com/rancher/k3s/releases/download/v1.18.9%2Bk3s1/k3s-airgap-images-amd64.tar</span><br><span class="line">docker load &lt; k3s-airgap-images-amd64.tar</span><br><span class="line"></span><br><span class="line">#下载k3s 可执行文件</span><br><span class="line">wget https://github.com/rancher/k3s/releases/download/v1.18.9%2Bk3s1/k3s</span><br><span class="line"></span><br><span class="line">#下载 install.sh</span><br><span class="line">https://github.com/rancher/k3s/blob/master/install.sh</span><br><span class="line"></span><br><span class="line">sudo mkdir -p /var/lib/rancher/k3s/agent/images/</span><br><span class="line">#下载的离线镜像包复制，格式如下</span><br><span class="line">#sudo cp ./k3s-airgap-images-$ARCH.tar /var/lib/rancher/k3s/agent/images/</span><br><span class="line">sudo cp ./k3s-airgap-images-amd64.tar /var/lib/rancher/k3s/agent/images/</span><br><span class="line"></span><br><span class="line">#授权</span><br><span class="line">chmod 755 k3s</span><br><span class="line">#下载的K3S的bin包，格式如下</span><br><span class="line">sudo cp ./k3s /usr/local/bin &amp;&amp; sudo chmod 755 /usr/local/bin/k3s</span><br><span class="line"></span><br><span class="line">#授权</span><br><span class="line">chmod +x ./install.sh</span><br><span class="line">#跳过镜像下载，使用docker作为运行时</span><br><span class="line">INSTALL_K3S_SKIP_DOWNLOAD=true  INSTALL_K3S_EXEC=&quot;--docker&quot; ./install.sh</span><br><span class="line"></span><br><span class="line"># 可能会遇到 k3s.server 换行引起的启动失败问题，修复后systemctl reload &amp;&amp; systemctl start k3s</span><br></pre></td></tr></table></figure>
 <p><strong>设置<code>kubeconfig</code>文件</strong></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> KUBECONFIG=/etc/rancher/k3s/k3s.yaml</span><br><span class="line">chown runner:runner -R /etc/rancher/k3s/k3s.yaml</span><br><span class="line">kubectl get pods --all-namespaces</span><br><span class="line">helm ls --all-namespaces</span><br></pre></td></tr></table></figure>
-<p> <strong>重启</strong></p>
+<p><strong>网络</strong></p>
+<p>支持创建 LoadBalancer 类型的 Service</p>
+<p><strong>重启</strong></p>
 <p>systemd 下手动重启：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart k3s</span><br></pre></td></tr></table></figure>
 <p>openrc 下手动重启：</p>
@@ -220,7 +222,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/10/k3s/" data-id="ckg90fuxc000r3apbuhrmeog1" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/10/k3s/" data-id="ckg956lqs000m4lpb6ve1y0bs" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/containerd/">containerd</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k3s/">k3s</a></li></ul>
@@ -268,7 +270,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/08/clickhouse-3shard/" data-id="ckg90fuwv000b3apbu1exny8x" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/08/clickhouse-3shard/" data-id="ckg956lq200074lpbpvnszyuv" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse/">clickhouse</a></li></ul>
@@ -313,7 +315,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/08/vue/" data-id="ckg90fuyz00483apbmz433uc0" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/08/vue/" data-id="ckg956lt5003j4lpb0dqgel3r" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/">vue</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vuejs/">vuejs</a></li></ul>
@@ -361,7 +363,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/07/shazam_source_code/" data-id="ckg90fuxt001c3apb31m8gtl3" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/07/shazam_source_code/" data-id="ckg956lsx00374lpbcaadbt76" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gaea/">gaea</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shazam/">shazam</a></li></ul>
@@ -430,7 +432,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/06/clickhouse-ha/" data-id="ckg90fuwg00013apboq1z5jpb" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/06/clickhouse-ha/" data-id="ckg956lpx00034lpb39tqrpk8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse-高可用/">clickhouse 高可用</a></li></ul>
@@ -482,7 +484,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/04/xorm_traceid/" data-id="ckg90fuyy00473apbrkf864o0" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/04/xorm_traceid/" data-id="ckg956lt3003g4lpb8f7xj6z5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/golang/">golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/logrus/">logrus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xorm/">xorm</a></li></ul>
@@ -531,7 +533,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="ckg90fux2000g3apb534451tl" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="ckg956lqk000h4lpb076to5a7" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -578,7 +580,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="ckg90fuwt00093apbkp6jvwk9" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="ckg956lq7000a4lpbd0yamp4k" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -637,7 +639,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ckg90fuwa00003apb3lc6be84" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ckg956lq400084lpbp1i4n3wm" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angular-js/">angular js</a></li></ul>

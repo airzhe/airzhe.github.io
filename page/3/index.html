@@ -101,7 +101,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/loki/" data-id="ckg90fuxp00193apbzfv5d9tp" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/loki/" data-id="ckg956lsr00334lpbu7jj2gtm" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/promtal/">promtal</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/日志/">日志</a></li></ul>
@@ -145,7 +145,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/core-dns/" data-id="ckg90fuws00083apbov64a741" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/core-dns/" data-id="ckg956lq000054lpbrse63y6a" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/coredns/">coredns</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/etcd/">etcd</a></li></ul>
@@ -192,7 +192,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/gitrunner-helm-install/" data-id="ckg90fuwx000d3apb37ei7s05" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/gitrunner-helm-install/" data-id="ckg956lqq000l4lpbda7v5z7l" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li></ul>
@@ -236,7 +236,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/helm/" data-id="ckg90fuxa000p3apb6x9om40h" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/helm/" data-id="ckg956lqw000p4lpbdupr9h4b" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
@@ -281,144 +281,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/grafana-alerting/" data-id="ckg90fux0000f3apbpjws8his" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/grafana-alerting/" data-id="ckg956lqg000f4lpbeyl8uc55" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/报警/">报警</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-btree" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/02/btree/" class="article-date">
-  <time datetime="2019-02-27T00:00:00.000Z" itemprop="datePublished">2019-02-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/btree/">B 树</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>gRPC是一个高性能、通用的开源 RPC 框架，其由 Google 主要面向移动应用开发并基于HTTP/2协议标准而设计，基于ProtoBuf(Protocol Buffers) 序列化协议开发，且支持众多开发语言。 使用 protoc –go_out=. *.proto 把proto文件转成 go 文件，定义格式如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">message HelloRequest &#123;</span><br><span class="line">  string greeting = 1;</span><br><span class="line">&#125;</span><br><span class="line">message HelloResponse &#123;</span><br><span class="line">  string reply = 1;</span><br><span class="line">&#125;</span><br><span class="line">service HelloService &#123;</span><br><span class="line">  rpc SayHello(HelloRequest) returns (HelloResponse);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><a href="https://zhuanlan.zhihu.com/p/27700617" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/27700617</a></p>
-<p>B树中每一个内部节点会包含一定数量的键，键将节点的子树分开。例如，如果一个内部节点有3个子节点（子树），那么它就必须有两个键： a1 和 a2 。左边子树的所有值都必须小于 a1 ，中间子树的所有值都必须在 a1 和a2 之间，右边子树的所有值都必须大于 a2 。</p>
-<p>规则：</p>
-<p>（1）所有节点关键字是按递增次序排列，并遵循左小右大原则；</p>
-<p>（2）1&lt;子节点数量&lt;=M ，M&gt;=2，空树除外（注：m阶代表一个树节点最多有多少个查找路径，m阶=m路,当m=2则是2叉树,m=3则是3叉）；</p>
-<p>（3）非根节点关键字数量大于等于ceil(m/2)-1且小于等于m-1个；（注：ceil()是个朝正无穷方向取整的函数 如ceil(1.1)结果为2)</p>
-<p>（4）非叶节点有N个子节点，则该节点的关键字数等于N-1;</p>
-<p>（5）所有叶子节点均在同一层、叶子节点除了包含了关键字和关键字记录的指针外也有指向其子节点的指针只不过其指针地址都为null对应下图最后一层节点的空格子</p>
-<p>B+ 树特点</p>
-<p>1、相较于B树B+每个非叶子节点存储的关键字数更多，树的层级更少所以查询数据更快；</p>
-<p>2、B+所有关键字数据地址都存在叶子节点上，所以每次查找的次数都相同所以查询速度要比B树更稳定;</p>
-<p>3、B+树所有的叶子节点数据构成了一个有序链表，在查询大小区间的数据时候更方便，数据紧密性很高，缓存的命中率也会比B树高。</p>
-<p>4、B+树遍历整棵树只需要遍历所有的叶子节点即可，，而不需要像B树一样需要对每一层进行遍历。</p>
-<p>5、B树相对于B+树的优点是，如果经常访问的数据离根节点很近，而B树的非叶子节点本身存有关键字其数据的地址，所以这种数据检索的时候会要比B+树快。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/btree/" data-id="ckg90fuwl00033apb7qulbxg3" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/b树/">b树</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-tcp" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/02/tcp/" class="article-date">
-  <time datetime="2019-02-27T00:00:00.000Z" itemprop="datePublished">2019-02-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/tcp/">Linux高性能服务器编程</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="Linux高性能服务器编程"><a href="#Linux高性能服务器编程" class="headerlink" title="Linux高性能服务器编程"></a>Linux高性能服务器编程</h2><p>网络层使用IP地址寻址一台机器，而数据链路层使用物理地址寻址一台机器，因此网络层必须先将目标机器的IP地址转换成其物理地址，才能使用数据链路层提供的服务，这就是 ARP 协议的用途。</p>
-<p>封装和分用</p>
-<p>经过TCP封装后的数据称为TCP报文段(TCP message segment)</p>
-<p>UDP无需为应用层数据保存副本，因此它提供的服务是不可靠的，当一个UDP数据报被成功发送之后，UDP内核缓冲区中的该数据报就被丢弃了，如果应用程序检测到该数据报未能正确接收，则需要从用户控件将该数据报拷贝到 UDP 内核发送缓冲区中。</p>
-<p>经过 IP 封装后的数据成为 IP 数据报（IP datagram）,IP数据报也包括头部信息和数据部分，其中数据部分就是一个 TCP 报文段，UDP报文段或ICMP报文。</p>
-<p>经过数据链路层封装的数据成为帧（frame)，以太网上传输的是以太网帧（ethernet frame），令牌环网络上传输的是令牌环帧(token ring frame)。</p>
-<p>帧的最大传输单位（MTU),即帧最多能携带多少上层协议数据（比如IP数据报），同程收到网络网络类型的限制，如果所示 以太网帧的MTU是1500字节，正因为如此，过长的IP数据可能需要被分片（fragment) 传输。</p>
-<p>以太网帧使用2字节的类型字段来标识上层协议，如果帧类型字段值为 0x800,则为 IP数据报，0x806为ARP请求或应答报文，0x835 帧的类型部分为 RARP 请求或者应答报文。</p>
-<p>因为ICMP 、TCP 和 UDP 都是用ip协议，所以 IP数据报的头部采用16位协议字段来区分它们。</p>
-<p>TCP 报文段和UDP数据报通过其头部中的16位端口号来区分上层应用</p>
-<p>帧通过上述分用步骤后，最终将封装前的原始数据送至目标服务，这样在顶层目标服务看来，封装和分用似乎没有发生过。</p>
-<p>arp -a  查看 arp 缓存</p>
-<p>即使是同一台机器上的两个进程通信，也要考虑字节序的问题</p>
-<p>inet_addr把点分十进制字符串的ipv4地址转换为网络字节序煮熟表示的 ipv4 地址。 inet_aton 相反</p>
-<p>pipe 函数的参数是一个包含两个 int 型整数的数组指针，该函数成功返回0，并将一对打开的文件描述符值填入其参数指向的数组。失败返回 -1</p>
-<p>自linux2.6.11内核起，管道容量的大小默认是 65536 字节</p>
-<p>sendfile 函数在两个文件描述符之间直接传递数据（完全在内核中操作），从而避免额内核缓冲区和用户缓冲区之间的数据拷贝，sendfile 几乎是专门为在网络上传输文件而设计的。</p>
-<p>大部分后台进程都在 /var/log 目录下用于自己的目录日志</p>
-<p>lsof 是一个列出当前系统打开的文件描述符的工具 -i 显示 socket 文件描述符</p>
-<p>字节流服务和数据报服务的区别，实际编程中体现为通信双方是否必须执行相同次数的读、写操作。</p>
-<p>当发送端应用程序连续执行多次写操作时，TCP模块先将哲学数据放入TCP发送缓冲区中。当TCP模块真正开始发送数据时，发送缓冲区中这些等待发送的数据可能被封装成一个或多个TCP报文段发出。因此，TCP模块发送出的TCP报文段的个数和应用程序执行的写操作次数之间没有固定的数量关系。</p>
-<p>当接收端收到一个或多个TCP报文段后，TCP模块将它们携带的应用程序数据按照TCP报文段的序号依次放入TCP接收缓冲区中，并通知应用程序读取数据。接收端应用程序可以一次性将TCP接收缓冲区中的数据全部读出，也可以分多次读取，这取决于用户指定的应用程序读取缓冲区的大小。因此，应用程序执行的读操作次数和TCP模块接收到的TCP报文段个数之间也没有固定的数量关系。</p>
-<p>发送端执行的写操作和接收端执行的读操作之间没有任何数量关系，这就是字节流的概念；应用程序对数据的发送和接收是没有边界线制的。UDP则不然。发送端应用程序每执行一次写操作，UDP模块就要将其分装成一个 UDP 数据报并发送之。接收端必须及时针对每一个 UDP 数据报执行读操作，否则就会丢包。并且，如果用户没有指定足够的应用程序缓冲区来读取UDP数据，则UDP数据将被截断。</p>
-<p>TCP 协议采用超时重传机制，发送端在发送出一个TCP报文段之后启动定时器，如果在定时时间内未收到应答，它将重发该把文段。TCP协议还会对接收到的TCP报文段重排、整理，再交付给应用层。</p>
-<p><strong>TCP头部结构如下：</strong></p>
-<p>16位源端口号、16位目的端口号</p>
-<p>32位序号</p>
-<p>32位确认号</p>
-<p>4位头部长度、6位保留、URG、ACK、PSH、RST、SYN、FIN、16位窗口大小</p>
-<p>16位校验和、16位紧急指针</p>
-<p>选项，最多40字节</p>
-<p>16位窗口大小：是TCP流量控制的一个手段。这里说的窗口，指的是接收通告窗口。它告诉对方本端的TCP接收缓冲区还能容纳多少字节的数据，这样对方就可以控制发送数据的速度。</p>
-<p>我们一共抓取到了6个TCP报文段，它们是同步报文段，并且具有相同的序号值，这说明后面5个同步报文段都是超时重连接报文段。它们间隔时间分别为1s,2s,4s,8s和16s</p>
-<p>服务器通过listen系统调用进入LISTEN状态，被动等待客户端连接，因此执行的是所谓的被动打开。服务器一旦监听到某个连接请求（收到同步报文段），就将该连接放入内核等待队列中，并向客户端发送带 SYN 标志的确认报文段。此时该连接处于 SYN_REVD 状态。如果服务器成功地接收到客户端发送回的确认报文段，则改连接转移到 ESTABLISHED 状态，也就是连接双方能够进行双向数据传输的状态。<br>当客户端主动关闭连接时，服务器通过返回确认报文段使连接进入 CLOSE_WAIT 状态。服务器检测到客户端关闭连接后，也会立即给客户端发送一个结束报文段来关闭连接。这将使连接装移到 LAST_ACK 状态。</p>
-<p><strong>扩大因子</strong></p>
-<p>TCP 紧急数据成为带外数据，仅支持一个字节。</p>
-<p>在某些特殊条件下，TCP连接的一端回会向另一端发送携带RST标志的报文段，即复位报文段，以通知对方关闭连接或重新建立连接。</p>
-<p>由于服务器程序已经被中断，所以对客户端发送的数据回应了一个复位报文段 </p>
-<p>带外数据比普通数据（也成为带内数据）有更高的优先级，它应该总是立即发送，而不论发送缓冲区中是否有排队等待发送的普通数据。带外数据的使用很少见，已知的仅有telnet、ftp等远程非活跃程序。</p>
-<p>发送端一次发送的多字节的带外数据中只有最后一个字节被当作带外数据，其他数据被当成了普通数据。</p>
-<p>ftp命令用使带 外 数据 来中断一个件文的输传。</p>
-<p>16位紧急指针，它是配合 URG 标志位一起使用的，言外之意就是这个字段只有在URG被置位时才有意义。因为只有一个紧急指针，这也意味着它只能表示一个字节的数据。这个指针指向了紧急数据最后一个自己的下一个字节。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/tcp/" data-id="ckg90fuxv001h3apbpm78rnpy" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li></ul>
 
     </footer>
   </div>
@@ -500,10 +366,144 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/nginx/" data-id="ckg90fuxn00173apbwb2cu0w8" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/nginx/" data-id="ckg956lsv00364lpbgkxgv2ot" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openresty/">openresty</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-tcp" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/tcp/" class="article-date">
+  <time datetime="2019-02-27T00:00:00.000Z" itemprop="datePublished">2019-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/tcp/">Linux高性能服务器编程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Linux高性能服务器编程"><a href="#Linux高性能服务器编程" class="headerlink" title="Linux高性能服务器编程"></a>Linux高性能服务器编程</h2><p>网络层使用IP地址寻址一台机器，而数据链路层使用物理地址寻址一台机器，因此网络层必须先将目标机器的IP地址转换成其物理地址，才能使用数据链路层提供的服务，这就是 ARP 协议的用途。</p>
+<p>封装和分用</p>
+<p>经过TCP封装后的数据称为TCP报文段(TCP message segment)</p>
+<p>UDP无需为应用层数据保存副本，因此它提供的服务是不可靠的，当一个UDP数据报被成功发送之后，UDP内核缓冲区中的该数据报就被丢弃了，如果应用程序检测到该数据报未能正确接收，则需要从用户控件将该数据报拷贝到 UDP 内核发送缓冲区中。</p>
+<p>经过 IP 封装后的数据成为 IP 数据报（IP datagram）,IP数据报也包括头部信息和数据部分，其中数据部分就是一个 TCP 报文段，UDP报文段或ICMP报文。</p>
+<p>经过数据链路层封装的数据成为帧（frame)，以太网上传输的是以太网帧（ethernet frame），令牌环网络上传输的是令牌环帧(token ring frame)。</p>
+<p>帧的最大传输单位（MTU),即帧最多能携带多少上层协议数据（比如IP数据报），同程收到网络网络类型的限制，如果所示 以太网帧的MTU是1500字节，正因为如此，过长的IP数据可能需要被分片（fragment) 传输。</p>
+<p>以太网帧使用2字节的类型字段来标识上层协议，如果帧类型字段值为 0x800,则为 IP数据报，0x806为ARP请求或应答报文，0x835 帧的类型部分为 RARP 请求或者应答报文。</p>
+<p>因为ICMP 、TCP 和 UDP 都是用ip协议，所以 IP数据报的头部采用16位协议字段来区分它们。</p>
+<p>TCP 报文段和UDP数据报通过其头部中的16位端口号来区分上层应用</p>
+<p>帧通过上述分用步骤后，最终将封装前的原始数据送至目标服务，这样在顶层目标服务看来，封装和分用似乎没有发生过。</p>
+<p>arp -a  查看 arp 缓存</p>
+<p>即使是同一台机器上的两个进程通信，也要考虑字节序的问题</p>
+<p>inet_addr把点分十进制字符串的ipv4地址转换为网络字节序煮熟表示的 ipv4 地址。 inet_aton 相反</p>
+<p>pipe 函数的参数是一个包含两个 int 型整数的数组指针，该函数成功返回0，并将一对打开的文件描述符值填入其参数指向的数组。失败返回 -1</p>
+<p>自linux2.6.11内核起，管道容量的大小默认是 65536 字节</p>
+<p>sendfile 函数在两个文件描述符之间直接传递数据（完全在内核中操作），从而避免额内核缓冲区和用户缓冲区之间的数据拷贝，sendfile 几乎是专门为在网络上传输文件而设计的。</p>
+<p>大部分后台进程都在 /var/log 目录下用于自己的目录日志</p>
+<p>lsof 是一个列出当前系统打开的文件描述符的工具 -i 显示 socket 文件描述符</p>
+<p>字节流服务和数据报服务的区别，实际编程中体现为通信双方是否必须执行相同次数的读、写操作。</p>
+<p>当发送端应用程序连续执行多次写操作时，TCP模块先将哲学数据放入TCP发送缓冲区中。当TCP模块真正开始发送数据时，发送缓冲区中这些等待发送的数据可能被封装成一个或多个TCP报文段发出。因此，TCP模块发送出的TCP报文段的个数和应用程序执行的写操作次数之间没有固定的数量关系。</p>
+<p>当接收端收到一个或多个TCP报文段后，TCP模块将它们携带的应用程序数据按照TCP报文段的序号依次放入TCP接收缓冲区中，并通知应用程序读取数据。接收端应用程序可以一次性将TCP接收缓冲区中的数据全部读出，也可以分多次读取，这取决于用户指定的应用程序读取缓冲区的大小。因此，应用程序执行的读操作次数和TCP模块接收到的TCP报文段个数之间也没有固定的数量关系。</p>
+<p>发送端执行的写操作和接收端执行的读操作之间没有任何数量关系，这就是字节流的概念；应用程序对数据的发送和接收是没有边界线制的。UDP则不然。发送端应用程序每执行一次写操作，UDP模块就要将其分装成一个 UDP 数据报并发送之。接收端必须及时针对每一个 UDP 数据报执行读操作，否则就会丢包。并且，如果用户没有指定足够的应用程序缓冲区来读取UDP数据，则UDP数据将被截断。</p>
+<p>TCP 协议采用超时重传机制，发送端在发送出一个TCP报文段之后启动定时器，如果在定时时间内未收到应答，它将重发该把文段。TCP协议还会对接收到的TCP报文段重排、整理，再交付给应用层。</p>
+<p><strong>TCP头部结构如下：</strong></p>
+<p>16位源端口号、16位目的端口号</p>
+<p>32位序号</p>
+<p>32位确认号</p>
+<p>4位头部长度、6位保留、URG、ACK、PSH、RST、SYN、FIN、16位窗口大小</p>
+<p>16位校验和、16位紧急指针</p>
+<p>选项，最多40字节</p>
+<p>16位窗口大小：是TCP流量控制的一个手段。这里说的窗口，指的是接收通告窗口。它告诉对方本端的TCP接收缓冲区还能容纳多少字节的数据，这样对方就可以控制发送数据的速度。</p>
+<p>我们一共抓取到了6个TCP报文段，它们是同步报文段，并且具有相同的序号值，这说明后面5个同步报文段都是超时重连接报文段。它们间隔时间分别为1s,2s,4s,8s和16s</p>
+<p>服务器通过listen系统调用进入LISTEN状态，被动等待客户端连接，因此执行的是所谓的被动打开。服务器一旦监听到某个连接请求（收到同步报文段），就将该连接放入内核等待队列中，并向客户端发送带 SYN 标志的确认报文段。此时该连接处于 SYN_REVD 状态。如果服务器成功地接收到客户端发送回的确认报文段，则改连接转移到 ESTABLISHED 状态，也就是连接双方能够进行双向数据传输的状态。<br>当客户端主动关闭连接时，服务器通过返回确认报文段使连接进入 CLOSE_WAIT 状态。服务器检测到客户端关闭连接后，也会立即给客户端发送一个结束报文段来关闭连接。这将使连接装移到 LAST_ACK 状态。</p>
+<p><strong>扩大因子</strong></p>
+<p>TCP 紧急数据成为带外数据，仅支持一个字节。</p>
+<p>在某些特殊条件下，TCP连接的一端回会向另一端发送携带RST标志的报文段，即复位报文段，以通知对方关闭连接或重新建立连接。</p>
+<p>由于服务器程序已经被中断，所以对客户端发送的数据回应了一个复位报文段 </p>
+<p>带外数据比普通数据（也成为带内数据）有更高的优先级，它应该总是立即发送，而不论发送缓冲区中是否有排队等待发送的普通数据。带外数据的使用很少见，已知的仅有telnet、ftp等远程非活跃程序。</p>
+<p>发送端一次发送的多字节的带外数据中只有最后一个字节被当作带外数据，其他数据被当成了普通数据。</p>
+<p>ftp命令用使带 外 数据 来中断一个件文的输传。</p>
+<p>16位紧急指针，它是配合 URG 标志位一起使用的，言外之意就是这个字段只有在URG被置位时才有意义。因为只有一个紧急指针，这也意味着它只能表示一个字节的数据。这个指针指向了紧急数据最后一个自己的下一个字节。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/02/tcp/" data-id="ckg956lt2003e4lpbish194lm" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-btree" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/btree/" class="article-date">
+  <time datetime="2019-02-27T00:00:00.000Z" itemprop="datePublished">2019-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/btree/">B 树</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>gRPC是一个高性能、通用的开源 RPC 框架，其由 Google 主要面向移动应用开发并基于HTTP/2协议标准而设计，基于ProtoBuf(Protocol Buffers) 序列化协议开发，且支持众多开发语言。 使用 protoc –go_out=. *.proto 把proto文件转成 go 文件，定义格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">message HelloRequest &#123;</span><br><span class="line">  string greeting = 1;</span><br><span class="line">&#125;</span><br><span class="line">message HelloResponse &#123;</span><br><span class="line">  string reply = 1;</span><br><span class="line">&#125;</span><br><span class="line">service HelloService &#123;</span><br><span class="line">  rpc SayHello(HelloRequest) returns (HelloResponse);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="https://zhuanlan.zhihu.com/p/27700617" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/27700617</a></p>
+<p>B树中每一个内部节点会包含一定数量的键，键将节点的子树分开。例如，如果一个内部节点有3个子节点（子树），那么它就必须有两个键： a1 和 a2 。左边子树的所有值都必须小于 a1 ，中间子树的所有值都必须在 a1 和a2 之间，右边子树的所有值都必须大于 a2 。</p>
+<p>规则：</p>
+<p>（1）所有节点关键字是按递增次序排列，并遵循左小右大原则；</p>
+<p>（2）1&lt;子节点数量&lt;=M ，M&gt;=2，空树除外（注：m阶代表一个树节点最多有多少个查找路径，m阶=m路,当m=2则是2叉树,m=3则是3叉）；</p>
+<p>（3）非根节点关键字数量大于等于ceil(m/2)-1且小于等于m-1个；（注：ceil()是个朝正无穷方向取整的函数 如ceil(1.1)结果为2)</p>
+<p>（4）非叶节点有N个子节点，则该节点的关键字数等于N-1;</p>
+<p>（5）所有叶子节点均在同一层、叶子节点除了包含了关键字和关键字记录的指针外也有指向其子节点的指针只不过其指针地址都为null对应下图最后一层节点的空格子</p>
+<p>B+ 树特点</p>
+<p>1、相较于B树B+每个非叶子节点存储的关键字数更多，树的层级更少所以查询数据更快；</p>
+<p>2、B+所有关键字数据地址都存在叶子节点上，所以每次查找的次数都相同所以查询速度要比B树更稳定;</p>
+<p>3、B+树所有的叶子节点数据构成了一个有序链表，在查询大小区间的数据时候更方便，数据紧密性很高，缓存的命中率也会比B树高。</p>
+<p>4、B+树遍历整棵树只需要遍历所有的叶子节点即可，，而不需要像B树一样需要对每一层进行遍历。</p>
+<p>5、B树相对于B+树的优点是，如果经常访问的数据离根节点很近，而B树的非叶子节点本身存有关键字其数据的地址，所以这种数据检索的时候会要比B+树快。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/02/btree/" data-id="ckg956lpn00004lpbz4w9s3f8" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/b树/">b树</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li></ul>
 
     </footer>
   </div>
@@ -552,7 +552,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/jenkins-introduction/" data-id="ckg90fux9000o3apbrb0ffz4m" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/jenkins-introduction/" data-id="ckg956lqz000r4lpb3ngv5f5m" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pipeline/">pipeline</a></li></ul>
@@ -652,7 +652,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/prometheus/" data-id="ckg90fuxu001e3apb42qefdnq" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/prometheus/" data-id="ckg956lsz003a4lpbauomjmpl" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/监控/">监控</a></li></ul>
