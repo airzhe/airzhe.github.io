@@ -2,7 +2,7 @@
 title: "vue 入门笔记"
 description: ""
 date: 2020-08-21 16:32:10
-tags: [vue、vuejs]
+tags: [vue,vuejs]
 comments: false
 share: true
 ---

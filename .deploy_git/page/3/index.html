@@ -62,6 +62,101 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-loki" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/loki/" class="article-date">
+  <time datetime="2019-10-17T19:25:10.000Z" itemprop="datePublished">2019-10-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/loki/">使用Loki查询日志</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="/img/loki/logo.png" alt="1.png"></p>
+<p>loki 是 grafana 公司出的日志查询工具，区别es，只对标签不对数据做索引，更轻量。</p>
+<p><img src="/img/loki/1.png" alt="1.png"></p>
+<p>helm 源</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">helm repo add loki https://grafana.github.io/loki/charts</span><br><span class="line">helm repo update</span><br><span class="line"></span><br><span class="line">loki 可以设置nodeSelector， promtail不要设置</span><br></pre></td></tr></table></figure>
+<p><a href="https://github.com/grafana/loki/blob/65ba42a6e7dc975d6f25b15fc6f9b8d72446b3e2/docs/logql.md" target="_blank" rel="noopener">查询语句</a>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;job=&quot;ingress-nginx/nginx-ingress&quot;&#125; |=&quot;php-sht-payment-develop-http&quot; |=&quot;refund/create&quot;</span><br><span class="line">&#123;job=&quot;php-sht/payment-develop&quot;,stream=&quot;neo-log&quot;&#125; !=&quot;ShopNotifyJob&quot; </span><br><span class="line">&#123;job=~&quot;php-sht/payment-develop.*&quot;&#125; |~&quot;shop_refund&quot; !~&quot;15712&quot; #正则</span><br></pre></td></tr></table></figure>
+<p><strong>promtail</strong> 作为loki的数据采集客户端，在k8s部署采用服务发现的形式监控所有容器标准输入输出。业务日志监控可以采用sidecar方式放在服务pod里，把日志文件mount 到本地，推给loki.</p>
+<p>promtail.yaml 普通配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">server:</span><br><span class="line">  http_listen_port: 3101</span><br><span class="line">scrape_configs:</span><br><span class="line">  - job_name: payment-develop</span><br><span class="line">    entry_parser: raw</span><br><span class="line">    static_configs:</span><br><span class="line">      - targets:</span><br><span class="line">         - localhost</span><br><span class="line">        labels:</span><br><span class="line">          job: php-sht/payment-develop</span><br><span class="line">          stream: neo-log</span><br><span class="line">          __path__: /var/www/payment/runtime/logs/*.log</span><br></pre></td></tr></table></figure></p>
+        
+          <p class="article-more-link">
+            <a href="/2019/10/loki/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/10/loki/" data-id="ckg956lsr00334lpbu7jj2gtm" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/promtal/">promtal</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/日志/">日志</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-core-dns" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/core-dns/" class="article-date">
+  <time datetime="2019-10-16T17:58:10.000Z" itemprop="datePublished">2019-10-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/core-dns/">core-dns使用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>core-dns-conf 配置</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">. &#123;</span><br><span class="line">    forward . 8.8.8.8</span><br><span class="line">    log</span><br><span class="line">    hosts &#123;</span><br><span class="line">        10.111.8.170 www.sms.service</span><br><span class="line">        ttl 60</span><br><span class="line">        reload 1m</span><br><span class="line">        fallthrough</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>docker 方式启动</strong><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl stop systemd-resolved</span><br><span class="line">docker run -d \</span><br><span class="line">    --net="host" \</span><br><span class="line">    -v /etc/hosts:/etc/hosts \</span><br><span class="line">    -v /etc/resolv.conf:/etc/resolv.conf \</span><br><span class="line">    -v /home/runner/work/coredns/core-dns/etc/core-dns-conf:/etc/core-dns-conf \</span><br><span class="line">    --name core-dns \</span><br><span class="line">    coredns/coredns -conf /etc/core-dns-conf</span><br></pre></td></tr></table></figure></p>
+<p><strong>使用etcd做服务发现</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">https://www.cnblogs.com/leffss/p/10148507.html</span><br><span class="line">etcdctl put /coredns/net/nicetuan/t1/a &apos;&#123;&quot;host&quot;:&quot;10.111.8.185&quot;,&quot;ttl&quot;:30&#125;&apos;</span><br><span class="line"></span><br><span class="line">$ ETCDCTL_API=3 </span><br><span class="line">./etcdctl put /skydns/com/example/services/users \</span><br><span class="line">&apos;&#123;&quot;host&quot;: &quot;192.0.2.10&quot;,&quot;port &quot;: 20020,&quot;priority&quot;: 10,&quot;weight&quot;: 20&#125;&apos;</span><br><span class="line">OK</span><br><span class="line">$ ETCDCTL_API=3 </span><br><span class="line">./etcdctl get /skydns/com/example/services/users</span><br><span class="line">/skydns/com/example/services/users</span><br><span class="line">&#123;&quot;host&quot;: &quot;192.0.2.10&quot;,&quot;port&quot;: 20020,&quot;priority&quot;: 10,&quot;weight&quot;: 20&#125;</span><br><span class="line"></span><br><span class="line">. &#123;</span><br><span class="line">    etcd &#123;   # 配置启用etcd插件,后面可以指定域名,例如 etcd test.com &#123;</span><br><span class="line">        stubzones # 启用存根区域功能。 stubzone仅在位于指定的第一个区域下方的etcd树中完成</span><br><span class="line">        path /coredns # etcd里面的路径 默认为/skydns，以后所有的dns记录就是存储在该存根路径底下</span><br><span class="line">        endpoint http://172.16.101.209:2379 # etcd访问地址，多个空格分开</span><br><span class="line"></span><br><span class="line">        # upstream设置要使用的上游解析程序解决指向外部域名的在etcd（认为CNAME）中找到的外部域名。</span><br><span class="line">        upstream 8.8.8.8:53 8.8.4.4:53</span><br><span class="line"></span><br><span class="line">        fallthrough # 如果区域匹配但不能生成记录，则将请求传递给下一个插件</span><br><span class="line">        # tls CERT KEY CACERT # 可选参数，etcd认证证书设置</span><br><span class="line">    &#125;</span><br><span class="line">    prometheus  :9153 # 监控插件</span><br><span class="line">    cache 160</span><br><span class="line">    loadbalance   # 负载均衡，开启DNS记录轮询策略</span><br><span class="line">    forward . 8.8.8.8:53 8.8.4.4:53 # 上面etcd未查询到的请求转发给设置的DNS服务器解析</span><br><span class="line">    log # 打印日志</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于传统的DNS服务器（例如BIND），管理员通常将主区域数据作为文件进行管理。 最近，DNS服务器已开始支持从其他来源（例如数据库）加载主区域数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm -u $(id -u):$(id -g) -v $PWD:/go golang:1.12 \</span><br><span class="line">    /bin/bash -c \</span><br><span class="line">    &quot;git clone https://github.com/coredns/coredns.git &amp;&amp; \</span><br><span class="line">    cd coredns &amp;&amp; \</span><br><span class="line">    git checkout v1.5.0&quot;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2019/10/core-dns/" data-id="ckg956lq000054lpbrse63y6a" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/coredns/">coredns</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/etcd/">etcd</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-gitrunner-helm-install" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/10/gitrunner-helm-install/" class="article-date">
@@ -97,7 +192,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/gitrunner-helm-install/" data-id="ckf9fwxk8000f1hpbfynxobzz" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/gitrunner-helm-install/" data-id="ckg956lqq000l4lpbda7v5z7l" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li></ul>
@@ -141,7 +236,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/helm/" data-id="ckf9fwxkh000m1hpbe9uhc82w" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/helm/" data-id="ckg956lqw000p4lpbdupr9h4b" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
@@ -186,7 +281,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/grafana-alerting/" data-id="ckf9fwxkb000g1hpbklp9sx2d" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/grafana-alerting/" data-id="ckg956lqg000f4lpbeyl8uc55" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/报警/">报警</a></li></ul>
@@ -271,7 +366,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/nginx/" data-id="ckf9fwxky00151hpb0yetu3eo" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/nginx/" data-id="ckg956lsv00364lpbgkxgv2ot" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openresty/">openresty</a></li></ul>
@@ -351,7 +446,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/tcp/" data-id="ckf9fwxl2001b1hpbij5sev9e" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/tcp/" data-id="ckg956lt2003e4lpbish194lm" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li></ul>
@@ -405,7 +500,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/btree/" data-id="ckf9fwxjr00031hpb05lqbrve" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/btree/" data-id="ckg956lpn00004lpbz4w9s3f8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/b树/">b树</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li></ul>
@@ -457,7 +552,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/jenkins-introduction/" data-id="ckf9fwxkk000q1hpbhn9lyfb3" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/jenkins-introduction/" data-id="ckg956lqz000r4lpb3ngv5f5m" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pipeline/">pipeline</a></li></ul>
@@ -557,7 +652,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/prometheus/" data-id="ckf9fwxkz00161hpb5nf7fq1p" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/prometheus/" data-id="ckg956lsz003a4lpbauomjmpl" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/监控/">监控</a></li></ul>
@@ -569,131 +664,10 @@
 
 
   
-    <article id="post-k8s-notes" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/02/k8s-notes/" class="article-date">
-  <time datetime="2019-02-01T19:38:10.000Z" itemprop="datePublished">2019-02-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/k8s-notes/">k8s 笔记</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>k8s 容器出现大量 Evicted</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$kubectl describe node/runner-e480</span><br><span class="line"></span><br><span class="line">Normal   NodeHasNoDiskPressure    6m19s (x8 over 6m19s)  kubelet, runner-e480     Node runner-e480 status is now: NodeHasNoDiskPressure</span><br><span class="line"></span><br><span class="line">df -h 系统盘使用85%</span><br><span class="line"></span><br><span class="line">修改了docker 镜像存储路径</span><br><span class="line">https://blog.csdn.net/glongljl/article/details/80158297</span><br><span class="line"></span><br><span class="line">参考:</span><br><span class="line">https://blog.csdn.net/qq_21816375/article/details/82905660</span><br></pre></td></tr></table></figure>
-<h3 id="k8s-命令"><a href="#k8s-命令" class="headerlink" title="k8s 命令"></a>k8s 命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">#命令行自动补全</span><br><span class="line">source &lt;(kubectl completion bash)</span><br><span class="line">echo &quot;source &lt;(kubectl completion bash)&quot; &gt;&gt; ~/.bashrc</span><br><span class="line"></span><br><span class="line">kubectl get sa --all-namespaces=true</span><br><span class="line">kubectl get roles --all-namespaces=true</span><br><span class="line">kubectl get RoleBinding  --all-namespaces=true</span><br><span class="line">kubectl get secrets --all-namespaces=true</span><br><span class="line">kubectl describe  ClusterRole/cluster-admin</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#端口转发 本地2000端口映射到容器3000端口 &amp;……&amp; 目前只能用localhost访问</span><br><span class="line">export POD_NAME=$(kubectl get pods --namespace default -l &quot;app=grafana,release=willing-lamb&quot; -o jsonpath=&quot;&#123;.items[0].metadata.name&#125;&quot;)</span><br><span class="line">kubectl port-forward willing-lamb-grafana-75d49cb58c-7dn6d 2000:3000</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">kubectl get secrets -o json | kubectl update -f -</span><br><span class="line"></span><br><span class="line">kubectl exec POD_NAME -c CONTAINER_NAME reboot</span><br><span class="line">kubectl exec -it [POD_NAME] -c [CONTAINER_NAME] -- /bin/sh -c &quot;kill 1&quot;</span><br><span class="line"></span><br><span class="line">kubectl explain namespace</span><br><span class="line"></span><br><span class="line">kubectl get ns default --show-labels</span><br><span class="line">kubectl completion -h</span><br><span class="line"></span><br><span class="line">kubectl delete pod deviosow-1828 --namespace=kube-system --grace-period=0 --force</span><br><span class="line"></span><br><span class="line">docker images | grep &apos;&lt;none&gt;&apos;| awk &apos;&#123;print $3&#125;&apos; | xargs docker rmi</span><br><span class="line">kubectl -n kube-system get endpoints -o wide</span><br><span class="line"></span><br><span class="line">#dns 验证</span><br><span class="line">kubectl run curl --image=radial/busyboxplus:curl -it</span><br><span class="line">nslookup docker-dind-svc.gitlab-managed-apps</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#使用命令快速创建 deployment 和 service</span><br><span class="line">kubectl run nginx --image=nginx --replicas=2</span><br><span class="line">kubectl expose deployment nginx --port 80 --external-ip 172.17.8.201</span><br><span class="line"></span><br><span class="line">node 上使用 k8s 的core-dns 服务</span><br><span class="line">dig @10.152.183.10 grafana.istio-system.svc.cluster.local</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#查看资源yaml</span><br><span class="line">kubectl api-resources | grep pod</span><br><span class="line">kubectl explain podtemplates.template.spec.containers</span><br></pre></td></tr></table></figure>
-<p><strong>RBAC</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: ServiceAccount</span><br><span class="line">metadata:</span><br><span class="line">  namespace: default</span><br><span class="line">  name: example-sa</span><br><span class="line">---</span><br><span class="line">kind: Role</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  namespace: default</span><br><span class="line">  name: example-role</span><br><span class="line">rules:</span><br><span class="line">- apiGroups: [&quot;&quot;]</span><br><span class="line">  resources: [&quot;pods&quot;]</span><br><span class="line">  verbs: [&quot;get&quot;, &quot;watch&quot;, &quot;list&quot;]</span><br><span class="line">---</span><br><span class="line">kind: RoleBinding</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  name: example-rolebinding</span><br><span class="line">  namespace: default</span><br><span class="line">subjects:</span><br><span class="line">- kind: ServiceAccount</span><br><span class="line">  name: example-sa</span><br><span class="line">  namespace: default</span><br><span class="line">roleRef:</span><br><span class="line">  kind: Role</span><br><span class="line">  name: example-role</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">  </span><br><span class="line">---</span><br><span class="line">#管理员，角色配置可以参考 kubectl describe  ClusterRole/cluster-admin</span><br><span class="line">kind: Role</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  namespace: default</span><br><span class="line">  name: example-role</span><br><span class="line">rules:</span><br><span class="line">- apiGroups:</span><br><span class="line">  - &apos;*&apos;</span><br><span class="line">  resources:</span><br><span class="line">  - &apos;*&apos;</span><br><span class="line">  verbs:</span><br><span class="line">  - &apos;*&apos;</span><br><span class="line">  </span><br><span class="line">serviceAccountName</span><br><span class="line">serviceAccount #pod请求别的命名空间时的帐号</span><br><span class="line"></span><br><span class="line">Error: release community-feature-haozhe-wei failed: namespaces &quot;php-sht&quot; is forbidden: User &quot;system:serviceaccount:gitlab-managed-apps:default&quot; cannot get resource &quot;namespaces&quot; in API group &quot;&quot; in the namespace &quot;php-sht&quot;</span><br><span class="line"></span><br><span class="line">更新密钥要小心，因为帐号token会被其他服务关联，比如 tiller account</span><br></pre></td></tr></table></figure>
-<p><strong>跨namespace授权 </strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">kind: Role</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  namespace: gitlab</span><br><span class="line">  name: gitlab-view-role</span><br><span class="line">rules:</span><br><span class="line">- apiGroups:</span><br><span class="line">  - &apos;*&apos;</span><br><span class="line">  resources:</span><br><span class="line">  - &apos;*&apos;</span><br><span class="line">  verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;, &quot;create&quot;, &quot;update&quot;, &quot;patch&quot;, &quot;delete&quot;]</span><br><span class="line">---</span><br><span class="line">kind: RoleBinding</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  name: gitlab-view-php-sht-rolebinding</span><br><span class="line">  namespace: gitlab</span><br><span class="line">subjects:</span><br><span class="line">- kind: ServiceAccount</span><br><span class="line">  name: admin</span><br><span class="line">  namespace: php-sht</span><br><span class="line">roleRef:</span><br><span class="line">  kind: Role</span><br><span class="line">  name: gitlab-view-role</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br></pre></td></tr></table></figure>
-<p><strong>角色</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">admin</span><br><span class="line">maintainer</span><br><span class="line">developer</span><br><span class="line">guest/reporter</span><br></pre></td></tr></table></figure>
-<h3 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a>Pod</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">每个 pod 都以mount形式挂载这个 默认的Servcice Account，</span><br><span class="line">如：mountPath&quot;: &quot;/var/run/secrets/kubernetes.io/serviceaccount&quot;</span><br><span class="line"></span><br><span class="line">单独的pod，恢复过程永远发生在当前节点，不会跑到别的节点上去。如果你想让Pod出现在其他的可用节点上，就必须使用 deployment 这样的控制器来管理 pod，哪怕你只需要一个 pod 副本。</span><br><span class="line"></span><br><span class="line">可以通过restartPolicy，改变pod的恢复策略</span><br><span class="line"></span><br><span class="line">selector 意味着后面这些追加的定义，只会作用于 selector 所定义的，带有&quot;role:frontend&quot;标签的Pod对象</span><br><span class="line"></span><br><span class="line">command: [&quot;sh&quot;,&quot;-c&quot;,&quot;mkdir /var/www/html ; ln -s /var/www/community/public /var/www/html/public ; nginx -g &apos;daemon off;&apos;&quot;]</span><br><span class="line"></span><br><span class="line">#多行配置</span><br><span class="line">env:</span><br><span class="line">    - name: COMMAND_SCRIPT</span><br><span class="line">      value: |-</span><br><span class="line">        set -xeo pipefail</span><br><span class="line">        helm init --upgrade</span><br><span class="line">        for i in $(seq 1 30); do helm version &amp;&amp; break; sleep 1s; echo &quot;Retrying ($i)...&quot;; done</span><br><span class="line">        helm repo add runner https://charts.gitlab.io</span><br><span class="line">        helm repo update</span><br><span class="line">        helm upgrade runner runner/gitlab-runner --install --reset-values --tls --tls-ca-cert /data/helm/runner/config/ca.pem --tls-cert /data/helm/runner/config/cert.pem --tls-key /data/helm/runner/config/key.pem --version 0.4.1 --set rbac.create\=true,rbac.enabled\=true --namespace gitlab-managed-apps -f /data/helm/runner/config/values.yaml</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-privileged</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">    - name: nginx-privileged</span><br><span class="line">      image: nginx:1.14.2</span><br><span class="line">      securityContext:</span><br><span class="line">        privileged: true</span><br><span class="line">        runAsUser: 1000 #指定容器运行账户</span><br><span class="line">      </span><br><span class="line">      </span><br><span class="line"></span><br><span class="line">pod 的操作只有创建删除</span><br><span class="line"></span><br><span class="line">&quot;hostAliases&quot;: [</span><br><span class="line">          &#123;</span><br><span class="line">            &quot;ip&quot;: &quot;172.16.101.197&quot;,</span><br><span class="line">            &quot;hostnames&quot;: [</span><br><span class="line">              &quot;prometheus.local.com&quot;</span><br><span class="line">            ]</span><br><span class="line">          &#125;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">pod 的标签很很重要，loki用来建立索引，prometheus可以用来指定报警分组.</span><br></pre></td></tr></table></figure>
-<p><strong>TLS</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl https://192.168.207.237:2376/info --cert ./cert.pm --key ./key.pem  --cacert ./ca.pem</span><br><span class="line">kubectl create secret tls tls-secret --cert=path/to/tls.cert --key=path/to/tls.key</span><br></pre></td></tr></table></figure>
-<p><strong>Namspace</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pv 不属于 namespace </span><br><span class="line">pvc 属于</span><br></pre></td></tr></table></figure>
-<p><strong>Label</strong> and Annotations 注释 可以用来检索</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#标签一定要有 key 可以没有 value</span><br><span class="line">kubectl label/annotate &lt;resource&gt; foo=bar</span><br><span class="line">kubectl label/annotate &lt;resource&gt; foo-</span><br></pre></td></tr></table></figure>
-<h3 id="健康检查"><a href="#健康检查" class="headerlink" title="健康检查"></a>健康检查</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">livenessProbe:</span><br><span class="line">  - initialDelaySeconds:5 #容器启动5s后开始执行</span><br><span class="line">    periodSeconds:5 #每5s执行一次</span><br><span class="line"></span><br><span class="line">readlinessProbe: #健康检查结果决定这个pod是不是能被通过Service的方式访问到，而并不影响Pod的生命周期</span><br></pre></td></tr></table></figure>
-<h3 id="ConfigMap-Secret-Downard-Api"><a href="#ConfigMap-Secret-Downard-Api" class="headerlink" title="ConfigMap Secret Downard Api"></a>ConfigMap Secret Downard Api</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">这三种Project Volume 定义的信息，还可以通过环境变量的方式出现在容器里。但环境变量不具备自动更新的能力。所以一般情况下，都建议你好似用 Volume 文件的方式获取这些信息。</span><br><span class="line"></span><br><span class="line">projected volume可以映射很多volume源到相同的目录下</span><br><span class="line"></span><br><span class="line">#从配置文件生成 configmap</span><br><span class="line">&lt;?php</span><br><span class="line">$c=file_get_contents(&quot;conf.php&quot;);</span><br><span class="line">echo json_encode($c,JSON_UNESCAPED_UNICODE).&quot;\n&quot;;</span><br></pre></td></tr></table></figure>
-<h3 id="k8s-node-节点加入集群"><a href="#k8s-node-节点加入集群" class="headerlink" title="k8s  node 节点加入集群"></a>k8s  node 节点加入集群</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">kubeadm join 172.16.101.197:6443 --token vq0fs8.rzcw1lf6k3lz7986     --discovery-token-ca-cert-hash sha256:68c8228227ae029b091c8d6cdecde4c11ec5dbbbd43fa725060ffdd512fef3cd</span><br><span class="line"></span><br><span class="line">节点需要关闭 swap 启动docker服务</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">还需要下载</span><br><span class="line">k8s.gcr.io/pause:3.1 镜像</span><br><span class="line">k8s.gcr.io/kube-proxy 镜像</span><br><span class="line"></span><br><span class="line">在 master节点观察子节点pod创建情况</span><br><span class="line"></span><br><span class="line">移除节点:</span><br><span class="line">kubectl delete node node-1</span><br></pre></td></tr></table></figure>
-<h3 id="PV"><a href="#PV" class="headerlink" title="PV"></a>PV</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: PersistentVolume</span><br><span class="line">metadata:</span><br><span class="line">  name: es-local-pv0</span><br><span class="line">spec:</span><br><span class="line">  capacity:</span><br><span class="line">    storage: 10Gi</span><br><span class="line">  accessModes:</span><br><span class="line">  - ReadWriteOnce</span><br><span class="line">  persistentVolumeReclaimPolicy: Retain</span><br><span class="line">  storageClassName: local-storage</span><br><span class="line">  local:</span><br><span class="line">    path: /data</span><br><span class="line">  nodeAffinity:</span><br><span class="line">    required:</span><br><span class="line">      nodeSelectorTerms:</span><br><span class="line">      - matchExpressions:</span><br><span class="line">        - key: kubernetes.io/hostname</span><br><span class="line">          operator: In</span><br><span class="line">          values:</span><br><span class="line">          - php-cd-node</span><br></pre></td></tr></table></figure>
-<p><strong>redis</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl run --namespace kube-public redis-client --rm --tty -i --restart=&apos;Never&apos; \</span><br><span class="line"> --env REDIS_PASSWORD=$REDIS_PASSWORD \</span><br><span class="line">--image docker.io/bitnami/redis:5.0.5-debian-9-r36 -- bash</span><br></pre></td></tr></table></figure>
-<h3 id="映射外部服务"><a href="#映射外部服务" class="headerlink" title="映射外部服务"></a>映射外部服务</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: ldap-chang-password</span><br><span class="line">  namespace: kube-system</span><br><span class="line">spec:</span><br><span class="line">  ports:</span><br><span class="line">  - port: 80</span><br><span class="line">    targetPort: 8080</span><br><span class="line">    protocol: TCP</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Endpoints</span><br><span class="line">metadata:</span><br><span class="line">  name: ldap-chang-password</span><br><span class="line">  namespace: kube-system</span><br><span class="line">subsets:</span><br><span class="line">  - addresses:</span><br><span class="line">    - ip: 10.111.8.166</span><br><span class="line">    ports:</span><br><span class="line">    - port: 8080</span><br><span class="line">      protocol: TCP</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  name: uic</span><br><span class="line">  namespace: kube-system</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - host: uic.t1.youhaodongxi.com</span><br><span class="line">    http:</span><br><span class="line">      paths:</span><br><span class="line">      - backend:</span><br><span class="line">          serviceName: ldap-chang-password</span><br><span class="line">          servicePort: 80</span><br><span class="line">        path: /</span><br></pre></td></tr></table></figure>
-<p><strong>API权限</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/</span><br><span class="line"></span><br><span class="line">APISERVER=$(kubectl config view --minify -o jsonpath=&apos;&#123;.clusters[0].cluster.server&#125;&apos;)</span><br><span class="line">TOKEN=$(kubectl get secret $(kubectl get serviceaccount default -o jsonpath=&apos;&#123;.secrets[0].name&#125;&apos;) -o jsonpath=&apos;&#123;.data.token&#125;&apos; | base64 --decode )</span><br><span class="line">curl $APISERVER/api --header &quot;Authorization: Bearer $TOKEN&quot; --insecure</span><br><span class="line">&#123;</span><br><span class="line">  &quot;kind&quot;: &quot;APIVersions&quot;,</span><br><span class="line">  &quot;versions&quot;: [</span><br><span class="line">    &quot;v1&quot;</span><br><span class="line">  ],</span><br><span class="line">  &quot;serverAddressByClientCIDRs&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;clientCIDR&quot;: &quot;0.0.0.0/0&quot;,</span><br><span class="line">      &quot;serverAddress&quot;: &quot;10.0.1.149:443&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>how-to-create-a-kubectl-config-file-for-serviceaccount</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://stackoverflow.com/questions/47770676/how-to-create-a-kubectl-config-file-for-serviceaccount</span><br></pre></td></tr></table></figure>
-<p><strong>create-kubectl-by-user</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://docs.bitnami.com/kubernetes/how-to/configure-rbac-in-your-kubernetes-cluster/</span><br></pre></td></tr></table></figure>
-<p><strong>同一个service开2个端口</strong></p>
-<p>一般我们只有一个端口的时候，在service的yaml文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ports:</span><br><span class="line">  - nodePort: 8482</span><br><span class="line">    port: 8080</span><br><span class="line">    protocol: TCP</span><br><span class="line">    targetPort: 8080</span><br></pre></td></tr></table></figure>
-<p>而如果你想开两个端口，直接复制粘贴可不行，k8s会提示你必须要加上name。所以,如果要开多端口，要为每个port都指定一个name，如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ports:</span><br><span class="line">  - name: http</span><br><span class="line">    nodePort: 8482</span><br><span class="line">    port: 8080</span><br><span class="line">    protocol: TCP</span><br><span class="line">    targetPort: 8080</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/k8s-notes/" data-id="ckf9fwxkq000w1hpbyk2o6q7q" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-k8s-introduction" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/01/k8s-introduction/" class="article-date">
-  <time datetime="2019-01-31T00:00:00.000Z" itemprop="datePublished">2019-01-31</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/k8s-introduction/">k8s 介绍</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="Kubernetes"><a href="#Kubernetes" class="headerlink" title="Kubernetes"></a>Kubernetes</h2><p>Kubernetes是一个开源的_用于管理云平台中多个主机上的容器化的应用_Kubernetes的目标是让部署容器化的应用简单并且高效<em>powerful__Kubernetes提供了应用部署</em>规划_更新_维护的一种机制</p>
-<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p><img src="/img/k8s/1.png" alt="image"></p>
-<p>集群中的机器划分为一个Master 节点和一群工作节点(Node)</p>
-<p>Master 节点，由三个紧密协作的独立组件组合而成，它们分别是负责 API 服务的 <strong>kube-apiserver</strong>、负责调度的 <strong>kube-scheduler</strong>，以及负责容器编排的 <strong>kube-controller-manager</strong>。整个集群的持久化数据，则由 kube-apiserver 处理后保存在 <strong>Ectd</strong> 中。</p>
-<p>node上运行着 kubelet、kube-proxy服务进程，负责pod的创建、启动、监控、重启、销毁、以及实现软件模式的负载均衡器。</p>
-<p>在 Kubernetes 项目中，kubelet 主要负责同容器运行时（比如 Docker 项目）打交道，只要你的这个容器运行时能够运行标准的容器镜像，它就可以通过实现 <strong>CRI</strong> 接入到 Kubernetes 项目当中。(比如 rkt)</p>
-<p>而kubelet 的另一个重要功能，则是调用网络插件和存储插件为容器配置网络和持久化存储。<br>
-        
-          <p class="article-more-link">
-            <a href="/2019/01/k8s-introduction/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/01/k8s-introduction/" data-id="ckf9fwxkn000s1hpb63juqnpr" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
-    <a class="extend prev" rel="prev" href="/page/2/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">__('next') &raquo;</a>
   </nav>
 </section>
         
@@ -706,7 +680,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/angular-js/">angular js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/b树/">b树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse/">clickhouse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse-高可用/">clickhouse 高可用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coredns/">coredns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gaea/">gaea</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gogs/">gogs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/">grafana</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/">helm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logrus/">logrus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loki/">loki</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/microk8s/">microk8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openldap/">openldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openresty/">openresty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/promtal/">promtal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shazam/">shazam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue、vuejs/">vue、vuejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webshell/">webshell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xorm/">xorm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/报警/">报警</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控/">监控</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/angular-js/">angular js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/b树/">b树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse/">clickhouse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse-高可用/">clickhouse 高可用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/containerd/">containerd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coredns/">coredns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gaea/">gaea</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gogs/">gogs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/">grafana</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/">helm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k3s/">k3s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ldap/">ldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logrus/">logrus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loki/">loki</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/microk8s/">microk8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openldap/">openldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openresty/">openresty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/promtal/">promtal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shazam/">shazam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vuejs/">vuejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webshell/">webshell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xorm/">xorm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/报警/">报警</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控/">监控</a></li></ul>
     </div>
   </div>
 
@@ -716,7 +690,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/OLAP/" style="font-size: 10px;">OLAP</a> <a href="/tags/angular-js/" style="font-size: 10px;">angular js</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/b树/" style="font-size: 10px;">b树</a> <a href="/tags/cassandra/" style="font-size: 10px;">cassandra</a> <a href="/tags/clickhouse/" style="font-size: 12.5px;">clickhouse</a> <a href="/tags/clickhouse-高可用/" style="font-size: 10px;">clickhouse 高可用</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gaea/" style="font-size: 10px;">gaea</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 10px;">jenkins</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/logrus/" style="font-size: 10px;">logrus</a> <a href="/tags/loki/" style="font-size: 15px;">loki</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/pipeline/" style="font-size: 10px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 12.5px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/shazam/" style="font-size: 10px;">shazam</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/vue、vuejs/" style="font-size: 10px;">vue、vuejs</a> <a href="/tags/webshell/" style="font-size: 12.5px;">webshell</a> <a href="/tags/xorm/" style="font-size: 10px;">xorm</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a>
+      <a href="/tags/OLAP/" style="font-size: 10px;">OLAP</a> <a href="/tags/angular-js/" style="font-size: 10px;">angular js</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/b树/" style="font-size: 10px;">b树</a> <a href="/tags/cassandra/" style="font-size: 10px;">cassandra</a> <a href="/tags/clickhouse/" style="font-size: 12.5px;">clickhouse</a> <a href="/tags/clickhouse-高可用/" style="font-size: 10px;">clickhouse 高可用</a> <a href="/tags/containerd/" style="font-size: 10px;">containerd</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gaea/" style="font-size: 10px;">gaea</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 10px;">jenkins</a> <a href="/tags/k3s/" style="font-size: 10px;">k3s</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/ldap/" style="font-size: 10px;">ldap</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/logrus/" style="font-size: 10px;">logrus</a> <a href="/tags/loki/" style="font-size: 15px;">loki</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/pipeline/" style="font-size: 10px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 12.5px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/shazam/" style="font-size: 10px;">shazam</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/vuejs/" style="font-size: 10px;">vuejs</a> <a href="/tags/webshell/" style="font-size: 12.5px;">webshell</a> <a href="/tags/xorm/" style="font-size: 10px;">xorm</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a>
     </div>
   </div>
 
@@ -725,7 +699,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
     </div>
   </div>
 
@@ -738,6 +712,14 @@
       <ul>
         
           <li>
+            <a href="/2020/10/ldap/">ldap 常用命令</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/k3s/">K3S</a>
+          </li>
+        
+          <li>
             <a href="/2020/08/clickhouse-3shard/"> clickhouse 多分片集群搭建</a>
           </li>
         
@@ -747,14 +729,6 @@
         
           <li>
             <a href="/2020/07/shazam_source_code/">小米mysql中间件shaza源码注释</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/clickhouse-ha/">clickhouse单分片三副本高可用搭建</a>
-          </li>
-        
-          <li>
-            <a href="/2020/04/xorm_traceid/">xorm结合logrus记录traceId</a>
           </li>
         
       </ul>
