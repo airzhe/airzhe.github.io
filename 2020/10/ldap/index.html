@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>ldap 常用命令 | Runner的小站</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="ldapsearch1ldapsearch -x -D &amp;apos;cn=Admin,dc=apple,dc=com&amp;apos; -w &amp;apos;******&amp;apos; -H ldap://0.0.0.0:9981 -b &amp;quot;cn=dong.tian,cn=apple,cn=People,dc=apple,dc=com&amp;quot; //搜索 cn=haozhe.wei,cn=apple">
+<meta name="keywords" content="ldap">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ldap 常用命令">
+<meta property="og:url" content="http://airzhe.github.io/2020/10/ldap/index.html">
+<meta property="og:site_name" content="Runner的小站">
+<meta property="og:description" content="ldapsearch1ldapsearch -x -D &amp;apos;cn=Admin,dc=apple,dc=com&amp;apos; -w &amp;apos;******&amp;apos; -H ldap://0.0.0.0:9981 -b &amp;quot;cn=dong.tian,cn=apple,cn=People,dc=apple,dc=com&amp;quot; //搜索 cn=haozhe.wei,cn=apple">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-10-14T06:19:13.371Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ldap 常用命令">
+<meta name="twitter:description" content="ldapsearch1ldapsearch -x -D &amp;apos;cn=Admin,dc=apple,dc=com&amp;apos; -w &amp;apos;******&amp;apos; -H ldap://0.0.0.0:9981 -b &amp;quot;cn=dong.tian,cn=apple,cn=People,dc=apple,dc=com&amp;quot; //搜索 cn=haozhe.wei,cn=apple">
+  
+    <link rel="alternate" href="/atom.xml" title="Runner的小站" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Runner的小站</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://airzhe.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-ldap" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/10/ldap/" class="article-date">
+  <time datetime="2020-10-14T14:17:00.000Z" itemprop="datePublished">2020-10-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ldap 常用命令
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="ldapsearch"><a href="#ldapsearch" class="headerlink" title="ldapsearch"></a>ldapsearch</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ldapsearch -x -D &apos;cn=Admin,dc=apple,dc=com&apos; -w &apos;******&apos; -H ldap://0.0.0.0:9981 -b &quot;cn=dong.tian,cn=apple,cn=People,dc=apple,dc=com&quot;</span><br></pre></td></tr></table></figure>
+<p>//搜索 cn=haozhe.wei,cn=apple,cn=People,dc=apple,dc=com 过滤 mail cn sn givenname字段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ldapsearch -x -D &apos;cn=Admin,dc=apple,dc=com&apos; -w &apos;******&apos; -H ldap://0.0.0.0:9981 -b &quot;cn=haozhe.wei,cn=apple,cn=People,dc=apple,dc=com&quot;  &quot;(objectClass=*)&quot; mail cn sn givenname</span><br></pre></td></tr></table></figure>
+<p> // 在cn=apple,cn=People,dc=apple,dc=com下搜索 carLicense=IVFISMVKUFXNV6ZF 的记录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ldapsearch -x  -D &apos;cn=Admin,dc=apple,dc=com&apos; -w &apos;******&apos; -H ldap://0.0.0.0:9981 -b &quot;dc=apple,dc=com&quot;  &quot;(carLicense=IVFISMVKUFXNV6ZF)&quot;</span><br></pre></td></tr></table></figure>
+<p> // 导出所有数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ldapsearch -x -D &apos;cn=Admin,dc=apple,dc=com&apos; -w &apos;******&apos;  -H ldap://0.0.0.0:9981 -b &apos;dc=apple,dc=com&apos; -LLL &gt; /tmp/ldapdb.ldif</span><br></pre></td></tr></table></figure>
+<p>-l 5 搜索时间限制为五秒，-z 5 大小限制为五</p>
+<h4 id="ldapmodify"><a href="#ldapmodify" class="headerlink" title="ldapmodify"></a>ldapmodify</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ldapmodify  -x  -D &apos;cn=Admin,dc=apple,dc=com&apos; -w &apos;******&apos; -H ldap://0.0.0.0:9981 -f /tmp/ldapm</span><br></pre></td></tr></table></figure>
+<p>文件内容： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dn:cn=haozhe.wei,cn=apple,cn=People,dc=apple,dc=com </span><br><span class="line">changetype: modify</span><br><span class="line">replace: mobile</span><br><span class="line">mobile: 15101646884</span><br></pre></td></tr></table></figure>
+<h4 id="ldapdelete"><a href="#ldapdelete" class="headerlink" title="ldapdelete"></a>ldapdelete</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ldapdelete -x -D &apos;cn=Admin,dc=apple,dc=com&apos; -w &apos;******&apos; -H ldap://0.0.0.0:9981 -v &quot;cn=haozhe.wei,cn=apple,cn=People,dc=apple,dc=com&quot; -v</span><br></pre></td></tr></table></figure>
+<h4 id="ldapdadd"><a href="#ldapdadd" class="headerlink" title="ldapdadd"></a>ldapdadd</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ldapadd -x -D &quot;cn=admin,dc=apple,dc=com&quot; -w ****** -H ldap://0.0.0.0:9981  -f /tmp/add.ldif</span><br></pre></td></tr></table></figure>
+<p><strong>PHP 安装 ldap 扩展</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">yum install openldap</span><br><span class="line">yum install openldap-devel</span><br><span class="line">cp -frp /usr/lib64/libldap* /usr/lib/ </span><br><span class="line"></span><br><span class="line">wget http://cn2.php.net/distributions/php-5.6.35.tar.gz</span><br><span class="line">tar -zxvf php-5.6.35.tar.gz </span><br><span class="line">cd php-5.6.35/ext/ldap</span><br><span class="line">/home/work/sky/thirdparty/php/bin/phpize</span><br><span class="line">./configure --with-php-config=/home/work/sky/thirdparty/php/bin/php-config</span><br><span class="line">make &amp;&amp; make install</span><br><span class="line">vim /home/work/sky/thirdparty/php/lib/php.ini</span><br><span class="line">kill -SIGUSR2 `ps -ef | grep php-fpm | grep master | awk &apos;&#123;print $2&#125;&apos;`</span><br></pre></td></tr></table></figure>
+<p><strong>修改密码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF |ldapmodify -x -D &apos;cn=admin,dc=apple,dc=com&apos; -w &apos;******&apos; -H ldap://0.0.0.0:389</span><br><span class="line">dn: cn=weihaozhe,cn=People,cn=apple,dc=apple,dc=com</span><br><span class="line">changetype: modify</span><br><span class="line">replace: userPassword</span><br><span class="line">userPassword: PBKDF2-SHA256&#125;10000$r0zVLb.7fzLJzBHg1GbC1Q$PVAePYz4pjC8uc31UlzYNZObrWdDYt1blKiR90EvrQ85CgK9FZ4/rPjhETHUx5YXs.E</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p><strong>权限配置</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">access to dn.one=&quot;cn=People,dc=apple,dc=com&quot;</span><br><span class="line">by dn=&quot;cn=search,cn=People,dc=apple,dc=com&quot; read</span><br><span class="line">by self write</span><br><span class="line">by self read</span><br><span class="line">by anonymous auth</span><br><span class="line">by * none</span><br><span class="line"></span><br><span class="line">access to *</span><br><span class="line">by dn=&quot;cn=root,dc=apple,dc=com&quot; write</span><br><span class="line">by anonymous auth</span><br><span class="line">by * read</span><br></pre></td></tr></table></figure>
+<p><strong>字段映射</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">protected static $map = [</span><br><span class="line">        &apos;id&apos;       =&gt; &apos;dn&apos;,</span><br><span class="line">        &apos;username&apos; =&gt; &apos;cn&apos;,</span><br><span class="line">        &apos;realname&apos; =&gt; &apos;sn&apos;,</span><br><span class="line">        &apos;password&apos; =&gt; &apos;userpassword&apos;,</span><br><span class="line">        &apos;ext&apos;      =&gt; &apos;telephonenumber&apos;,</span><br><span class="line">        &apos;phone&apos;    =&gt; &apos;mobile&apos;,</span><br><span class="line">        &apos;email&apos;    =&gt; &apos;mail&apos;,</span><br><span class="line">        &apos;secretkey&apos;=&gt; &apos;carlicense&apos;,</span><br><span class="line">        &apos;status&apos;   =&gt; &apos;businesscategory&apos;,</span><br><span class="line">        &apos;photoUri&apos; =&gt; &apos;givenname&apos;,</span><br><span class="line">        &apos;department&apos;     =&gt; &apos;departmentnumber&apos;,</span><br><span class="line">        &apos;employeenumber&apos; =&gt; &apos;employeenumber&apos;,</span><br><span class="line">        &apos;workseat&apos;  =&gt; &apos;workseat&apos;,</span><br><span class="line">        &apos;birthday&apos;  =&gt; &apos;birthday&apos;,</span><br><span class="line">        &apos;job&apos;       =&gt; &apos;job&apos;,</span><br><span class="line">        &apos;constellation&apos;  =&gt; &apos;constellation&apos;,</span><br><span class="line">        &apos;bloodtype&apos; =&gt; &apos;bloodtype&apos;,</span><br><span class="line">        &apos;description&apos; =&gt; &apos;description&apos;,</span><br><span class="line">        &apos;haveauth&apos;   =&gt; &apos;haveauth&apos;,</span><br><span class="line">        &apos;msgnotify&apos;  =&gt; &apos;msgnotify&apos;,</span><br><span class="line">        &apos;authkey&apos;    =&gt; &apos;authkey&apos;,</span><br><span class="line">        &apos;jobType&apos;      =&gt;  &apos;employeetype&apos;,</span><br><span class="line">        &apos;secondAuthType&apos; =&gt; &apos;postalcode&apos;</span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ldapsearch -x -D &apos;uid=auth,ou=users,dc=apple,dc=com&apos; -w &apos;***&apos; -H ldap://10.0.1.*:389 -b &quot;uid=weihaozhe,ou=users,dc=apple,dc=com&quot;</span><br><span class="line"># extended LDIF</span><br><span class="line">#</span><br><span class="line"># LDAPv3</span><br><span class="line"># base &lt;uid=weihaozhe,ou=users,dc=apple,dc=com&gt; with scope subtree</span><br><span class="line"># filter: (objectclass=*)</span><br><span class="line"># requesting: ALL</span><br><span class="line">#</span><br><span class="line"></span><br><span class="line"># weihaozhe, users, apple.com</span><br><span class="line">dn: uid=weihaozhe,ou=users,dc=apple,dc=com</span><br><span class="line">objectClass: posixAccount</span><br><span class="line">objectClass: shadowAccount</span><br><span class="line">objectClass: inetOrgPerson</span><br><span class="line">cn:: 6a2P5rWp5ZOy</span><br><span class="line">gecos: Linux</span><br><span class="line">gidNumber: 500</span><br><span class="line">givenName:: 5rWp5ZOy</span><br><span class="line">homeDirectory: /home/weihaozhe/</span><br><span class="line">loginShell: /bin/bash</span><br><span class="line">mail: weihaozhe@nicetuan.net</span><br><span class="line">mobile: 176**10668100</span><br><span class="line">sn:: 6a2P</span><br><span class="line">uidNumber: 1761**68100</span><br><span class="line">uid: weihaozhe</span><br></pre></td></tr></table></figure>
+<p><strong>备份</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">* */1 * * * sh /home/work/ldap/backup/bin/run.sh</span><br><span class="line">cat run.sh</span><br><span class="line">#!/bin/bash</span><br><span class="line">BACKUP_PATH=/home/work/ldap/backup</span><br><span class="line">docker exec -it openldap /home/work/ldap/sbin/slapcat &gt; $&#123;BACKUP_PATH&#125;/data/openldap-backup.ldif 2&gt;/dev/null</span><br><span class="line">sh $&#123;BACKUP_PATH&#125;/bin/backuplog.sh -P $&#123;BACKUP_PATH&#125;/data -F openldap-backup.ldif -B ./bak</span><br><span class="line"></span><br><span class="line">https://gist.githubusercontent.com/kunpengku/f18651f582d84c1756a7/raw/03b001a8ad0c3ba544f07e3d1512d7db60d1dd84/backuplog.sh</span><br></pre></td></tr></table></figure>
+<p><strong>工具</strong></p>
+<p>Ldap Admin Tool</p>
+<p>apache directory studio</p>
+<p>参考：</p>
+<p><a href="https://www.cnblogs.com/dwj97/p/7513509.html" target="_blank" rel="noopener">openldap+php-ldap操作</a></p>
+<p><a href="http://blog.csdn.net/peterwanghao/article/details/7481444" target="_blank" rel="noopener">基于LDAP进行验证-方法和问题</a> </p>
+<p><a href="https://www.cnblogs.com/xzkzzz/p/9269714.html" target="_blank" rel="noopener">Openldap命令详解</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2020/10/ldap/" data-id="ckg90bj7a000v2apbx4rrifxw" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ldap/">ldap</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/10/k3s/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">K3S</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/angular-js/">angular js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/b树/">b树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse/">clickhouse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse-高可用/">clickhouse 高可用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/containerd/">containerd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coredns/">coredns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gaea/">gaea</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gogs/">gogs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/">grafana</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/">helm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k3s/">k3s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ldap/">ldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logrus/">logrus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loki/">loki</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/microk8s/">microk8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openldap/">openldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openresty/">openresty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/promtal/">promtal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shazam/">shazam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vuejs/">vuejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webshell/">webshell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xorm/">xorm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/报警/">报警</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控/">监控</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/OLAP/" style="font-size: 10px;">OLAP</a> <a href="/tags/angular-js/" style="font-size: 10px;">angular js</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/b树/" style="font-size: 10px;">b树</a> <a href="/tags/cassandra/" style="font-size: 10px;">cassandra</a> <a href="/tags/clickhouse/" style="font-size: 12.5px;">clickhouse</a> <a href="/tags/clickhouse-高可用/" style="font-size: 10px;">clickhouse 高可用</a> <a href="/tags/containerd/" style="font-size: 10px;">containerd</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gaea/" style="font-size: 10px;">gaea</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 10px;">jenkins</a> <a href="/tags/k3s/" style="font-size: 10px;">k3s</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/ldap/" style="font-size: 10px;">ldap</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/logrus/" style="font-size: 10px;">logrus</a> <a href="/tags/loki/" style="font-size: 15px;">loki</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/pipeline/" style="font-size: 10px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 12.5px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/shazam/" style="font-size: 10px;">shazam</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/vuejs/" style="font-size: 10px;">vuejs</a> <a href="/tags/webshell/" style="font-size: 12.5px;">webshell</a> <a href="/tags/xorm/" style="font-size: 10px;">xorm</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/10/ldap/">ldap 常用命令</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/k3s/">K3S</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/clickhouse-3shard/"> clickhouse 多分片集群搭建</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/vue/">vue 入门笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/shazam_source_code/">小米mysql中间件shaza源码注释</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 air_zhe@163.com<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
