@@ -19,7 +19,7 @@ helm repo add stable http://mirror.azure.cn/kubernetes/charts
 helm repo add bitnami https://charts.bitnami.com/bitnami  #添加仓库
 
 helm list --deleted
-helm rollback nginx-ingress 1
+helm rollback mq-exporter 9 -n soa #回滚某个服务
 
 helm create hello_test
 helm package ./hello_test/ #打包

@@ -61,3 +61,23 @@ curl 'https://oapi.dingtalk.com/robot/send?access_token=762627b8d3fdfe3951dc***7
 }
 ```
 
+ldap  配置
+```yaml
+config: |-
+    [[servers]]
+    host = "10.0.0.1"
+    port = 389
+    use_ssl = false
+    start_tls = false
+    ssl_skip_verify = false
+    bind_dn = "uid=auth,ou=users,dc=apple,dc=com"
+    bind_password = "******"
+    search_filter = "(uid=%s)"
+    group_search_filter = "(&(objectClass=inetOrgPerson)(uid=%s))"
+    search_base_dns = ["ou=users,dc=apple,dc=com"]
+    [servers.attributes]
+    name = "givenName"
+    surname = "sn"
+    username = "uid"
+    email =  "mail"
+```

@@ -56,7 +56,7 @@ helm ls --all-namespaces
 
 **网络**
 
-支持创建 LoadBalancer 类型的 Service
+支持创建 [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) 类型的 Service
 
 **重启**
 
