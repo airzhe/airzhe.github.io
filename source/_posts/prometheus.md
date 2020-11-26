@@ -319,19 +319,19 @@ label_replace(BIW_SHT_QUEUE_DELIVERY_ORDER_OUT, "attr", "$1", "attr",  ".*_(.*)"
         services: []
       job_name: consul-prometheus
       relabel_configs:
-      - source_labels: [__meta_consul_tags]
-        regex: ^,,$
-        action: keep
       - action: labelmap
         regex: __meta_consul_service_metadata_(.+)
-    - consul_sd_configs:
-      - server: consul.kube-public:8500
-        services:
-        - redis-exporter
-      job_name: redis-exporter
-      relabel_configs:
-      - action: labelmap
-        regex: __meta_consul_service_metadata_(.+)
+      - action: replace
+        regex: ^(.+)$
+        replacement: $1
+        source_labels:
+        - __meta_consul_service_metadata_metrics
+        target_label: __metrics_path__
+```
+
+**consul 注册服务**
+```sh
+curl -X PUT -d '{"id":"minion-1","name":"minio","address":"10.2.4.1","port":9000,"meta":{"app":"minio","team":"soa","metrics":"/minio/prometheus/metrics"}}'  http://consul.t1.abc.net/v1/agent/service/register
 ```
 
 参考：
