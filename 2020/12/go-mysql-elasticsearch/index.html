@@ -14,7 +14,7 @@
 <meta property="og:description" content="项目中使用到了 go-mysql-elasticsearch 来做mysql和es的数据同步，所以花些时间了解下源码。 中间件主要用到了 github.com/siddontang/go-mysql/canal 这个包来实现 binlog 的处理  canal示例 12345678910111213141516171819202122232425262728cfg := canal.NewDefa">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://airzhe.github.io/img/2020/flowchart.png">
-<meta property="og:updated_time" content="2020-12-24T02:26:32.696Z">
+<meta property="og:updated_time" content="2020-12-24T03:37:58.098Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="go-mysql-elasticsearch 源码解读">
 <meta name="twitter:description" content="项目中使用到了 go-mysql-elasticsearch 来做mysql和es的数据同步，所以花些时间了解下源码。 中间件主要用到了 github.com/siddontang/go-mysql/canal 这个包来实现 binlog 的处理  canal示例 12345678910111213141516171819202122232425262728cfg := canal.NewDefa">
@@ -131,11 +131,13 @@
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">log.Infof(<span class="string">"closing river"</span>)</span><br><span class="line">r.cancel()</span><br><span class="line">r.canal.Close()</span><br><span class="line">r.master.Close()</span><br><span class="line"><span class="comment">//当等待组计数器不等于 0 时阻塞，直到变 0</span></span><br><span class="line"><span class="comment">//syncLoop()方法 defer 处执行 r.wg.Done()</span></span><br><span class="line">r.wg.Wait()</span><br></pre></td></tr></table></figure>
 <p>完整版代码注释链接:</p>
 <p><a href="https://github.com/airzhe/go-mysql-elasticsearch" target="_blank" rel="noopener">https://github.com/airzhe/go-mysql-elasticsearch</a></p>
+<p>参考：</p>
+<p><a href="https://www.jianshu.com/p/c16686b35807" target="_blank" rel="noopener">MySQL binlog格式解析</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/12/go-mysql-elasticsearch/" data-id="ckj286j6600082kpbva6159a9" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/12/go-mysql-elasticsearch/" data-id="ckj2aqqlf000b3qpbq0m775pq" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go-mysql-elasticsearch/">go-mysql-elasticsearch</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/中间件/">中间件</a></li></ul>
