@@ -155,7 +155,7 @@ gidNumber: 500
 givenName:: 5rWp5ZOy
 homeDirectory: /home/weihaozhe/
 loginShell: /bin/bash
-mail: weihaozhe@nicetuan.net
+mail: weihaozhe@apple.net
 mobile: 176**10668100
 sn:: 6a2P
 uidNumber: 1761**68100

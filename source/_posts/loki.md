@@ -108,6 +108,29 @@ annotations:
 
 ![3.png](/img/loki/3.png)
 
+使用minio存储chunk
+```
+ schema_config:
+    configs:
+    - from: 2020-10-24
+      store: boltdb-shipper
+      object_store: aws
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h
+  server:
+    http_listen_port: 3100
+  storage_config:
+    boltdb_shipper:
+      active_index_directory: /data/loki/boltdb-shipper-active
+      cache_location: /data/loki/boltdb-shipper-cache
+      cache_ttl: 24h         # Can be increased for faster performance over longer query periods, uses more disk space
+      shared_store: s3
+    aws:
+      s3: http://***:***@10.2.4.3:9000/loki
+      s3forcepathstyle: true
+```
 
 参考：
 

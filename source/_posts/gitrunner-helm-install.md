@@ -20,8 +20,8 @@ kubectl label nodes node-a002 ci=true
 安装gitlab-runner
 helm upgrade gitlab-runner-01 --install --namespace gitlab \
 --set checkInterval=2 \
---set runners.image=alpine:latest --set runners.imagePullPolicy=if-not-present --set runners.tag=k8s-01 \
---set gitlabUrl=http://gitla.******.net/,runnerRegistrationToken=AxwjhfK7bb8eDCs5PN --set runners.privileged=true \
+--set runners.image=alpine:latest --set runners.imagePullPolicy=if-not-present --set runners.tags=k8s-01 \
+--set gitlabUrl=http://gitlab.******.net/,runnerRegistrationToken=AxwjhfK7bb8eDCs5PN --set runners.privileged=true \
 --set gitRunnerCacheDir=/volume \
 --set nodeSelector.ci=true \
 .
@@ -76,10 +76,7 @@ roleRef:
   name: gitlab-admin-role
   apiGroup: rbac.authorization.k8s.io
 ```
-指定命名空间和帐号安装tiller，建议开启tls认证
-```
-helm init --tiller-namespace php-sht --service-account=admin
-```
+
 
 **跳过fetch **
 
@@ -90,3 +87,9 @@ deploy_all:
     GIT_CHECKOUT: "false"
   stage: deploy
 ```
+
+ 参考：
+
+[GitlabCI 使用 S3 存储配置分布式缓存](https://mp.weixin.qq.com/s/dY1J-SJJmJK9p7FdbrPSDQ)
+
+[Gitlab CI yaml官方配置文件翻译](https://segmentfault.com/a/1190000010442764)

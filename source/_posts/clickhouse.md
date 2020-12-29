@@ -265,7 +265,7 @@ WHERE id >
 
 #使用非交互模式
 clickhouse-client --input_format_allow_errors_num=10 \
---query="INSERT INTO bill SELECT * FROM url('http://ck.t1.nicetuan.net/?database=default&query=select%20*%20from%20bill', TabSeparated, 'created_date DateTime, wx_app_id String, mch_id String, order_id String, shop_order_id String, trade_type String, trade_status String, total_fee Float64, refund_id String, shop_refund_id String, refund_fee Float64, refund_status String, goods_name String, fees Float64, rates String, trade_no String, refund_no String')"
+--query="INSERT INTO bill SELECT * FROM url('http://ck.t1.apple.net/?database=default&query=select%20*%20from%20bill', TabSeparated, 'created_date DateTime, wx_app_id String, mch_id String, order_id String, shop_order_id String, trade_type String, trade_status String, total_fee Float64, refund_id String, shop_refund_id String, refund_fee Float64, refund_status String, goods_name String, fees Float64, rates String, trade_no String, refund_no String')"
 ```
 
 **使用 url 函数 clickhouseA 导入 clickhouseB**
@@ -320,7 +320,7 @@ SELECT (intDiv(toUInt32(created_at), 7200) * 7200) * 1000 as t, count(id) AS "id
 clickhouse-client --input_format_allow_errors_num=1 \
 --input_format_allow_errors_ratio=0.1 \
 --query="INSERT INTO bill SELECT *
-FROM url('http://payment-hotfix-duizhangdan.t1.nicetuan.net/order/downloadbill?bill_date=20200106&agg_platform=wx', CSV, 'created_date DateTime, wx_app_id String , mch_id String, order_id String , shop_order_id String, trade_type String, trade_status String, total_fee Float64 , refund_id String, shop_refund_id String ,refund_fee  Float64, refund_status String, goods_name String, fees Float64, rates String , trade_no String , refund_no String')"
+FROM url('http://payment-hotfix-duizhangdan.t1.apple.net/order/downloadbill?bill_date=20200106&agg_platform=wx', CSV, 'created_date DateTime, wx_app_id String , mch_id String, order_id String , shop_order_id String, trade_type String, trade_status String, total_fee Float64 , refund_id String, shop_refund_id String ,refund_fee  Float64, refund_status String, goods_name String, fees Float64, rates String , trade_no String , refund_no String')"
 ```
 
 **php 客户端**

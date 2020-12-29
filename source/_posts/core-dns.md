@@ -35,7 +35,7 @@ docker run -d \
 
 ```
 https://www.cnblogs.com/leffss/p/10148507.html
-etcdctl put /coredns/net/nicetuan/t1/a '{"host":"10.111.8.185","ttl":30}'
+etcdctl put /coredns/net/apple/t1/a '{"host":"10.111.8.185","ttl":30}'
 
 $ ETCDCTL_API=3 
 ./etcdctl put /skydns/com/example/services/users \

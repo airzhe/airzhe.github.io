@@ -2,7 +2,7 @@
 title: "Prometheus入门"
 description: ""
 date: 2019-02-01 19:46:10
-tags: [prometheus,监控]
+tags: [prometheus,监控,consul]
 comments: false
 share: true
 ---
@@ -133,8 +133,8 @@ groups:
 global:
   smtp_smarthost: 'smtp.qq.com:465'
   smtp_from: '532499602@qq.com'
-  smtp_auth_username: 'weihaozhe@nicetuan.net'
-  smtp_auth_password: '745632Bn123'
+  smtp_auth_username: 'weihaozhe@aa.net'
+  smtp_auth_password: ''
   smtp_require_tls: false
 route:
   group_by: ['alertname']
@@ -282,13 +282,19 @@ metadata:
 ```
 # 两分钟的增长率×60,为什么×60呢？因为为是按秒求的平均值，还原一分钟的就要乘以60，另外prometheus默认1分钟刮一次数据
 irate(user_behavior_request_counter[2m])*60
+
 # 统计loki某个job的日志数（通过sum by把不同日期的数据求和，通过count_over_time统计区间向量内每个度量指标的样本数据个数）
 sum(count_over_time({job="${job}"} |~"(?i)${search}" [$__interval])) by (job)
+
 # 统计counter类型增长曲线(注意使用变量报警不支持)高版grafana可以使用$__rate_interval, 这个时间和 prometheus 的采集时间设置有关，比如1分钟采集一次，这个值要大于60s
 rate(my_test_counter[$__rate_interval])*$__interval_ms/1000
+
 # 统计counter类型一分钟内的增长数
 increase(mysql2es_inserted_num[1m])
 # 在grafana 中设置`Min interval`为1m，设置Display为Bar
+
+# 按每半小时统计增长数，在grafana使用total计算总数，设置`Min interval`为30m
+increase(SOA_SMS_SEND_ANY{attr="message_publish"}[30m]  offset 1d)
 ```
 
 通过增长率表示样本的变化情况

@@ -29,9 +29,9 @@ pipeline {
     	APP_NAME = "api-monitor-new"
         GIT_BRANCH = "test123"
         GIT_COMMIT_ID = "test123456"
-    	CHART_NAME = "nicetuan/api-monitor-new"
+    	CHART_NAME = "apple/api-monitor-new"
         CHART_VERSION = 3.0
-        NEW_HARBOR_HOST = "harbor.nicetuan.net"
+        NEW_HARBOR_HOST = "harbor.apple.net"
         BUILD_IMAGES_NAME = "${NEW_HARBOR_HOST}/php/${APP_NAME}:${GIT_BRANCH}"
         KUBE_CONFIG = credentials("156485be-dbb8-4f8c-b3a2-15f3535049ad")
         NAMESPACE = "default"   
@@ -40,11 +40,11 @@ pipeline {
     stages {
         stage('Build') { 
             agent {
-                docker { image 'harbor.nicetuan.net/php/golang:latest' }
+                docker { image 'harbor.apple.net/php/golang:latest' }
             }
             steps { 
                 sh 'echo Build stage ...' 
-                git credentialsId: '1', url: 'http://gitlaball.nicetuan.net/nicetuan/middle/soa/api-monitor-new.git'
+                git credentialsId: '1', url: 'http://gitlaball.apple.net/apple/middle/soa/api-monitor-new.git'
                 sh 'rm -rf ./output'
                 sh 'export CGO_ENABLED=0 ;chmod +x ./build.sh ; ./build.sh'
                 sh 'cd ./output && mkdir ./app && tar -zxvf *.gz -C ./app'
@@ -52,7 +52,7 @@ pipeline {
         }
         stage('Build Image') { 
             agent {
-                docker { image 'harbor.nicetuan.net/php/docker:stable' }
+                docker { image 'harbor.apple.net/php/docker:stable' }
             }
             steps { 
                 withCredentials([usernamePassword(credentialsId: 'a00b4d01-c2e7-49af-9b1f-fcc382116911', usernameVariable: 'HARBOR_USER', passwordVariable: 'HARBOR_PWD')]) {
@@ -60,7 +60,7 @@ pipeline {
                 }
                 sh 'cd ./output/app'
                 sh 'echo Dockerfile01 > .dockerignore'
-                sh 'echo FROM harbor.nicetuan.net/php/alpine > Dockerfile01 && echo COPY . /app >> Dockerfile01'
+                sh 'echo FROM harbor.apple.net/php/alpine > Dockerfile01 && echo COPY . /app >> Dockerfile01'
                 sh 'docker build -t "$BUILD_IMAGES_NAME"  -f Dockerfile01 .'
                 sh 'docker push "$BUILD_IMAGES_NAME"'
                 sh 'docker images'
@@ -68,11 +68,11 @@ pipeline {
         }
         stage('Deploy') {
              agent {
-                docker { image 'harbor.nicetuan.net/php/helm:3.0-rc2' }
+                docker { image 'harbor.apple.net/php/helm:3.0-rc2' }
             }
             steps { 
                 sh 'mkdir -p ~/.kube && cat ${KUBE_CONFIG} > ~/.kube/config'
-                sh 'helm repo add nicetuan https://harbor.nicetuan.net/chartrepo/php'
+                sh 'helm repo add apple https://harbor.apple.net/chartrepo/php'
                 sh 'helm repo update'
                 withCredentials([usernamePassword(credentialsId: 'a00b4d01-c2e7-49af-9b1f-fcc382116911', usernameVariable: 'HARBOR_USER', passwordVariable: 'HARBOR_PWD')]) {
                     sh 'helm upgrade ${APP_NAME} --install \
