@@ -99,7 +99,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="ckmebhvsb000d0vpb1ksnxwc4" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="ckmg3v5l6000e0lpbo36sk5ng" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -146,7 +146,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="ckmebhvs000040vpb7way8zde" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="ckmg3v5ks00040lpb79af2ml5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -188,9 +188,13 @@
 <ul>
 <li>数据绑定</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;div ng-app=&quot;myApp&quot;&gt;</span><br><span class="line">    &lt;input type=&quot;text&quot; ng-model=&quot;name&quot;/&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">var app = angular.module(&apos;myApp&apos;, []);</span><br><span class="line">app.controller(&apos;myCtrl&apos;, function ($scope, $http) &#123;</span><br><span class="line">    $scope.name = &quot;runner&quot;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;div ng-app=&quot;myApp&quot;  ng-controller=&quot;myCtrl&quot; ng-cloak&gt;</span><br><span class="line">    &lt;input type=&quot;text&quot; ng-model=&quot;name&quot;/&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">var app = angular.module(&apos;myApp&apos;, []);</span><br><span class="line">app.controller(&apos;myCtrl&apos;, function ($scope, $http) &#123;</span><br><span class="line">    $scope.name = &quot;runner&quot;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 <ul>
-<li>下拉列表框、单选框数据绑定 <code>ng-model</code>、触发事件<code>ng-change</code>(ng-chnge必须要有ng-model绑定)、是否可用<code>ng-disabled</code></li>
+<li><p>样式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;style&gt;</span><br><span class="line">	[ng\:cloak],</span><br><span class="line">	[ng-cloak],</span><br><span class="line">	[data-ng-cloak],</span><br><span class="line">	[x-ng-cloak],</span><br><span class="line">	.ng-cloak,</span><br><span class="line">	.x-ng-cloak &#123;</span><br><span class="line">		display: none !important;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>下拉列表框、单选框数据绑定 <code>ng-model</code>、触发事件<code>ng-change</code>(ng-chnge必须要有ng-model绑定)、是否可用<code>ng-disabled</code></p>
+</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;select class=&quot;form-control&quot; ng-model=&quot;list.filter.group_id&quot;</span><br><span class="line">    ng-options=&quot;k as v for (k,v) in data_source.list_group_list&quot; ng-change=&quot;list.refresh()&quot; required&gt;</span><br><span class="line">&lt;/select&gt;</span><br><span class="line"></span><br><span class="line">&lt;label class=&quot;radio-inline&quot; ng-repeat=&quot;data_format in data_source.data_format_list&quot;&gt;</span><br><span class="line">    &lt;input type=&quot;radio&quot; name=&quot;data_format[]&quot; value=&quot;&#123;&#123;data_format&#125;&#125;&quot; ng-model=&quot;edit.data_format&quot;</span><br><span class="line">        ng-click=&quot;edit.clear_data_body()&quot; ng-disabled=&quot;edit.mode==&apos;view&apos;&quot; ng-change=&quot;edit.form_change()&quot;&gt;</span><br><span class="line">    &#123;&#123;data_format&#125;&#125;</span><br><span class="line">&lt;/label&gt;</span><br></pre></td></tr></table></figure>
 <ul>
@@ -205,7 +209,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ckmebhvro00000vpbbtrss50t" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ckmg3v5l000090lpbq0x7360x" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angular-js/">angular js</a></li></ul>
@@ -251,7 +255,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="ckmebhvrt00010vpbevfv2jl4" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="ckmg3v5ka00000lpbrl64ywoa" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/awk/">awk</a></li></ul>
@@ -307,7 +311,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ckmebhvsi000j0vpby8ur07wz" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ckmg3v5kp00030lpbhvkuv58s" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse/">clickhouse</a></li></ul>
@@ -356,7 +360,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ckmebhvsx00110vpbkukszuny" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ckmg3v5m600150lpbu8vdhq3r" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gogs/">gogs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openldap/">openldap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li></ul>
@@ -421,7 +425,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ubuntu-install/" data-id="ckmebhvtb001g0vpbc6h71pqc" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/ubuntu-install/" data-id="ckmg3v5nt00400lpbm7wms094" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -467,7 +471,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ckmebhvsg000h0vpbzpoib0k3" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ckmg3v5lb000g0lpb35q8e57l" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li></ul>
@@ -544,7 +548,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/k8s-migration-1/" data-id="ckmebhvsr000u0vpbwoe16ta1" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/k8s-migration-1/" data-id="ckmg3v5lx000x0lpbeuua29rx" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
@@ -606,7 +610,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/microk8s/" data-id="ckmebhvt7001b0vpbhy7ie42f" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/microk8s/" data-id="ckmg3v5md001a0lpb8afew1ga" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/microk8s/">microk8s</a></li></ul>
