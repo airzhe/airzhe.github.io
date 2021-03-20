@@ -102,7 +102,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/jenkins-introduction/" data-id="ckmg3v5lr000q0lpbhraktwge" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/jenkins-introduction/" data-id="ckmhet7rh000n0lpbkuln59a6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pipeline/">pipeline</a></li></ul>
@@ -195,7 +195,7 @@
 <p>increase(node_cpu[2m]) / 120</p>
 <p><strong>标签替换</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">该函数会依次对 v 中的每一条时间序列进行处理，通过 regex 匹配 src_label 的值，并将匹配部分 relacement 写入到 dst_label 标签中。如下所示：</span><br><span class="line"></span><br><span class="line">label_replace(up, &quot;host&quot;, &quot;$1&quot;, &quot;instance&quot;,  &quot;(.*):.*&quot;)</span><br><span class="line">函数处理后，时间序列将包含一个 host 标签，host 标签的值为 Exporter 实例的 IP 地址：</span><br><span class="line"></span><br><span class="line">up&#123;host=&quot;localhost&quot;,instance=&quot;localhost:8080&quot;,job=&quot;cadvisor&quot;&#125;   1</span><br><span class="line">up&#123;host=&quot;localhost&quot;,instance=&quot;localhost:9090&quot;,job=&quot;prometheus&quot;&#125;   1</span><br><span class="line">up&#123;host=&quot;localhost&quot;,instance=&quot;localhost:9100&quot;,job=&quot;node&quot;&#125;   1$$</span><br><span class="line"></span><br><span class="line">label_replace(BIW_SHT_QUEUE_DELIVERY_ORDER_OUT, &quot;attr&quot;, &quot;$1&quot;, &quot;attr&quot;,  &quot;.*_(.*)&quot;)</span><br></pre></td></tr></table></figure></p>
 <p><strong>consul 配置</strong><br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- consul_sd_configs:</span></span><br><span class="line"><span class="attr">  - server:</span> <span class="string">consul.kube-public:8500</span></span><br><span class="line"><span class="attr">    services:</span> <span class="string">[]</span></span><br><span class="line"><span class="attr">  job_name:</span> <span class="string">consul-prometheus</span></span><br><span class="line"><span class="attr">  relabel_configs:</span></span><br><span class="line"><span class="attr">  - action:</span> <span class="string">labelmap</span></span><br><span class="line"><span class="attr">    regex:</span> <span class="string">__meta_consul_service_metadata_(.+)</span></span><br><span class="line"><span class="attr">  - action:</span> <span class="string">replace</span></span><br><span class="line"><span class="attr">    regex:</span> <span class="string">^(.+)$</span></span><br><span class="line"><span class="attr">    replacement:</span> <span class="string">$1</span></span><br><span class="line"><span class="attr">    source_labels:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">__meta_consul_service_metadata_metrics</span></span><br><span class="line"><span class="attr">    target_label:</span> <span class="string">__metrics_path__</span></span><br></pre></td></tr></table></figure></p>
-<p><strong>consul 注册服务</strong><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X PUT -d <span class="string">'&#123;"id":"minion-1","name":"minio","address":"10.2.4.1","port":9000,"meta":&#123;"app":"minio","team":"soa","metrics":"/minio/prometheus/metrics"&#125;&#125;'</span>  http://consul.t1.abc.net/v1/agent/service/register</span><br></pre></td></tr></table></figure></p>
+<p><strong>consul 注册服务</strong><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl -X PUT -d <span class="string">'&#123;"id":"minion-1","name":"minio","address":"10.2.4.1","port":9000,"meta":&#123;"app":"minio","team":"soa","metrics":"/minio/prometheus/metrics"&#125;&#125;'</span>  http://consul.t1.abc.net/v1/agent/service/register</span><br><span class="line"></span><br><span class="line">// 按id删除服务</span><br><span class="line">curl -X PUT http://10.0.**.251:8500/v1/agent/service/deregister/minion-1</span><br></pre></td></tr></table></figure></p>
 <p>参考：</p>
 <p><a href="https://mojotv.cn/go/prometheus-client-for-go" target="_blank" rel="noopener">https://mojotv.cn/go/prometheus-client-for-go</a></p>
 <p><a href="https://blog.csdn.net/aixiaoyang168/article/details/103022342" target="_blank" rel="noopener">Prometheus 通过 consul 实现自动服务发现</a></p>
@@ -203,7 +203,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/prometheus/" data-id="ckmg3v5me001b0lpbptxxcg34" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/prometheus/" data-id="ckmhet7s6001c0lpb4br9ygla" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/consul/">consul</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/监控/">监控</a></li></ul>
@@ -275,7 +275,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/k8s-notes/" data-id="ckmg3v5m100100lpbzfzrqnq2" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/k8s-notes/" data-id="ckmhet7ru000x0lpbuu9rscua" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
@@ -324,7 +324,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/01/k8s-introduction/" data-id="ckmg3v5m400120lpbra2ql5mh" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/01/k8s-introduction/" data-id="ckmhet7rq000u0lpbln7uzxgr" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
