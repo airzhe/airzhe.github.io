@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Runner的小站">
 <meta property="og:description" content="基本使用  引入 angular.js  1&amp;lt;script src=&amp;quot;https://cdn.bootcss.com/angular.js/1.7.8/angular.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;  数据绑定  12345678&amp;lt;div ng-app=&amp;quot;myApp&amp;quot;  ng-controller=&amp;quot;myCtrl&amp;">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2021-03-24T09:54:38.291Z">
+<meta property="og:updated_time" content="2021-03-24T09:59:22.024Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="angular js基本使用">
 <meta name="twitter:description" content="基本使用  引入 angular.js  1&amp;lt;script src=&amp;quot;https://cdn.bootcss.com/angular.js/1.7.8/angular.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;  数据绑定  12345678&amp;lt;div ng-app=&amp;quot;myApp&amp;quot;  ng-controller=&amp;quot;myCtrl&amp;">
@@ -148,12 +148,11 @@
 <li><p>占位符冲突</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">app.config(function ($interpolateProvider) &#123;</span><br><span class="line">	$interpolateProvider.startSymbol(&apos;[[&apos;);</span><br><span class="line">	$interpolateProvider.endSymbol(&apos;]]&apos;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>ng-init<br><code>`</code></p>
-<tr ng-repeat="row in dataList" ng-init="row.model='view';row.status=row.status.toString()">
-
-</tr></li>
+<li><p>ng-init</p>
+<pre><code>&lt;tr ng-repeat=&quot;row in dataList&quot; ng-init=&quot;row.model=&apos;view&apos;;row.status=row.status.toString()&quot;&gt;
+&lt;/tr&gt;
+</code></pre></li>
 </ul>
-<p><br><code>`</code> </p>
 <p>参考：</p>
 <p><a href="https://blog.csdn.net/qilin001cs/article/details/51364063" target="_blank" rel="noopener">Angularjs实现分页和分页算法</a></p>
 <p><a href="https://blog.csdn.net/weixin_30856965/article/details/96122899" target="_blank" rel="noopener">angularJs select ng-options 绑定int型的时候绑定失效的坑</a></p>
@@ -162,7 +161,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ckmn9t0pd00013xpbmpn8ohzn" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ckmn9ztye00015jpbpwddfryx" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angularjs/">angularjs</a></li></ul>
