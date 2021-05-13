@@ -62,6 +62,127 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-clickhouse-ha" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/clickhouse-ha/" class="article-date">
+  <time datetime="2020-06-30T12:06:00.000Z" itemprop="datePublished">2020-06-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/clickhouse-ha/">clickhouse单分片三副本高可用搭建</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>3台机器，分别起3个 clickhosue 和 zookeeper 搭建一分片三副本高可用集群。</p>
+<p>用到镜像<code>yandex/clickhouse-server:19.15.3.6</code>，<code>zookeeper</code></p>
+<p><strong>zookeeper 配置</strong></p>
+<p>zoo.cfg 增加server列表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@node-a002 zookeeper]# cat zoo.cfg</span><br><span class="line">dataDir=/data</span><br><span class="line">dataLogDir=/datalog</span><br><span class="line">tickTime=2000</span><br><span class="line">initLimit=5</span><br><span class="line">syncLimit=2</span><br><span class="line">autopurge.snapRetainCount=3</span><br><span class="line">autopurge.purgeInterval=0</span><br><span class="line">maxClientCnxns=60</span><br><span class="line">standaloneEnabled=true</span><br><span class="line">admin.enableServer=true</span><br><span class="line">server.1=10.2.4.14:2888:3888;2181</span><br><span class="line">server.2=10.2.4.15:2888:3888;2181</span><br><span class="line">server.3=10.2.4.16:2888:3888;2181</span><br></pre></td></tr></table></figure>
+<p>同时 data 目录下 myid 内容对应配置里的id编号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@node-a002 zookeeper]# cat data/myid</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<p>启动 zookeeper </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@node-a002 ~]# cat sh/d_zookeeper.sh</span><br><span class="line">docker run -d \</span><br><span class="line">        --network host \</span><br><span class="line">        -v /root/zookeeper/data:/data \</span><br><span class="line">        -v /root/zookeeper/zoo.cfg:/conf/zoo.cfg \</span><br><span class="line">        --name zookeeper \</span><br><span class="line">        --restart=&quot;always&quot; \</span><br><span class="line">        zookeeper</span><br></pre></td></tr></table></figure>
+<p><strong>clickhouse 配置</strong></p>
+<p>添加 <code>metrika.xml</code> 文件: 配置3个zookeeper，replica 处表示01集群、01分片、a001备份</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[root@node-a002 clickhouse]# cat conf/metrika.xml</span><br><span class="line">&lt;yandex&gt;</span><br><span class="line">    &lt;zookeeper-servers&gt;</span><br><span class="line">        &lt;node index=&quot;1&quot;&gt;</span><br><span class="line">            &lt;host&gt;10.2.4.14&lt;/host&gt;</span><br><span class="line">            &lt;port&gt;2181&lt;/port&gt;</span><br><span class="line">        &lt;/node&gt;</span><br><span class="line">        &lt;node index=&quot;2&quot;&gt;</span><br><span class="line">            &lt;host&gt;10.2.4.15&lt;/host&gt;</span><br><span class="line">            &lt;port&gt;2181&lt;/port&gt;</span><br><span class="line">        &lt;/node&gt;</span><br><span class="line">        &lt;node index=&quot;3&quot;&gt;</span><br><span class="line">            &lt;host&gt;10.2.4.16&lt;/host&gt;</span><br><span class="line">            &lt;port&gt;2181&lt;/port&gt;</span><br><span class="line">        &lt;/node&gt;</span><br><span class="line">    &lt;/zookeeper-servers&gt;</span><br><span class="line"></span><br><span class="line">    &lt;macros&gt;</span><br><span class="line">        &lt;layer&gt;01&lt;/layer&gt;</span><br><span class="line">        &lt;shard&gt;01&lt;/shard&gt;</span><br><span class="line">        &lt;replica&gt;cluster01-01-a002&lt;/replica&gt;</span><br><span class="line">    &lt;/macros&gt;</span><br><span class="line">&lt;/yandex&gt;</span><br></pre></td></tr></table></figure>
+<p><code>config.xml</code> 引入 <code>metrika.xml</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@node-a002 clickhouse]# cat conf/config.xml -n | grep &apos;metrika.xml&apos;</span><br><span class="line">461      &lt;include_from&gt;/etc/clickhouse-server/metrika.xml&lt;/include_from&gt;</span><br></pre></td></tr></table></figure>
+<p>启动 clickhouse </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@node-a002 sh]# cat d_clickhouse.sh</span><br><span class="line">docker run -d \</span><br><span class="line">        --network=host \</span><br><span class="line">        -v /root/clickhouse/conf/config.xml:/etc/clickhouse-server/config.xml \</span><br><span class="line">        -v /root/clickhouse/conf/metrika.xml:/etc/clickhouse-server/metrika.xml \</span><br><span class="line">        -v /root/clickhouse/conf/users.xml:/etc/clickhouse-server/users.xml \</span><br><span class="line">        -v /root/clickhouse/data:/var/lib/clickhouse \</span><br><span class="line">        -v /root/clickhouse/log:/var/log/clickhouse-server/ \</span><br><span class="line">        --name clickhouse \</span><br><span class="line">        yandex/clickhouse-server:19.14</span><br></pre></td></tr></table></figure>
+<p><strong>写数据</strong></p>
+<p>三分片分别创建<code>ReplicatedMergeTree</code>引擎表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE test</span><br><span class="line">(</span><br><span class="line">    `id` Int64,</span><br><span class="line">    `created_date` DateTime</span><br><span class="line">)</span><br><span class="line">ENGINE = ReplicatedMergeTree(&apos;/clickhouse/tables/&#123;layer&#125;-&#123;shard&#125;/test&apos;, &apos;&#123;replica&#125;&apos;)</span><br><span class="line">PARTITION BY toYYYYMMDD(created_date)</span><br><span class="line">ORDER BY id</span><br><span class="line">SETTINGS index_granularity = 8192</span><br></pre></td></tr></table></figure>
+<p>插入数据：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">insert into test values(1,&apos;2020 06 28 14:00:00&apos;) ;</span><br></pre></td></tr></table></figure>
+<p>到其他两台备份上分别查看数据是否同步 ✓</p>
+<p>停掉某一台 zookeeper 数据库是否能正常访问 ✓</p>
+<p><strong>其他表引擎</strong></p>
+<p>自动数据备份，是表的行为，ReplicatedXXX的表支持自动同步。</p>
+<p>Replicated前缀只用于MergeTree系列（MergeTree是最常用的引擎），即clickhouse支持以下几种自动备份的引擎：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ReplicatedMergeTree</span><br><span class="line">ReplicatedSummingMergeTree</span><br><span class="line">ReplicatedReplacingMergeTree</span><br><span class="line">ReplicatedAggregatingMergeTree</span><br><span class="line">ReplicatedCollapsingMergeTree</span><br><span class="line">ReplicatedGraphiteMergeTree</span><br></pre></td></tr></table></figure></p>
+<p><strong>参考：</strong></p>
+<a href="/2019/12/clickhouse/" title="clickhouse入门操作">clickhouse入门操作</a>
+<p><a href="https://blog.csdn.net/qq_33142257/article/details/79836645" target="_blank" rel="noopener">zookeeper集群启动报错</a></p>
+<p><a href="https://blog.csdn.net/linglingma9087/article/details/84666581" target="_blank" rel="noopener">Clickhouse集群应用、分片、复制</a></p>
+<p><a href="https://www.jianshu.com/p/e339336e7bb9" target="_blank" rel="noopener">添加帐号密码</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2020/06/clickhouse-ha/" data-id="ckoml2uoo000g0wpbg62lhqz0" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse/">clickhouse</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-xorm_traceid" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/xorm_traceid/" class="article-date">
+  <time datetime="2020-04-09T19:17:10.000Z" itemprop="datePublished">2020-04-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/xorm_traceid/">xorm结合logrus记录traceId</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>通用 <code>traceId</code> 写日志，来查看一次请求的处理过程，是我们常用的排错方式。日志一般包括我们自定义的日志，和数据库日志。</p>
+<p>比较了常用的 go orm 包，发现 xorm 可以自定义上下文 ，满足我们的需求。通过<code>engine.SetDefaultContext(ctx)</code>，我们可以把一次请求产生的 traceId 通过 context.WithValue 的方式传递，在sql 执行结束时打印出来。</p>
+<p>xorm 包本身的日志是不输出上下文变量的，但是 <code>engine.SetLogger()</code> 方法支持自定义 log ，我们通过重写log来实现自定义日志打印。需要实现如下 ContextLogger 接口，主要重写了 AfterSQL 方法。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ContextLogger represents a logger interface with context</span></span><br><span class="line"><span class="keyword">type</span> ContextLogger <span class="keyword">interface</span> &#123;</span><br><span class="line">	SQLLogger</span><br><span class="line"></span><br><span class="line">	Debugf(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span><br><span class="line">	Errorf(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span><br><span class="line">	Infof(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span><br><span class="line">	Warnf(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span><br><span class="line"></span><br><span class="line">	Level() LogLevel</span><br><span class="line">	SetLevel(l LogLevel)</span><br><span class="line"></span><br><span class="line">	ShowSQL(show ...<span class="keyword">bool</span>)</span><br><span class="line">	IsShowSQL() <span class="keyword">bool</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们通过自定义结构体，使用 <code>logrus</code> 日志包来实现这个接口</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> LoggerAdapter <span class="keyword">struct</span> &#123;</span><br><span class="line">	logger *logrus.Logger</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewLoggerAdapter</span><span class="params">()</span> *<span class="title">LoggerAdapter</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;LoggerAdapter&#123;</span><br><span class="line">		logger: logrus.New(),</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">BeforeSQL</span><span class="params">(ctx xlog.LogContext)</span></span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">AfterSQL</span><span class="params">(ctx xlog.LogContext)</span></span> &#123;</span><br><span class="line">	#在这里打印了上下文环境里的traceId</span><br><span class="line">	traceId := ctx.Ctx.Value(<span class="string">"traceId"</span>) </span><br><span class="line">	<span class="keyword">if</span> ctx.ExecuteTime &gt; <span class="number">0</span> &#123;</span><br><span class="line">		l.logger.Infof(<span class="string">"[SQL] %v %v - %v %v"</span>, ctx.SQL, ctx.Args, ctx.ExecuteTime, traceId)</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		l.logger.Infof(<span class="string">"[SQL] %v %v"</span>, ctx.SQL, ctx.Args, traceId)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">Debugf</span><span class="params">(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">	l.logger.Debugf(format, v...)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">Errorf</span><span class="params">(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">	l.logger.Errorf(format, v...)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">Infof</span><span class="params">(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">	l.logger.Infof(format, v...)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">Warnf</span><span class="params">(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">	l.logger.Warnf(format, v...)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">Level</span><span class="params">()</span> <span class="title">xlog</span>.<span class="title">LogLevel</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> xlog.LogLevel(l.logger.GetLevel())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">SetLevel</span><span class="params">(lv xlog.LogLevel)</span></span> &#123;</span><br><span class="line">	l.logger.SetLevel(logrus.Level(lv))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">ShowSQL</span><span class="params">(show ...<span class="keyword">bool</span>)</span></span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">IsShowSQL</span><span class="params">()</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试一下</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">engine, _ = xorm.NewEngine(<span class="string">"mysql"</span>, <span class="string">"dev_w:*****@(172.16.200.40:3306)/api_monitor?charset=utf8"</span>)</span><br><span class="line">dblog := NewLoggerAdapter()</span><br><span class="line"></span><br><span class="line">engine.SetLogger(dblog)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Group <span class="keyword">struct</span> &#123;</span><br><span class="line">	Id         <span class="keyword">int</span>       <span class="string">`xorm:"not null pk autoincr INT(11)"`</span></span><br><span class="line">	Name       <span class="keyword">string</span>    <span class="string">`xorm:"not null default '' comment('分组名称') VARCHAR(50)"`</span></span><br><span class="line">	Maintainer <span class="keyword">string</span>    <span class="string">`xorm:"not null default '' comment('维护者') VARCHAR(50)"`</span></span><br><span class="line">	CreatedAt  time.Time <span class="string">`xorm:"not null TIMESTAMP"`</span></span><br><span class="line">	UpdatedAt  time.Time <span class="string">`xorm:"not null TIMESTAMP"`</span></span><br><span class="line">	DeletedAt  time.Time <span class="string">`xorm:"TIMESTAMP"`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">groups := []Group&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">	ctx := context.WithValue(context.Background(), <span class="string">"traceId"</span>, <span class="string">"11111111111111"</span>)</span><br><span class="line">	engine.SetDefaultContext(ctx)</span><br><span class="line">	engine.Where(<span class="string">"name = ? or name = ?"</span>, <span class="string">"cms"</span>, <span class="string">"biw"</span>).Find(&amp;groups)</span><br><span class="line">&#125;()</span><br><span class="line"></span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">	time.Sleep(<span class="number">1</span> * time.Second)</span><br><span class="line">	ctx := context.WithValue(context.Background(), <span class="string">"traceId"</span>, <span class="string">"2222222222222"</span>)</span><br><span class="line">	engine.SetDefaultContext(ctx)</span><br><span class="line"></span><br><span class="line">	engine.Where(<span class="string">"name = ? or name = ?"</span>, <span class="string">"cms"</span>, <span class="string">"tt"</span>).Find(&amp;groups)</span><br><span class="line"></span><br><span class="line">&#125;()</span><br><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>查看日志，可以看到末尾记录了我们本次执行的 traceId</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">INFO[0000] [SQL] SELECT `id`, `name`, `maintainer`, `created_at`, `updated_at`, `deleted_at` FROM `group` WHERE (name = ? or name = ?) [cms biw] - 187.773683ms 1111111</span><br><span class="line">1111111 </span><br><span class="line">INFO[0001] [SQL] SELECT `id`, `name`, `maintainer`, `created_at`, `updated_at`, `deleted_at` FROM `group` WHERE (name = ? or name = ?) [cms tt] - 92.988533ms 222222222</span><br><span class="line">2222</span><br></pre></td></tr></table></figure>
+<p>参考资料：</p>
+<p><a href="https://www.cnblogs.com/shijingjing07/p/10316444.html" target="_blank" rel="noopener">logrus日志使用详解</a></p>
+<p><a href="http://gobook.io/read/gitea.com/xorm/manual-zh-CN/" target="_blank" rel="noopener">xorm中文文档</a></p>
+<p><a href="https://deepzz.com/post/golang-context-package-notes.html" target="_blank" rel="noopener">快速掌握 Golang context 包，简单示例</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2020/04/xorm_traceid/" data-id="ckoml2upo001p0wpb1gdiywwm" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/golang/">golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/logrus/">logrus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xorm/">xorm</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-docker-web-shell-2" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/02/docker-web-shell-2/" class="article-date">
@@ -99,7 +220,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="ckmn9ztyu000b5jpbdngf8j2k" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="ckoml2uob00080wpby40aapv4" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -146,7 +267,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="ckmn9ztyl00045jpbxmsq41lm" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="ckoml2uo900050wpbhnh3u6wn" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -209,7 +330,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ckmn9ztye00015jpbpwddfryx" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ckoml2up3000y0wpb71jqzqxa" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angularjs/">angularjs</a></li></ul>
@@ -255,7 +376,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="ckmn9ztyn00055jpbwjcg4kpx" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="ckoml2unr00000wpbmu0wcqqe" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/awk/">awk</a></li></ul>
@@ -311,7 +432,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ckmn9ztyv000d5jpb3s8ly60v" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ckoml2uo500030wpbqsff44os" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse/">clickhouse</a></li></ul>
@@ -360,7 +481,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ckmn9ztzh000z5jpb2lc61s00" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ckoml2up800150wpbm5c9x76l" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gogs/">gogs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openldap/">openldap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li></ul>
@@ -425,7 +546,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ubuntu-install/" data-id="ckmn9ztzx001g5jpbai168ckl" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/ubuntu-install/" data-id="ckoml2upj001k0wpbbzofygml" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -471,149 +592,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ckmn9ztz7000l5jpbioxye59i" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ckoml2uoq000i0wpbv61cgu8r" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-k8s-migration-1" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/k8s-migration-1/" class="article-date">
-  <time datetime="2019-11-08T18:40:10.000Z" itemprop="datePublished">2019-11-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/k8s-migration-1/"> 测试服务迁移k8s集群记录 (一)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>前言: 组内给了3台新机器，要把之前的服务全迁到新机器。共6个服务，2个在之前的 k8s 集群，其他4个在物理机。</p>
-<p>已经迁移完成，记录下实施过程，大致分3步: 新 k8s 集群搭建、监控日志系统部署、业务服务迁移。</p>
-<h3 id="k8s-集群搭建"><a href="#k8s-集群搭建" class="headerlink" title="k8s 集群搭建"></a>k8s 集群搭建</h3><p>因为是新机器，准备尝试下 k8s  master 高可用方案，运维给的3台机器信息如下，两个mastet 建立ssh 信任，服务规划参考老集群。</p>
-<table>
-<thead>
-<tr>
-<th>主机名</th>
-<th>IP</th>
-<th>角色</th>
-<th>服务</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>soa-test-a001</td>
-<td>10.2.4.34</td>
-<td>master01</td>
-<td>监控、日志</td>
-</tr>
-<tr>
-<td>soa-test-a002</td>
-<td>10.2.4.35</td>
-<td>master02</td>
-<td>CI、Ingress</td>
-</tr>
-<tr>
-<td>soa-test-a003</td>
-<td>10.2.4.36</td>
-<td>node01</td>
-<td>业务服务</td>
-</tr>
-</tbody>
-</table>
-<p>只有两台master， 我们使用的是堆叠式 etcd 拓扑结构，如图：</p>
-<p><img src="/img/k8s/5.svg" alt="kubeadm-ha-topology-stacked-etcd">机器已经安装 docker ，直接开始使用 kubeadm 安装 k8s<br>
-        
-          <p class="article-more-link">
-            <a href="/2019/11/k8s-migration-1/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/k8s-migration-1/" data-id="ckmn9ztzi00115jpb9ub8owoa" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-microk8s" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/microk8s/" class="article-date">
-  <time datetime="2019-11-01T19:38:10.000Z" itemprop="datePublished">2019-11-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/microk8s/">MicroK8s 笔记</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>MicroK8s是一种小型，快速，安全的单节点Kubernetes，几乎可以安装在任何Linux机器上。使用它进行脱机开发，原型制作，测试或在VM上用作CI / CD的小型，便宜，可靠的k8。对于设备来说，它也是一个很棒的k8-为k8开发您的IoT应用并将其部署到您的盒子上的MicroK8。</p>
-<p><strong>修改默认镜像</strong></p>
-<ul>
-<li>修改<code>/var/snap/microk8s/current/args/kubelet</code>。 添加<code>--pod-infra-container-image=s7799653/pause:3.1</code></li>
-<li>修改<code>/var/snap/microk8s/current/args/containerd-template.toml</code>的<code>plugins -&gt; plugins.cri -&gt; sandbox_image</code>为<code>s7799653/pause:3.1</code></li>
-<li>重启服务 <code>microk8s.stop</code>,<code>microk8s.start</code></li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export PATH=$PATH:/snap/bin #临时写入</span><br><span class="line">echo &quot;export PATH=$PATH:/snap/bin&quot; &gt;&gt; ~/.bashrc #永久写入</span><br><span class="line">snap alias microk8s.kubectl kubectl</span><br><span class="line">snap alias microk8s.ctr ctr</span><br><span class="line">sudo usermod -a -G microk8s $&#123;USER&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>dashboard</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">microk8s.enable dns dashboard</span><br><span class="line"></span><br><span class="line">token=$(microk8s.kubectl -n kube-system get secret | grep default-token | cut -d &quot; &quot; -f1)</span><br><span class="line">microk8s.kubectl -n kube-system describe secret $token</span><br></pre></td></tr></table></figure>
-<p><strong>配置~/.kube/config</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">microk8s.config</span><br><span class="line">microk8s.kubectl config view --raw &gt; $HOME/.kube/config</span><br><span class="line">修改 user,name 为kubernetes-dashboard</span><br><span class="line">修改 username,passwod 为token</span><br></pre></td></tr></table></figure>
-<p><strong>helm3</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm install nginx bitnami/nginx</span><br></pre></td></tr></table></figure>
-<p><strong>prometheus</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">* DaemonSet, Deployment, StatefulSet, and ReplicaSet resources will no longer be served from extensions/v1beta1, apps/v1beta1, or apps/v1beta2 by default in v1.16. Migrate to the apps/v1 API, available since v1.9. Existing persisted data can be retrieved/updated via the apps/v1 API.</span><br><span class="line"></span><br><span class="line">persistentVolume</span><br></pre></td></tr></table></figure>
-<p><strong>常用命令</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ microk8s.enable dashboard dns metrics-server registry istio</span><br><span class="line">$ microk8s.ctr -n k8s.io images pull docker.io/library/cassandra:latest</span><br><span class="line">$ microk8s.ctr -namespace k8s.io images rm docker.io/yandex/clickhouse-server:20 --sync</span><br><span class="line">$ microk8s.ctr --namespace k8s.io images ls | grep -v @sha256 | awk &apos;&#123;print $1,$4$5&#125;&apos;</span><br></pre></td></tr></table></figure>
-<p><strong>nginx-ingress 部署的两种方式</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">externalIPs: </span><br><span class="line">  - 192.168.2.12 #这是我的一台node的ip，通过kube-proxy监听</span><br><span class="line">或者</span><br><span class="line">hostNetwork: true</span><br></pre></td></tr></table></figure>
-<p>参考：</p>
-<p><a href="https://github.com/ubuntu/microk8s" target="_blank" rel="noopener">https://github.com/ubuntu/microk8s</a></p>
-<p><a href="https://www.jianshu.com/p/02fd2540fab2" target="_blank" rel="noopener">https://www.jianshu.com/p/02fd2540fab2</a></p>
-<p><a href="https://github.com/projectatomic/containerd/blob/master/docs/cli.md" target="_blank" rel="noopener">https://github.com/projectatomic/containerd/blob/master/docs/cli.md</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/microk8s/" data-id="ckmn9ztzv001b5jpbau9b0tdf" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/microk8s/">microk8s</a></li></ul>
 
     </footer>
   </div>
@@ -638,7 +620,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/angularjs/">angularjs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse/">clickhouse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/consul/">consul</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/containerd/">containerd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coredns/">coredns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gaea/">gaea</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-mysql-elasticsearch/">go-mysql-elasticsearch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/goalng/">goalng</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gogs/">gogs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/">grafana</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/">helm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k3s/">k3s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ldap/">ldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logrus/">logrus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loki/">loki</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/machinery/">machinery</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/microk8s/">microk8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openldap/">openldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openresty/">openresty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/promtal/">promtal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shazam/">shazam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vuejs/">vuejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webshell/">webshell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xorm/">xorm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/中间件/">中间件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/延迟队列/">延迟队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/报警/">报警</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控/">监控</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/angularjs/">angularjs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse/">clickhouse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/consul/">consul</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/containerd/">containerd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coredns/">coredns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gaea/">gaea</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-mysql-elasticsearch/">go-mysql-elasticsearch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/goalng/">goalng</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gogs/">gogs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/">grafana</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/">helm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k3s/">k3s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ldap/">ldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logrus/">logrus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loki/">loki</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/machinery/">machinery</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/microk8s/">microk8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openldap/">openldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openresty/">openresty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/promtal/">promtal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shazam/">shazam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/victoriametrics/">victoriametrics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vuejs/">vuejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webshell/">webshell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xorm/">xorm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/中间件/">中间件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/延迟队列/">延迟队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/报警/">报警</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控/">监控</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/高可用/">高可用</a></li></ul>
     </div>
   </div>
 
@@ -648,7 +630,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/OLAP/" style="font-size: 10px;">OLAP</a> <a href="/tags/angularjs/" style="font-size: 10px;">angularjs</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/clickhouse/" style="font-size: 15px;">clickhouse</a> <a href="/tags/consul/" style="font-size: 10px;">consul</a> <a href="/tags/containerd/" style="font-size: 10px;">containerd</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gaea/" style="font-size: 10px;">gaea</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/go-mysql-elasticsearch/" style="font-size: 10px;">go-mysql-elasticsearch</a> <a href="/tags/goalng/" style="font-size: 10px;">goalng</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 12.5px;">jenkins</a> <a href="/tags/k3s/" style="font-size: 10px;">k3s</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/ldap/" style="font-size: 10px;">ldap</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/logrus/" style="font-size: 10px;">logrus</a> <a href="/tags/loki/" style="font-size: 12.5px;">loki</a> <a href="/tags/machinery/" style="font-size: 10px;">machinery</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/pipeline/" style="font-size: 12.5px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 12.5px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/shazam/" style="font-size: 10px;">shazam</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/vuejs/" style="font-size: 10px;">vuejs</a> <a href="/tags/webshell/" style="font-size: 12.5px;">webshell</a> <a href="/tags/xorm/" style="font-size: 10px;">xorm</a> <a href="/tags/中间件/" style="font-size: 10px;">中间件</a> <a href="/tags/延迟队列/" style="font-size: 10px;">延迟队列</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a>
+      <a href="/tags/OLAP/" style="font-size: 10px;">OLAP</a> <a href="/tags/angularjs/" style="font-size: 10px;">angularjs</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/clickhouse/" style="font-size: 15px;">clickhouse</a> <a href="/tags/consul/" style="font-size: 10px;">consul</a> <a href="/tags/containerd/" style="font-size: 10px;">containerd</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gaea/" style="font-size: 10px;">gaea</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/go-mysql-elasticsearch/" style="font-size: 10px;">go-mysql-elasticsearch</a> <a href="/tags/goalng/" style="font-size: 10px;">goalng</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 12.5px;">jenkins</a> <a href="/tags/k3s/" style="font-size: 10px;">k3s</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/ldap/" style="font-size: 10px;">ldap</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/logrus/" style="font-size: 10px;">logrus</a> <a href="/tags/loki/" style="font-size: 12.5px;">loki</a> <a href="/tags/machinery/" style="font-size: 10px;">machinery</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/pipeline/" style="font-size: 12.5px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 15px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/shazam/" style="font-size: 10px;">shazam</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/victoriametrics/" style="font-size: 10px;">victoriametrics</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/vuejs/" style="font-size: 10px;">vuejs</a> <a href="/tags/webshell/" style="font-size: 12.5px;">webshell</a> <a href="/tags/xorm/" style="font-size: 10px;">xorm</a> <a href="/tags/中间件/" style="font-size: 10px;">中间件</a> <a href="/tags/延迟队列/" style="font-size: 10px;">延迟队列</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
     </div>
   </div>
 
@@ -657,7 +639,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
     </div>
   </div>
 
@@ -670,6 +652,14 @@
       <ul>
         
           <li>
+            <a href="/2021/05/prometheus-ha/">高可用 prometheus 监控实施</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/Oauth2/">(no title)</a>
+          </li>
+        
+          <li>
             <a href="/2021/03/golang-design-pattern/">Golang 设计模式</a>
           </li>
         
@@ -679,14 +669,6 @@
         
           <li>
             <a href="/2020/12/go-mysql-elasticsearch/">go-mysql-elasticsearch 源码解读</a>
-          </li>
-        
-          <li>
-            <a href="/2020/10/ldap/">ldap 常用命令</a>
-          </li>
-        
-          <li>
-            <a href="/2020/10/k3s/">K3S</a>
           </li>
         
       </ul>

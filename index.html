@@ -62,6 +62,140 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-prometheus-ha" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/05/prometheus-ha/" class="article-date">
+  <time datetime="2021-05-13T15:40:10.000Z" itemprop="datePublished">2021-05-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/05/prometheus-ha/">高可用 prometheus 监控实施</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>机器配置</strong></p>
+<table>
+<thead>
+<tr>
+<th>ip</th>
+<th>服务</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10.0.40.100</td>
+<td>grafana + prometheus</td>
+<td>监控 报警</td>
+</tr>
+<tr>
+<td>10.0.40.101</td>
+<td>grafana + prometheus</td>
+<td>监控 报警</td>
+</tr>
+<tr>
+<td>10.0.40.102</td>
+<td>victoriametrics</td>
+<td>slb 10.0.50.100 代理8428端口</td>
+</tr>
+<tr>
+<td>10.0.40.103</td>
+<td>victoriametrics</td>
+<td>slb 10.0.50.100 代理8428端口</td>
+</tr>
+<tr>
+<td>10.0.40.104</td>
+<td>loki</td>
+<td>日志</td>
+</tr>
+</tbody>
+</table>
+<p><strong>方案说明</strong></p>
+<ul>
+<li><p>prometheus 设置远程写，到多个 victoriametrics</p>
+</li>
+<li><p>grafana 数据存入mysql，使用 slb 地址引入 victoriametrics 数据源做展示报警</p>
+</li>
+<li><p>以上prometheus 、grafana 、victoriametrics 均可配置水平扩展</p>
+</li>
+</ul>
+<p><strong>收益</strong></p>
+<ul>
+<li>监控报警高可用</li>
+<li>引入了victoriametrics存储，数据查看由之前的最近15天扩展到3个月或更久</li>
+</ul>
+        
+          <p class="article-more-link">
+            <a href="/2021/05/prometheus-ha/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2021/05/prometheus-ha/" data-id="ckoml2upg001e0wpb3qfdc2vu" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/victoriametrics/">victoriametrics</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/高可用/">高可用</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Oauth2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/04/Oauth2/" class="article-date">
+  <time datetime="2021-04-10T11:41:10.198Z" itemprop="datePublished">2021-04-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Oauth2"><a href="#Oauth2" class="headerlink" title="Oauth2"></a>Oauth2</h2><p>数据表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- client 表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> %s (</span><br><span class="line">		<span class="keyword">id</span> <span class="built_in">VARCHAR</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> PRIMARY <span class="keyword">KEY</span>,</span><br><span class="line">		secret <span class="built_in">VARCHAR</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">		<span class="keyword">domain</span> <span class="built_in">VARCHAR</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">		<span class="keyword">data</span> <span class="built_in">TEXT</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>	</span><br><span class="line">);</span><br><span class="line">	  </span><br><span class="line"><span class="comment">-- token 表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> %s (</span><br><span class="line">		<span class="keyword">id</span> <span class="built_in">BIGINT</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT PRIMARY <span class="keyword">KEY</span>,</span><br><span class="line">		code <span class="built_in">VARCHAR</span>(<span class="number">255</span>),</span><br><span class="line">		<span class="keyword">access</span> <span class="built_in">VARCHAR</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">		<span class="keyword">refresh</span> <span class="built_in">VARCHAR</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">		<span class="keyword">data</span> <span class="built_in">TEXT</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>, <span class="comment">--token结构体里的数据存在这里</span></span><br><span class="line">		created_at <span class="built_in">TIMESTAMP</span> <span class="keyword">DEFAULT</span> <span class="keyword">CURRENT_TIMESTAMP</span>,</span><br><span class="line">		expired_at <span class="built_in">TIMESTAMP</span> <span class="keyword">DEFAULT</span> <span class="keyword">CURRENT_TIMESTAMP</span>,</span><br><span class="line">		<span class="keyword">KEY</span> access_k(<span class="keyword">access</span>),</span><br><span class="line">		<span class="keyword">KEY</span> refresh_k (<span class="keyword">refresh</span>),</span><br><span class="line">		<span class="keyword">KEY</span> expired_at_k (expired_at),</span><br><span class="line">		<span class="keyword">KEY</span> code_k (code)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>配置</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">config = oauth2.Config&#123;</span><br><span class="line">	ClientID:     <span class="string">"222222"</span>,</span><br><span class="line">	ClientSecret: <span class="string">"22222222"</span>,</span><br><span class="line">	Scopes:       []<span class="keyword">string</span>&#123;<span class="string">"all"</span>&#125;,</span><br><span class="line">	RedirectURL:  <span class="string">"http://localhost:9094/oauth2"</span>,</span><br><span class="line">	Endpoint: oauth2.Endpoint&#123;</span><br><span class="line">		AuthURL:  authServerURL + <span class="string">"/authorize"</span>,</span><br><span class="line">		TokenURL: authServerURL + <span class="string">"/token"</span>,</span><br><span class="line">	&#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>token 结构体</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Token <span class="keyword">struct</span> &#123;</span><br><span class="line">	ClientID         <span class="keyword">string</span>        <span class="string">`bson:"ClientID"`</span></span><br><span class="line">	UserID           <span class="keyword">string</span>        <span class="string">`bson:"UserID"`</span></span><br><span class="line">	RedirectURI      <span class="keyword">string</span>        <span class="string">`bson:"RedirectURI"`</span></span><br><span class="line">	Scope            <span class="keyword">string</span>        <span class="string">`bson:"Scope"`</span></span><br><span class="line">	Code             <span class="keyword">string</span>        <span class="string">`bson:"Code"`</span></span><br><span class="line">	CodeCreateAt     time.Time     <span class="string">`bson:"CodeCreateAt"`</span></span><br><span class="line">	CodeExpiresIn    time.Duration <span class="string">`bson:"CodeExpiresIn"`</span></span><br><span class="line">	Access           <span class="keyword">string</span>        <span class="string">`bson:"Access"`</span></span><br><span class="line">	AccessCreateAt   time.Time     <span class="string">`bson:"AccessCreateAt"`</span></span><br><span class="line">	AccessExpiresIn  time.Duration <span class="string">`bson:"AccessExpiresIn"`</span></span><br><span class="line">	Refresh          <span class="keyword">string</span>        <span class="string">`bson:"Refresh"`</span></span><br><span class="line">	RefreshCreateAt  time.Time     <span class="string">`bson:"RefreshCreateAt"`</span></span><br><span class="line">	RefreshExpiresIn time.Duration <span class="string">`bson:"RefreshExpiresIn"`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>TokenInfo 接口<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TokenInfo the token information model interface</span></span><br><span class="line">TokenInfo <span class="keyword">interface</span> &#123;</span><br><span class="line">	New() TokenInfo</span><br><span class="line"></span><br><span class="line">	GetClientID() <span class="keyword">string</span></span><br><span class="line">	SetClientID(<span class="keyword">string</span>)</span><br><span class="line">	GetUserID() <span class="keyword">string</span></span><br><span class="line">	SetUserID(<span class="keyword">string</span>)</span><br><span class="line">	GetRedirectURI() <span class="keyword">string</span></span><br><span class="line">	SetRedirectURI(<span class="keyword">string</span>)</span><br><span class="line">	GetScope() <span class="keyword">string</span></span><br><span class="line">	SetScope(<span class="keyword">string</span>)</span><br><span class="line"></span><br><span class="line">	GetCode() <span class="keyword">string</span></span><br><span class="line">	SetCode(<span class="keyword">string</span>)</span><br><span class="line">	GetCodeCreateAt() time.Time</span><br><span class="line">	SetCodeCreateAt(time.Time)</span><br><span class="line">	GetCodeExpiresIn() time.Duration</span><br><span class="line">	SetCodeExpiresIn(time.Duration)</span><br><span class="line"></span><br><span class="line">	GetAccess() <span class="keyword">string</span></span><br><span class="line">	SetAccess(<span class="keyword">string</span>)</span><br><span class="line">	GetAccessCreateAt() time.Time</span><br><span class="line">	SetAccessCreateAt(time.Time)</span><br><span class="line">	GetAccessExpiresIn() time.Duration</span><br><span class="line">	SetAccessExpiresIn(time.Duration)</span><br><span class="line"></span><br><span class="line">	GetRefresh() <span class="keyword">string</span></span><br><span class="line">	SetRefresh(<span class="keyword">string</span>)</span><br><span class="line">	GetRefreshCreateAt() time.Time</span><br><span class="line">	SetRefreshCreateAt(time.Time)</span><br><span class="line">	GetRefreshExpiresIn() time.Duration</span><br><span class="line">	SetRefreshExpiresIn(time.Duration)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>AuthCodeURL</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># 通过此方法创建用户授权url并拼装参数</span><br><span class="line"># 主要有 response_type、client_id、redirect_uri、scope、state 参数</span><br><span class="line">buf.WriteString(c.Endpoint.AuthURL)</span><br><span class="line">v := url.Values&#123;</span><br><span class="line">	<span class="string">"response_type"</span>: &#123;<span class="string">"code"</span>&#125;,</span><br><span class="line">	<span class="string">"client_id"</span>:     &#123;c.ClientID&#125;,</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> c.RedirectURL != <span class="string">""</span> &#123;</span><br><span class="line">	v.Set(<span class="string">"redirect_uri"</span>, c.RedirectURL)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(c.Scopes) &gt; <span class="number">0</span> &#123;</span><br><span class="line">	v.Set(<span class="string">"scope"</span>, strings.Join(c.Scopes, <span class="string">" "</span>))</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> state != <span class="string">""</span> &#123;</span><br><span class="line">	<span class="comment">// TODO(light): Docs say never to omit state; don't allow empty.</span></span><br><span class="line">	v.Set(<span class="string">"state"</span>, state)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> strings.Contains(c.Endpoint.AuthURL, <span class="string">"?"</span>) &#123;</span><br><span class="line">	buf.WriteByte(<span class="string">'&amp;'</span>)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	buf.WriteByte(<span class="string">'?'</span>)</span><br><span class="line">&#125;</span><br><span class="line">buf.WriteString(v.Encode())</span><br></pre></td></tr></table></figure>
+<p>角色</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">用户中心-&gt;资源所有者</span><br><span class="line">oauth 服务器-&gt;授权服务器</span><br><span class="line">第三方应用-&gt;客户端</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">https://api.weibo.com/oauth2/authorize?response_type=code&amp;client_id=1682292631&amp;redirect_uri=http://my.leju.com/Web/Callback/callbackAdd?key=YjA2Yzk0MDhiWGt1YkdWcWRTNWpiMjA9YjA0YQ==&amp;originUrl=%2F%2Fmy.leju.com%2Fsettings%2Fbindmobile%2FthirdBindView&amp;state=ZDZmYmI4ZGRNam94TmpFM056azJORFU1ODE1NA==&amp;scope=all###</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">https://open.weixin.qq.com/connect/qrconnect?appid=wx9d8d3686b76baff8&amp;redirect_uri=https://passport.lagou.com/oauth20/callback_weixinProvider.html&amp;response_type=code&amp;scope=snsapi_login#wechat_redirect</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">https://open.weixin.qq.com/connect/qrconnect?appid=wx1b4c7610fc671845&amp;redirect_uri=https://account.geekbang.org/account/oauth/callback?type=wechat&amp;ident=704f12&amp;login=0&amp;cip=0&amp;redirect=https%3A%2F%2Faccount.geekbang.org%2Fthirdlogin%3Fremember%3D1%26type%3Dwechat%26is_bind%3D0%26platform%3Dtime%26redirect%3Dhttps%253A%252F%252Ftime.geekbang.org%252Fcolumn%252F126%26failedurl%3Dhttps%3A%2F%2Faccount.geekbang.org%2Fsignin%3Fredirect%3Dhttps%253A%252F%252Ftime.geekbang.org%252Fcolumn%252F126&amp;response_type=code&amp;scope=snsapi_login&amp;state=aeffd8302fd1c8f146f91aeeb063170b#wechat_redirect</span><br></pre></td></tr></table></figure>
+<p>参考：</p>
+<p><a href="https://www.cnblogs.com/cjsblog/p/9174797.html" target="_blank" rel="noopener">https://www.cnblogs.com/cjsblog/p/9174797.html</a></p>
+<p><a href="https://github.com/go-oauth2/oauth2.git" target="_blank" rel="noopener">https://github.com/go-oauth2/oauth2.git</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2021/04/Oauth2/" data-id="ckoml2uoi000d0wpbsb96kn1m" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-golang-design-pattern" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/03/golang-design-pattern/" class="article-date">
@@ -111,7 +245,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2021/03/golang-design-pattern/" data-id="ckmn9ztza000p5jpbj3ck05hv" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2021/03/golang-design-pattern/" data-id="ckoml2upm001n0wpbt8qrt5ml" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/goalng/">goalng</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
@@ -155,7 +289,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2021/01/machinery/" data-id="ckmn9ztzm00135jpb9rc7hc0q" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2021/01/machinery/" data-id="ckoml2upq001r0wpbpkc1zebv" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/machinery/">machinery</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/延迟队列/">延迟队列</a></li></ul>
@@ -210,7 +344,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/12/go-mysql-elasticsearch/" data-id="ckmn9ztz3000h5jpbe180gqsk" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/12/go-mysql-elasticsearch/" data-id="ckoml2uog000b0wpbsm5jzuti" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go-mysql-elasticsearch/">go-mysql-elasticsearch</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/中间件/">中间件</a></li></ul>
@@ -265,7 +399,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/10/ldap/" data-id="ckmn9ztzp00165jpbcoinz3nv" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/10/ldap/" data-id="ckoml2upc00180wpbu5bhqn8j" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ldap/">ldap</a></li></ul>
@@ -382,7 +516,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/10/k3s/" data-id="ckmn9ztzf000x5jpbf6i82pjr" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/10/k3s/" data-id="ckoml2up1000v0wpb8cuwfxrv" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/containerd/">containerd</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k3s/">k3s</a></li></ul>
@@ -430,7 +564,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/08/clickhouse-3shard/" data-id="ckmn9ztyr00095jpbvbyfzgmn" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/08/clickhouse-3shard/" data-id="ckoml2uo000010wpbicgwfnqt" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse/">clickhouse</a></li></ul>
@@ -475,7 +609,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/08/vue/" data-id="ckmn9zu09001q5jpbe23c7fcn" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/08/vue/" data-id="ckoml2upl001m0wpbbt6qf4yj" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/">vue</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vuejs/">vuejs</a></li></ul>
@@ -523,131 +657,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/07/shazam_source_code/" data-id="ckmn9zu06001n5jpbfq6wwsut" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/07/shazam_source_code/" data-id="ckoml2uph001f0wpb514r5ypz" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gaea/">gaea</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shazam/">shazam</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-clickhouse-ha" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/clickhouse-ha/" class="article-date">
-  <time datetime="2020-06-30T12:06:00.000Z" itemprop="datePublished">2020-06-30</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/clickhouse-ha/">clickhouse单分片三副本高可用搭建</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>3台机器，分别起3个 clickhosue 和 zookeeper 搭建一分片三副本高可用集群。</p>
-<p>用到镜像<code>yandex/clickhouse-server:19.15.3.6</code>，<code>zookeeper</code></p>
-<p><strong>zookeeper 配置</strong></p>
-<p>zoo.cfg 增加server列表</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@node-a002 zookeeper]# cat zoo.cfg</span><br><span class="line">dataDir=/data</span><br><span class="line">dataLogDir=/datalog</span><br><span class="line">tickTime=2000</span><br><span class="line">initLimit=5</span><br><span class="line">syncLimit=2</span><br><span class="line">autopurge.snapRetainCount=3</span><br><span class="line">autopurge.purgeInterval=0</span><br><span class="line">maxClientCnxns=60</span><br><span class="line">standaloneEnabled=true</span><br><span class="line">admin.enableServer=true</span><br><span class="line">server.1=10.2.4.14:2888:3888;2181</span><br><span class="line">server.2=10.2.4.15:2888:3888;2181</span><br><span class="line">server.3=10.2.4.16:2888:3888;2181</span><br></pre></td></tr></table></figure>
-<p>同时 data 目录下 myid 内容对应配置里的id编号</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@node-a002 zookeeper]# cat data/myid</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
-<p>启动 zookeeper </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@node-a002 ~]# cat sh/d_zookeeper.sh</span><br><span class="line">docker run -d \</span><br><span class="line">        --network host \</span><br><span class="line">        -v /root/zookeeper/data:/data \</span><br><span class="line">        -v /root/zookeeper/zoo.cfg:/conf/zoo.cfg \</span><br><span class="line">        --name zookeeper \</span><br><span class="line">        --restart=&quot;always&quot; \</span><br><span class="line">        zookeeper</span><br></pre></td></tr></table></figure>
-<p><strong>clickhouse 配置</strong></p>
-<p>添加 <code>metrika.xml</code> 文件: 配置3个zookeeper，replica 处表示01集群、01分片、a001备份</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[root@node-a002 clickhouse]# cat conf/metrika.xml</span><br><span class="line">&lt;yandex&gt;</span><br><span class="line">    &lt;zookeeper-servers&gt;</span><br><span class="line">        &lt;node index=&quot;1&quot;&gt;</span><br><span class="line">            &lt;host&gt;10.2.4.14&lt;/host&gt;</span><br><span class="line">            &lt;port&gt;2181&lt;/port&gt;</span><br><span class="line">        &lt;/node&gt;</span><br><span class="line">        &lt;node index=&quot;2&quot;&gt;</span><br><span class="line">            &lt;host&gt;10.2.4.15&lt;/host&gt;</span><br><span class="line">            &lt;port&gt;2181&lt;/port&gt;</span><br><span class="line">        &lt;/node&gt;</span><br><span class="line">        &lt;node index=&quot;3&quot;&gt;</span><br><span class="line">            &lt;host&gt;10.2.4.16&lt;/host&gt;</span><br><span class="line">            &lt;port&gt;2181&lt;/port&gt;</span><br><span class="line">        &lt;/node&gt;</span><br><span class="line">    &lt;/zookeeper-servers&gt;</span><br><span class="line"></span><br><span class="line">    &lt;macros&gt;</span><br><span class="line">        &lt;layer&gt;01&lt;/layer&gt;</span><br><span class="line">        &lt;shard&gt;01&lt;/shard&gt;</span><br><span class="line">        &lt;replica&gt;cluster01-01-a002&lt;/replica&gt;</span><br><span class="line">    &lt;/macros&gt;</span><br><span class="line">&lt;/yandex&gt;</span><br></pre></td></tr></table></figure>
-<p><code>config.xml</code> 引入 <code>metrika.xml</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@node-a002 clickhouse]# cat conf/config.xml -n | grep &apos;metrika.xml&apos;</span><br><span class="line">461      &lt;include_from&gt;/etc/clickhouse-server/metrika.xml&lt;/include_from&gt;</span><br></pre></td></tr></table></figure>
-<p>启动 clickhouse </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@node-a002 sh]# cat d_clickhouse.sh</span><br><span class="line">docker run -d \</span><br><span class="line">        --network=host \</span><br><span class="line">        -v /root/clickhouse/conf/config.xml:/etc/clickhouse-server/config.xml \</span><br><span class="line">        -v /root/clickhouse/conf/metrika.xml:/etc/clickhouse-server/metrika.xml \</span><br><span class="line">        -v /root/clickhouse/conf/users.xml:/etc/clickhouse-server/users.xml \</span><br><span class="line">        -v /root/clickhouse/data:/var/lib/clickhouse \</span><br><span class="line">        -v /root/clickhouse/log:/var/log/clickhouse-server/ \</span><br><span class="line">        --name clickhouse \</span><br><span class="line">        yandex/clickhouse-server:19.14</span><br></pre></td></tr></table></figure>
-<p><strong>写数据</strong></p>
-<p>三分片分别创建<code>ReplicatedMergeTree</code>引擎表</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE test</span><br><span class="line">(</span><br><span class="line">    `id` Int64,</span><br><span class="line">    `created_date` DateTime</span><br><span class="line">)</span><br><span class="line">ENGINE = ReplicatedMergeTree(&apos;/clickhouse/tables/&#123;layer&#125;-&#123;shard&#125;/test&apos;, &apos;&#123;replica&#125;&apos;)</span><br><span class="line">PARTITION BY toYYYYMMDD(created_date)</span><br><span class="line">ORDER BY id</span><br><span class="line">SETTINGS index_granularity = 8192</span><br></pre></td></tr></table></figure>
-<p>插入数据：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">insert into test values(1,&apos;2020 06 28 14:00:00&apos;) ;</span><br></pre></td></tr></table></figure>
-<p>到其他两台备份上分别查看数据是否同步 ✓</p>
-<p>停掉某一台 zookeeper 数据库是否能正常访问 ✓</p>
-<p><strong>其他表引擎</strong></p>
-<p>自动数据备份，是表的行为，ReplicatedXXX的表支持自动同步。</p>
-<p>Replicated前缀只用于MergeTree系列（MergeTree是最常用的引擎），即clickhouse支持以下几种自动备份的引擎：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ReplicatedMergeTree</span><br><span class="line">ReplicatedSummingMergeTree</span><br><span class="line">ReplicatedReplacingMergeTree</span><br><span class="line">ReplicatedAggregatingMergeTree</span><br><span class="line">ReplicatedCollapsingMergeTree</span><br><span class="line">ReplicatedGraphiteMergeTree</span><br></pre></td></tr></table></figure></p>
-<p><strong>参考：</strong></p>
-<a href="/2019/12/clickhouse/" title="clickhouse入门操作">clickhouse入门操作</a>
-<p><a href="https://blog.csdn.net/qq_33142257/article/details/79836645" target="_blank" rel="noopener">zookeeper集群启动报错</a></p>
-<p><a href="https://blog.csdn.net/linglingma9087/article/details/84666581" target="_blank" rel="noopener">Clickhouse集群应用、分片、复制</a></p>
-<p><a href="https://www.jianshu.com/p/e339336e7bb9" target="_blank" rel="noopener">添加帐号密码</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/06/clickhouse-ha/" data-id="ckmn9zty900005jpb1fqve411" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse/">clickhouse</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-xorm_traceid" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/04/xorm_traceid/" class="article-date">
-  <time datetime="2020-04-09T19:17:10.000Z" itemprop="datePublished">2020-04-09</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/xorm_traceid/">xorm结合logrus记录traceId</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>通用 <code>traceId</code> 写日志，来查看一次请求的处理过程，是我们常用的排错方式。日志一般包括我们自定义的日志，和数据库日志。</p>
-<p>比较了常用的 go orm 包，发现 xorm 可以自定义上下文 ，满足我们的需求。通过<code>engine.SetDefaultContext(ctx)</code>，我们可以把一次请求产生的 traceId 通过 context.WithValue 的方式传递，在sql 执行结束时打印出来。</p>
-<p>xorm 包本身的日志是不输出上下文变量的，但是 <code>engine.SetLogger()</code> 方法支持自定义 log ，我们通过重写log来实现自定义日志打印。需要实现如下 ContextLogger 接口，主要重写了 AfterSQL 方法。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ContextLogger represents a logger interface with context</span></span><br><span class="line"><span class="keyword">type</span> ContextLogger <span class="keyword">interface</span> &#123;</span><br><span class="line">	SQLLogger</span><br><span class="line"></span><br><span class="line">	Debugf(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span><br><span class="line">	Errorf(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span><br><span class="line">	Infof(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span><br><span class="line">	Warnf(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span><br><span class="line"></span><br><span class="line">	Level() LogLevel</span><br><span class="line">	SetLevel(l LogLevel)</span><br><span class="line"></span><br><span class="line">	ShowSQL(show ...<span class="keyword">bool</span>)</span><br><span class="line">	IsShowSQL() <span class="keyword">bool</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们通过自定义结构体，使用 <code>logrus</code> 日志包来实现这个接口</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> LoggerAdapter <span class="keyword">struct</span> &#123;</span><br><span class="line">	logger *logrus.Logger</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewLoggerAdapter</span><span class="params">()</span> *<span class="title">LoggerAdapter</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;LoggerAdapter&#123;</span><br><span class="line">		logger: logrus.New(),</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">BeforeSQL</span><span class="params">(ctx xlog.LogContext)</span></span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">AfterSQL</span><span class="params">(ctx xlog.LogContext)</span></span> &#123;</span><br><span class="line">	#在这里打印了上下文环境里的traceId</span><br><span class="line">	traceId := ctx.Ctx.Value(<span class="string">"traceId"</span>) </span><br><span class="line">	<span class="keyword">if</span> ctx.ExecuteTime &gt; <span class="number">0</span> &#123;</span><br><span class="line">		l.logger.Infof(<span class="string">"[SQL] %v %v - %v %v"</span>, ctx.SQL, ctx.Args, ctx.ExecuteTime, traceId)</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		l.logger.Infof(<span class="string">"[SQL] %v %v"</span>, ctx.SQL, ctx.Args, traceId)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">Debugf</span><span class="params">(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">	l.logger.Debugf(format, v...)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">Errorf</span><span class="params">(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">	l.logger.Errorf(format, v...)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">Infof</span><span class="params">(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">	l.logger.Infof(format, v...)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">Warnf</span><span class="params">(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">	l.logger.Warnf(format, v...)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">Level</span><span class="params">()</span> <span class="title">xlog</span>.<span class="title">LogLevel</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> xlog.LogLevel(l.logger.GetLevel())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">SetLevel</span><span class="params">(lv xlog.LogLevel)</span></span> &#123;</span><br><span class="line">	l.logger.SetLevel(logrus.Level(lv))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">ShowSQL</span><span class="params">(show ...<span class="keyword">bool</span>)</span></span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">IsShowSQL</span><span class="params">()</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>测试一下</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">engine, _ = xorm.NewEngine(<span class="string">"mysql"</span>, <span class="string">"dev_w:*****@(172.16.200.40:3306)/api_monitor?charset=utf8"</span>)</span><br><span class="line">dblog := NewLoggerAdapter()</span><br><span class="line"></span><br><span class="line">engine.SetLogger(dblog)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Group <span class="keyword">struct</span> &#123;</span><br><span class="line">	Id         <span class="keyword">int</span>       <span class="string">`xorm:"not null pk autoincr INT(11)"`</span></span><br><span class="line">	Name       <span class="keyword">string</span>    <span class="string">`xorm:"not null default '' comment('分组名称') VARCHAR(50)"`</span></span><br><span class="line">	Maintainer <span class="keyword">string</span>    <span class="string">`xorm:"not null default '' comment('维护者') VARCHAR(50)"`</span></span><br><span class="line">	CreatedAt  time.Time <span class="string">`xorm:"not null TIMESTAMP"`</span></span><br><span class="line">	UpdatedAt  time.Time <span class="string">`xorm:"not null TIMESTAMP"`</span></span><br><span class="line">	DeletedAt  time.Time <span class="string">`xorm:"TIMESTAMP"`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">groups := []Group&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">	ctx := context.WithValue(context.Background(), <span class="string">"traceId"</span>, <span class="string">"11111111111111"</span>)</span><br><span class="line">	engine.SetDefaultContext(ctx)</span><br><span class="line">	engine.Where(<span class="string">"name = ? or name = ?"</span>, <span class="string">"cms"</span>, <span class="string">"biw"</span>).Find(&amp;groups)</span><br><span class="line">&#125;()</span><br><span class="line"></span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">	time.Sleep(<span class="number">1</span> * time.Second)</span><br><span class="line">	ctx := context.WithValue(context.Background(), <span class="string">"traceId"</span>, <span class="string">"2222222222222"</span>)</span><br><span class="line">	engine.SetDefaultContext(ctx)</span><br><span class="line"></span><br><span class="line">	engine.Where(<span class="string">"name = ? or name = ?"</span>, <span class="string">"cms"</span>, <span class="string">"tt"</span>).Find(&amp;groups)</span><br><span class="line"></span><br><span class="line">&#125;()</span><br><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>查看日志，可以看到末尾记录了我们本次执行的 traceId</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">INFO[0000] [SQL] SELECT `id`, `name`, `maintainer`, `created_at`, `updated_at`, `deleted_at` FROM `group` WHERE (name = ? or name = ?) [cms biw] - 187.773683ms 1111111</span><br><span class="line">1111111 </span><br><span class="line">INFO[0001] [SQL] SELECT `id`, `name`, `maintainer`, `created_at`, `updated_at`, `deleted_at` FROM `group` WHERE (name = ? or name = ?) [cms tt] - 92.988533ms 222222222</span><br><span class="line">2222</span><br></pre></td></tr></table></figure>
-<p>参考资料：</p>
-<p><a href="https://www.cnblogs.com/shijingjing07/p/10316444.html" target="_blank" rel="noopener">logrus日志使用详解</a></p>
-<p><a href="http://gobook.io/read/gitea.com/xorm/manual-zh-CN/" target="_blank" rel="noopener">xorm中文文档</a></p>
-<p><a href="https://deepzz.com/post/golang-context-package-notes.html" target="_blank" rel="noopener">快速掌握 Golang context 包，简单示例</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/04/xorm_traceid/" data-id="ckmn9zu07001o5jpbh9zrqnga" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/golang/">golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/logrus/">logrus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xorm/">xorm</a></li></ul>
 
     </footer>
   </div>
@@ -672,7 +685,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/angularjs/">angularjs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse/">clickhouse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/consul/">consul</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/containerd/">containerd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coredns/">coredns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gaea/">gaea</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-mysql-elasticsearch/">go-mysql-elasticsearch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/goalng/">goalng</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gogs/">gogs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/">grafana</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/">helm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k3s/">k3s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ldap/">ldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logrus/">logrus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loki/">loki</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/machinery/">machinery</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/microk8s/">microk8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openldap/">openldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openresty/">openresty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/promtal/">promtal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shazam/">shazam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vuejs/">vuejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webshell/">webshell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xorm/">xorm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/中间件/">中间件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/延迟队列/">延迟队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/报警/">报警</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控/">监控</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/angularjs/">angularjs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse/">clickhouse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/consul/">consul</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/containerd/">containerd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coredns/">coredns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gaea/">gaea</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-mysql-elasticsearch/">go-mysql-elasticsearch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/goalng/">goalng</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gogs/">gogs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/">grafana</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/">helm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k3s/">k3s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ldap/">ldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logrus/">logrus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loki/">loki</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/machinery/">machinery</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/microk8s/">microk8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openldap/">openldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openresty/">openresty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/promtal/">promtal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shazam/">shazam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/victoriametrics/">victoriametrics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vuejs/">vuejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webshell/">webshell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xorm/">xorm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/中间件/">中间件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/延迟队列/">延迟队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/报警/">报警</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控/">监控</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/高可用/">高可用</a></li></ul>
     </div>
   </div>
 
@@ -682,7 +695,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/OLAP/" style="font-size: 10px;">OLAP</a> <a href="/tags/angularjs/" style="font-size: 10px;">angularjs</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/clickhouse/" style="font-size: 15px;">clickhouse</a> <a href="/tags/consul/" style="font-size: 10px;">consul</a> <a href="/tags/containerd/" style="font-size: 10px;">containerd</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gaea/" style="font-size: 10px;">gaea</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/go-mysql-elasticsearch/" style="font-size: 10px;">go-mysql-elasticsearch</a> <a href="/tags/goalng/" style="font-size: 10px;">goalng</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 12.5px;">jenkins</a> <a href="/tags/k3s/" style="font-size: 10px;">k3s</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/ldap/" style="font-size: 10px;">ldap</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/logrus/" style="font-size: 10px;">logrus</a> <a href="/tags/loki/" style="font-size: 12.5px;">loki</a> <a href="/tags/machinery/" style="font-size: 10px;">machinery</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/pipeline/" style="font-size: 12.5px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 12.5px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/shazam/" style="font-size: 10px;">shazam</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/vuejs/" style="font-size: 10px;">vuejs</a> <a href="/tags/webshell/" style="font-size: 12.5px;">webshell</a> <a href="/tags/xorm/" style="font-size: 10px;">xorm</a> <a href="/tags/中间件/" style="font-size: 10px;">中间件</a> <a href="/tags/延迟队列/" style="font-size: 10px;">延迟队列</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a>
+      <a href="/tags/OLAP/" style="font-size: 10px;">OLAP</a> <a href="/tags/angularjs/" style="font-size: 10px;">angularjs</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/clickhouse/" style="font-size: 15px;">clickhouse</a> <a href="/tags/consul/" style="font-size: 10px;">consul</a> <a href="/tags/containerd/" style="font-size: 10px;">containerd</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gaea/" style="font-size: 10px;">gaea</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/go-mysql-elasticsearch/" style="font-size: 10px;">go-mysql-elasticsearch</a> <a href="/tags/goalng/" style="font-size: 10px;">goalng</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 12.5px;">jenkins</a> <a href="/tags/k3s/" style="font-size: 10px;">k3s</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/ldap/" style="font-size: 10px;">ldap</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/logrus/" style="font-size: 10px;">logrus</a> <a href="/tags/loki/" style="font-size: 12.5px;">loki</a> <a href="/tags/machinery/" style="font-size: 10px;">machinery</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/pipeline/" style="font-size: 12.5px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 15px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/shazam/" style="font-size: 10px;">shazam</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/victoriametrics/" style="font-size: 10px;">victoriametrics</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/vuejs/" style="font-size: 10px;">vuejs</a> <a href="/tags/webshell/" style="font-size: 12.5px;">webshell</a> <a href="/tags/xorm/" style="font-size: 10px;">xorm</a> <a href="/tags/中间件/" style="font-size: 10px;">中间件</a> <a href="/tags/延迟队列/" style="font-size: 10px;">延迟队列</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
     </div>
   </div>
 
@@ -691,7 +704,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
     </div>
   </div>
 
@@ -704,6 +717,14 @@
       <ul>
         
           <li>
+            <a href="/2021/05/prometheus-ha/">高可用 prometheus 监控实施</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/Oauth2/">(no title)</a>
+          </li>
+        
+          <li>
             <a href="/2021/03/golang-design-pattern/">Golang 设计模式</a>
           </li>
         
@@ -713,14 +734,6 @@
         
           <li>
             <a href="/2020/12/go-mysql-elasticsearch/">go-mysql-elasticsearch 源码解读</a>
-          </li>
-        
-          <li>
-            <a href="/2020/10/ldap/">ldap 常用命令</a>
-          </li>
-        
-          <li>
-            <a href="/2020/10/k3s/">K3S</a>
           </li>
         
       </ul>
