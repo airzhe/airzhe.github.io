@@ -102,7 +102,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/04/xorm_traceid/" data-id="ckp5h8xde001r25pbqnbm78w0" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/04/xorm_traceid/" data-id="ckp7rebjq001p0vpbmxlw6w43" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/golang/">golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/logrus/">logrus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xorm/">xorm</a></li></ul>
@@ -151,7 +151,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="ckp5h8xba000b25pb7cl5iuqz" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="ckp7rebin000b0vpb598q80h1" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -198,7 +198,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="ckp5h8xb7000925pb6gd8xhyt" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="ckp7rebir000f0vpbky3qy79r" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
@@ -261,7 +261,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ckp5h8xb0000425pbpmmk7mtq" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ckp7rebi200000vpbm5rlkfk3" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angularjs/">angularjs</a></li></ul>
@@ -295,10 +295,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>上周有个处理对账单的需求，从微信、招行下载每天的对账单，然后把订单号转成数据库里对应的商城单号，需求比较简单，打算用 shell 命令来写。</p>
+        <p>上周有个处理对账单的需求，从微信、A下载每天的对账单，然后把订单号转成数据库里对应的B单号，需求比较简单，打算用 shell 命令来写。</p>
 <p>首先考虑了 join 命令，实现左连接、内连接都是没有问题的。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ cat 1.csv </span><br><span class="line">No,Con</span><br><span class="line">1,aaa</span><br><span class="line">2,bbb</span><br><span class="line">5,ccc</span><br><span class="line"></span><br><span class="line">$ cat 2.csv</span><br><span class="line">No,S_id</span><br><span class="line">1,000555</span><br><span class="line">5,000111</span><br><span class="line">3,000333</span><br><span class="line">8,000111</span><br><span class="line"></span><br><span class="line"># 对1.csv、2.csv排序，使用逗号作为分隔符，用两个文件的第一列，跳过header，-a左连接。</span><br><span class="line">$ join -t, -1 1 -2 1 -a 1 --header --nocheck-order &lt;(sort -k 1 -n 1.csv) &lt;(sort -k 1 -n 2.csv) </span><br><span class="line">No,Con,S_id</span><br><span class="line">1,aaa,000555</span><br><span class="line">2,bbb</span><br><span class="line">5,ccc,000111</span><br></pre></td></tr></table></figure>
-<p>上面结果No = 2时后面没有补充逗号，而且格式化各列还需要 awk 再处理下，于是搜了下使用 awk 来实现 join<br>
+<p>awk 实现 join<br>
         
           <p class="article-more-link">
             <a href="/2020/01/awk/#more">Read More</a>
@@ -307,7 +307,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="ckp5h8xal000025pbmxmtwpy2" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="ckp7rebik00090vpb45e94cke" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/awk/">awk</a></li></ul>
@@ -363,7 +363,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ckp5h8xb4000825pbdc2zm1pa" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ckp7rebie00040vpbjloiijbd" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse/">clickhouse</a></li></ul>
@@ -412,7 +412,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ckp5h8xcb001225pb1wvlviiy" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ckp7rebja00130vpblc0oy9sc" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gogs/">gogs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openldap/">openldap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li></ul>
@@ -477,7 +477,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ubuntu-install/" data-id="ckp5h8xd8001l25pbzbh2xnyz" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/ubuntu-install/" data-id="ckp7rebjm001l0vpbp2uizbir" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -523,7 +523,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ckp5h8xbi000h25pb839vkadm" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ckp7rebiw000k0vpbk702r642" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li></ul>
@@ -572,19 +572,19 @@
 <tbody>
 <tr>
 <td>soa-test-a001</td>
-<td>10.2.5.4</td>
+<td>172.2.5.4</td>
 <td>master01</td>
 <td>监控、日志</td>
 </tr>
 <tr>
 <td>soa-test-a002</td>
-<td>10.2.5.5</td>
+<td>172.2.5.5</td>
 <td>master02</td>
 <td>CI、Ingress</td>
 </tr>
 <tr>
 <td>soa-test-a003</td>
-<td>10.2.5.6</td>
+<td>172.2.5.6</td>
 <td>node01</td>
 <td>业务服务</td>
 </tr>
@@ -600,7 +600,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/k8s-migration-1/" data-id="ckp5h8xc7001125pbuujnx0ti" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/k8s-migration-1/" data-id="ckp7rebj4000w0vpbkzzitjj2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>

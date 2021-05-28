@@ -112,7 +112,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/microk8s/" data-id="ckp5h8xco001925pbj9a8di1i" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/microk8s/" data-id="ckp7rebjg001b0vpbtbxwt7gu" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/microk8s/">microk8s</a></li></ul>
@@ -149,7 +149,7 @@
         <p><strong>docker 启动脚本</strong></p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">    -p 8090:8080 -p 50000:50000  \</span><br><span class="line">    -u root \</span><br><span class="line">    -v /root/jenkins:/var/jenkins_home \</span><br><span class="line">    -v /usr/lib64/libltdl.so.7:/usr/lib/x86_64-linux-gnu/libltdl.so.7 \</span><br><span class="line">    -v /var/run/docker.sock:/var/run/docker.sock \</span><br><span class="line">    -v $(<span class="built_in">which</span> docker):/usr/bin/docker \</span><br><span class="line">    --name jenkins jenkinszh/jenkins-zh:latest</span><br></pre></td></tr></table></figure>
 <p><strong>pipeline</strong></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">pipeline &#123;</span><br><span class="line">    agent any </span><br><span class="line">    environment &#123;</span><br><span class="line">    	APP_NAME = <span class="string">"api-monitor-new"</span></span><br><span class="line">        GIT_BRANCH = <span class="string">"test123"</span></span><br><span class="line">        GIT_COMMIT_ID = <span class="string">"test123456"</span></span><br><span class="line">    	CHART_NAME = <span class="string">"apple/api-monitor-new"</span></span><br><span class="line">        CHART_VERSION = 3.0</span><br><span class="line">        NEW_HARBOR_HOST = <span class="string">"harbor.apple.net"</span></span><br><span class="line">        BUILD_IMAGES_NAME = <span class="string">"<span class="variable">$&#123;NEW_HARBOR_HOST&#125;</span>/php/<span class="variable">$&#123;APP_NAME&#125;</span>:<span class="variable">$&#123;GIT_BRANCH&#125;</span>"</span></span><br><span class="line">        KUBE_CONFIG = credentials(<span class="string">"156485be-dbb8-4f8c-b3a2-15f3535049ad"</span>)</span><br><span class="line">        NAMESPACE = <span class="string">"default"</span>   </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    stages &#123;</span><br><span class="line">        stage(<span class="string">'Build'</span>) &#123; </span><br><span class="line">            agent &#123;</span><br><span class="line">                docker &#123; image <span class="string">'harbor.apple.net/php/golang:latest'</span> &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            steps &#123; </span><br><span class="line">                sh <span class="string">'echo Build stage ...'</span> </span><br><span class="line">                git credentialsId: <span class="string">'1'</span>, url: <span class="string">'http://gitlaball.apple.net/apple/middle/soa/api-monitor-new.git'</span></span><br><span class="line">                sh <span class="string">'rm -rf ./output'</span></span><br><span class="line">                sh <span class="string">'export CGO_ENABLED=0 ;chmod +x ./build.sh ; ./build.sh'</span></span><br><span class="line">                sh <span class="string">'cd ./output &amp;&amp; mkdir ./app &amp;&amp; tar -zxvf *.gz -C ./app'</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(<span class="string">'Build Image'</span>) &#123; </span><br><span class="line">            agent &#123;</span><br><span class="line">                docker &#123; image <span class="string">'harbor.apple.net/php/docker:stable'</span> &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            steps &#123; </span><br><span class="line">                withCredentials([usernamePassword(credentialsId: <span class="string">'a00b4d01-c2e7-49af-9b1f-fcc382116911'</span>, usernameVariable: <span class="string">'HARBOR_USER'</span>, passwordVariable: <span class="string">'HARBOR_PWD'</span>)]) &#123;</span><br><span class="line">                    sh <span class="string">'docker login -u "$&#123;HARBOR_USER&#125;" -p "$&#123;HARBOR_PWD&#125;" "$&#123;NEW_HARBOR_HOST&#125;"'</span></span><br><span class="line">                &#125;</span><br><span class="line">                sh <span class="string">'cd ./output/app'</span></span><br><span class="line">                sh <span class="string">'echo Dockerfile01 &gt; .dockerignore'</span></span><br><span class="line">                sh <span class="string">'echo FROM harbor.apple.net/php/alpine &gt; Dockerfile01 &amp;&amp; echo COPY . /app &gt;&gt; Dockerfile01'</span></span><br><span class="line">                sh <span class="string">'docker build -t "$BUILD_IMAGES_NAME"  -f Dockerfile01 .'</span></span><br><span class="line">                sh <span class="string">'docker push "$BUILD_IMAGES_NAME"'</span></span><br><span class="line">                sh <span class="string">'docker images'</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(<span class="string">'Deploy'</span>) &#123;</span><br><span class="line">             agent &#123;</span><br><span class="line">                docker &#123; image <span class="string">'harbor.apple.net/php/helm:3.0-rc2'</span> &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            steps &#123; </span><br><span class="line">                sh <span class="string">'mkdir -p ~/.kube &amp;&amp; cat $&#123;KUBE_CONFIG&#125; &gt; ~/.kube/config'</span></span><br><span class="line">                sh <span class="string">'helm repo add apple https://harbor.apple.net/chartrepo/php'</span></span><br><span class="line">                sh <span class="string">'helm repo update'</span></span><br><span class="line">                withCredentials([usernamePassword(credentialsId: <span class="string">'a00b4d01-c2e7-49af-9b1f-fcc382116911'</span>, usernameVariable: <span class="string">'HARBOR_USER'</span>, passwordVariable: <span class="string">'HARBOR_PWD'</span>)]) &#123;</span><br><span class="line">                    sh <span class="string">'helm upgrade $&#123;APP_NAME&#125; --install \</span></span><br><span class="line"><span class="string">                    --set image.tag=$&#123;APP_TAG&#125; \</span></span><br><span class="line"><span class="string">                    --set gitBranch=$&#123;GIT_BRANCH&#125; \</span></span><br><span class="line"><span class="string">                    --set commitId=$&#123;GIT_COMMIT_ID&#125; \</span></span><br><span class="line"><span class="string">                    --username $&#123;HARBOR_USER&#125; --password $&#123;HARBOR_PWD&#125; \</span></span><br><span class="line"><span class="string">                    --set nodeSelector.role="node" \</span></span><br><span class="line"><span class="string">                    --force --wait --atomic --debug \</span></span><br><span class="line"><span class="string">                    --namespace=$&#123;NAMESPACE&#125; \</span></span><br><span class="line"><span class="string">                    $&#123;CHART_NAME&#125; --version $&#123;CHART_VERSION&#125; '</span></span><br><span class="line">                    sh <span class="string">'echo "soa.cicd.$&#123;APP_NAME&#125;.status $? `date +%s`" | nc 10.2.5.5 32003'</span></span><br><span class="line">                &#125;</span><br><span class="line">                sh <span class="string">'helm list'</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">pipeline &#123;</span><br><span class="line">    agent any </span><br><span class="line">    environment &#123;</span><br><span class="line">    	APP_NAME = <span class="string">"api-monitor-new"</span></span><br><span class="line">        GIT_BRANCH = <span class="string">"test123"</span></span><br><span class="line">        GIT_COMMIT_ID = <span class="string">"test123456"</span></span><br><span class="line">    	CHART_NAME = <span class="string">"apple/api-monitor-new"</span></span><br><span class="line">        CHART_VERSION = 3.0</span><br><span class="line">        NEW_HARBOR_HOST = <span class="string">"harbor.apple.net"</span></span><br><span class="line">        BUILD_IMAGES_NAME = <span class="string">"<span class="variable">$&#123;NEW_HARBOR_HOST&#125;</span>/php/<span class="variable">$&#123;APP_NAME&#125;</span>:<span class="variable">$&#123;GIT_BRANCH&#125;</span>"</span></span><br><span class="line">        KUBE_CONFIG = credentials(<span class="string">"156485be-dbb8-4f8c-b3a2-15f3535049ad"</span>)</span><br><span class="line">        NAMESPACE = <span class="string">"default"</span>   </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    stages &#123;</span><br><span class="line">        stage(<span class="string">'Build'</span>) &#123; </span><br><span class="line">            agent &#123;</span><br><span class="line">                docker &#123; image <span class="string">'harbor.apple.net/php/golang:latest'</span> &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            steps &#123; </span><br><span class="line">                sh <span class="string">'echo Build stage ...'</span> </span><br><span class="line">                git credentialsId: <span class="string">'1'</span>, url: <span class="string">'http://gitlaball.apple.net/apple/middle/soa/api-monitor-new.git'</span></span><br><span class="line">                sh <span class="string">'rm -rf ./output'</span></span><br><span class="line">                sh <span class="string">'export CGO_ENABLED=0 ;chmod +x ./build.sh ; ./build.sh'</span></span><br><span class="line">                sh <span class="string">'cd ./output &amp;&amp; mkdir ./app &amp;&amp; tar -zxvf *.gz -C ./app'</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(<span class="string">'Build Image'</span>) &#123; </span><br><span class="line">            agent &#123;</span><br><span class="line">                docker &#123; image <span class="string">'harbor.apple.net/php/docker:stable'</span> &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            steps &#123; </span><br><span class="line">                withCredentials([usernamePassword(credentialsId: <span class="string">'a00b4d01-c2e7-49af-9b1f-fcc382116911'</span>, usernameVariable: <span class="string">'HARBOR_USER'</span>, passwordVariable: <span class="string">'HARBOR_PWD'</span>)]) &#123;</span><br><span class="line">                    sh <span class="string">'docker login -u "$&#123;HARBOR_USER&#125;" -p "$&#123;HARBOR_PWD&#125;" "$&#123;NEW_HARBOR_HOST&#125;"'</span></span><br><span class="line">                &#125;</span><br><span class="line">                sh <span class="string">'cd ./output/app'</span></span><br><span class="line">                sh <span class="string">'echo Dockerfile01 &gt; .dockerignore'</span></span><br><span class="line">                sh <span class="string">'echo FROM harbor.apple.net/php/alpine &gt; Dockerfile01 &amp;&amp; echo COPY . /app &gt;&gt; Dockerfile01'</span></span><br><span class="line">                sh <span class="string">'docker build -t "$BUILD_IMAGES_NAME"  -f Dockerfile01 .'</span></span><br><span class="line">                sh <span class="string">'docker push "$BUILD_IMAGES_NAME"'</span></span><br><span class="line">                sh <span class="string">'docker images'</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(<span class="string">'Deploy'</span>) &#123;</span><br><span class="line">             agent &#123;</span><br><span class="line">                docker &#123; image <span class="string">'harbor.apple.net/php/helm:3.0-rc2'</span> &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            steps &#123; </span><br><span class="line">                sh <span class="string">'mkdir -p ~/.kube &amp;&amp; cat $&#123;KUBE_CONFIG&#125; &gt; ~/.kube/config'</span></span><br><span class="line">                sh <span class="string">'helm repo add apple https://harbor.apple.net/chartrepo/php'</span></span><br><span class="line">                sh <span class="string">'helm repo update'</span></span><br><span class="line">                withCredentials([usernamePassword(credentialsId: <span class="string">'a00b4d01-c2e7-49af-9b1f-fcc382116911'</span>, usernameVariable: <span class="string">'HARBOR_USER'</span>, passwordVariable: <span class="string">'HARBOR_PWD'</span>)]) &#123;</span><br><span class="line">                    sh <span class="string">'helm upgrade $&#123;APP_NAME&#125; --install \</span></span><br><span class="line"><span class="string">                    --set image.tag=$&#123;APP_TAG&#125; \</span></span><br><span class="line"><span class="string">                    --set gitBranch=$&#123;GIT_BRANCH&#125; \</span></span><br><span class="line"><span class="string">                    --set commitId=$&#123;GIT_COMMIT_ID&#125; \</span></span><br><span class="line"><span class="string">                    --username $&#123;HARBOR_USER&#125; --password $&#123;HARBOR_PWD&#125; \</span></span><br><span class="line"><span class="string">                    --set nodeSelector.role="node" \</span></span><br><span class="line"><span class="string">                    --force --wait --atomic --debug \</span></span><br><span class="line"><span class="string">                    --namespace=$&#123;NAMESPACE&#125; \</span></span><br><span class="line"><span class="string">                    $&#123;CHART_NAME&#125; --version $&#123;CHART_VERSION&#125; '</span></span><br><span class="line">                    sh <span class="string">'echo "soa.cicd.$&#123;APP_NAME&#125;.status $? `date +%s`" | nc 172.2.5.5 32003'</span></span><br><span class="line">                &#125;</span><br><span class="line">                sh <span class="string">'helm list'</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 <p>参考：</p>
 <p><a href="http://blog.jboost.cn/k8s3-cd.html" target="_blank" rel="noopener">Gitlab+Jenkins Pipeline+Docker+k8s+Helm自动化部署实践</a></p>
 <p><a href="https://www.kubernetes.org.cn/6158.html" target="_blank" rel="noopener">Jenkins CI/CD 集成 Git Secrets</a></p>
@@ -159,7 +159,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/jenkins-pipeline/" data-id="ckp5h8xbw000s25pbdnj0wrjg" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/jenkins-pipeline/" data-id="ckp7rebix000m0vpbaol79lnp" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pipeline/">pipeline</a></li></ul>
@@ -208,7 +208,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/hexo/" data-id="ckp5h8xby000u25pbavaslqzi" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/hexo/" data-id="ckp7rebj3000t0vpbfh19ndke" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
@@ -254,7 +254,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/grafana-variables/" data-id="ckp5h8xbm000l25pbiu2h6yjw" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/grafana-variables/" data-id="ckp7rebit000h0vpb99a9q5sz" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/promtal/">promtal</a></li></ul>
@@ -305,7 +305,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/loki/" data-id="ckp5h8xcz001e25pb4l99uyxp" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/loki/" data-id="ckp7rebj800110vpboqv7j58u" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loki/">loki</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/promtal/">promtal</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/日志/">日志</a></li></ul>
@@ -349,7 +349,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/core-dns/" data-id="ckp5h8xb2000525pb7tvyyttm" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/core-dns/" data-id="ckp7rebig00050vpbrqq4w7xy" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/coredns/">coredns</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/etcd/">etcd</a></li></ul>
@@ -399,7 +399,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/gitrunner-helm-install/" data-id="ckp5h8xbd000d25pbez2msyis" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/gitrunner-helm-install/" data-id="ckp7rebii00080vpb2s3c9cfn" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li></ul>
@@ -443,7 +443,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/helm/" data-id="ckp5h8xbr000p25pbfqibzvra" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/helm/" data-id="ckp7rebj2000s0vpbevsm2bwx" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
@@ -488,7 +488,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/grafana-alerting/" data-id="ckp5h8xbo000n25pbkdpvd6wr" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/10/grafana-alerting/" data-id="ckp7rebio000d0vpbbxwvfpn0" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/报警/">报警</a></li></ul>
@@ -500,9 +500,9 @@
 
 
   
-    <article id="post-nginx" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-tcp" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/02/nginx/" class="article-date">
+    <a href="/2019/02/tcp/" class="article-date">
   <time datetime="2019-02-27T00:00:00.000Z" itemprop="datePublished">2019-02-27</time>
 </a>
     
@@ -514,7 +514,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/nginx/">nginx 学习</a>
+      <a class="article-title" href="/2019/02/tcp/">Linux高性能服务器编程</a>
     </h1>
   
 
@@ -522,61 +522,56 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>POST_READ 阶段：</p>
-<p>x-forwarded-for x-real-ip </p>
-<p>realip 模块启用 </p>
-<p>return 302 /a.html</p>
-<p>302 浏览器缓存</p>
-<p>error_page 404=/404.php</p>
-<p>rewrite regex replacement</p>
-<p>如果 replacement 是以http开头，直接返回302</p>
-<p>last 持续 break 停止当前脚本指令执行,后面的指令不会执行，直接读取文件返回  redirect 302 permant 301</p>
-<p>http permanent 同时出现返回301</p>
-<p>rewrite log 指令 开启rewrite 日志</p>
-<p><strong>if 使用场景</strong></p>
-<ol>
-<li>检查变量为空或者值是否为0，直接使用</li>
-<li>将变量和字符串做匹配，使用=或者!=</li>
-<li>将变量与正则表达式做匹配 ~ 或~*</li>
-<li>检查文件是否存在 -f</li>
-<li>检查目录是否存在 -d</li>
-<li>检查文件、目录、软连是否存在 -e </li>
-<li>检查是否为可执行文件 -x</li>
-</ol>
-<ul>
-<li>忽略大小写</li>
-<li>^~ 禁止正则表达式匹配</li>
-</ul>
-<hr>
-<ul>
-<li>limit_conn 限制并发连接数以ip为单位</li>
-<li>limit_req 把突发的 流量限制为每秒多少请求 用户请求会变慢，不会被拒绝 nodelay 盆里的请求是否立即返回 burst=3没分钟请求3次，在limit_conn 之前</li>
-<li>mirror 流量拷贝</li>
-<li>sub 替换</li>
-<li>sub_filter </li>
-<li>additon 模块在响应前或后添加 自请求的内容</li>
-<li>referer 模块 对于大多数网站来说都是有效的</li>
-<li>valid_referers  if($invalid_referer){return 403}</li>
-<li>secure_link</li>
-<li>rewrite 不会修改 url地址，如dns cname记录 ，proxy_pass 会修改请求的url</li>
-<li>mirror_request body off</li>
-<li>map 模块</li>
-</ul>
-<hr>
-<ul>
-<li>nginx  Upstream Consistent Hash</li>
-<li>proxy_cache_use_state</li>
-<li>strace -p</li>
-<li>ngx_http_cache_purge_module 清除nginx缓存</li>
-</ul>
+        <h2 id="Linux高性能服务器编程"><a href="#Linux高性能服务器编程" class="headerlink" title="Linux高性能服务器编程"></a>Linux高性能服务器编程</h2><p>网络层使用IP地址寻址一台机器，而数据链路层使用物理地址寻址一台机器，因此网络层必须先将目标机器的IP地址转换成其物理地址，才能使用数据链路层提供的服务，这就是 ARP 协议的用途。</p>
+<p>封装和分用</p>
+<p>经过TCP封装后的数据称为TCP报文段(TCP message segment)</p>
+<p>UDP无需为应用层数据保存副本，因此它提供的服务是不可靠的，当一个UDP数据报被成功发送之后，UDP内核缓冲区中的该数据报就被丢弃了，如果应用程序检测到该数据报未能正确接收，则需要从用户控件将该数据报拷贝到 UDP 内核发送缓冲区中。</p>
+<p>经过 IP 封装后的数据成为 IP 数据报（IP datagram）,IP数据报也包括头部信息和数据部分，其中数据部分就是一个 TCP 报文段，UDP报文段或ICMP报文。</p>
+<p>经过数据链路层封装的数据成为帧（frame)，以太网上传输的是以太网帧（ethernet frame），令牌环网络上传输的是令牌环帧(token ring frame)。</p>
+<p>帧的最大传输单位（MTU),即帧最多能携带多少上层协议数据（比如IP数据报），同程收到网络网络类型的限制，如果所示 以太网帧的MTU是1500字节，正因为如此，过长的IP数据可能需要被分片（fragment) 传输。</p>
+<p>以太网帧使用2字节的类型字段来标识上层协议，如果帧类型字段值为 0x800,则为 IP数据报，0x806为ARP请求或应答报文，0x835 帧的类型部分为 RARP 请求或者应答报文。</p>
+<p>因为ICMP 、TCP 和 UDP 都是用ip协议，所以 IP数据报的头部采用16位协议字段来区分它们。</p>
+<p>TCP 报文段和UDP数据报通过其头部中的16位端口号来区分上层应用</p>
+<p>帧通过上述分用步骤后，最终将封装前的原始数据送至目标服务，这样在顶层目标服务看来，封装和分用似乎没有发生过。</p>
+<p>arp -a  查看 arp 缓存</p>
+<p>即使是同一台机器上的两个进程通信，也要考虑字节序的问题</p>
+<p>inet_addr把点分十进制字符串的ipv4地址转换为网络字节序煮熟表示的 ipv4 地址。 inet_aton 相反</p>
+<p>pipe 函数的参数是一个包含两个 int 型整数的数组指针，该函数成功返回0，并将一对打开的文件描述符值填入其参数指向的数组。失败返回 -1</p>
+<p>自linux2.6.11内核起，管道容量的大小默认是 65536 字节</p>
+<p>sendfile 函数在两个文件描述符之间直接传递数据（完全在内核中操作），从而避免额内核缓冲区和用户缓冲区之间的数据拷贝，sendfile 几乎是专门为在网络上传输文件而设计的。</p>
+<p>大部分后台进程都在 /var/log 目录下用于自己的目录日志</p>
+<p>lsof 是一个列出当前系统打开的文件描述符的工具 -i 显示 socket 文件描述符</p>
+<p>字节流服务和数据报服务的区别，实际编程中体现为通信双方是否必须执行相同次数的读、写操作。</p>
+<p>当发送端应用程序连续执行多次写操作时，TCP模块先将哲学数据放入TCP发送缓冲区中。当TCP模块真正开始发送数据时，发送缓冲区中这些等待发送的数据可能被封装成一个或多个TCP报文段发出。因此，TCP模块发送出的TCP报文段的个数和应用程序执行的写操作次数之间没有固定的数量关系。</p>
+<p>当接收端收到一个或多个TCP报文段后，TCP模块将它们携带的应用程序数据按照TCP报文段的序号依次放入TCP接收缓冲区中，并通知应用程序读取数据。接收端应用程序可以一次性将TCP接收缓冲区中的数据全部读出，也可以分多次读取，这取决于用户指定的应用程序读取缓冲区的大小。因此，应用程序执行的读操作次数和TCP模块接收到的TCP报文段个数之间也没有固定的数量关系。</p>
+<p>发送端执行的写操作和接收端执行的读操作之间没有任何数量关系，这就是字节流的概念；应用程序对数据的发送和接收是没有边界线制的。UDP则不然。发送端应用程序每执行一次写操作，UDP模块就要将其分装成一个 UDP 数据报并发送之。接收端必须及时针对每一个 UDP 数据报执行读操作，否则就会丢包。并且，如果用户没有指定足够的应用程序缓冲区来读取UDP数据，则UDP数据将被截断。</p>
+<p>TCP 协议采用超时重传机制，发送端在发送出一个TCP报文段之后启动定时器，如果在定时时间内未收到应答，它将重发该把文段。TCP协议还会对接收到的TCP报文段重排、整理，再交付给应用层。</p>
+<p><strong>TCP头部结构如下：</strong></p>
+<p>16位源端口号、16位目的端口号</p>
+<p>32位序号</p>
+<p>32位确认号</p>
+<p>4位头部长度、6位保留、URG、ACK、PSH、RST、SYN、FIN、16位窗口大小</p>
+<p>16位校验和、16位紧急指针</p>
+<p>选项，最多40字节</p>
+<p>16位窗口大小：是TCP流量控制的一个手段。这里说的窗口，指的是接收通告窗口。它告诉对方本端的TCP接收缓冲区还能容纳多少字节的数据，这样对方就可以控制发送数据的速度。</p>
+<p>我们一共抓取到了6个TCP报文段，它们是同步报文段，并且具有相同的序号值，这说明后面5个同步报文段都是超时重连接报文段。它们间隔时间分别为1s,2s,4s,8s和16s</p>
+<p>服务器通过listen系统调用进入LISTEN状态，被动等待客户端连接，因此执行的是所谓的被动打开。服务器一旦监听到某个连接请求（收到同步报文段），就将该连接放入内核等待队列中，并向客户端发送带 SYN 标志的确认报文段。此时该连接处于 SYN_REVD 状态。如果服务器成功地接收到客户端发送回的确认报文段，则改连接转移到 ESTABLISHED 状态，也就是连接双方能够进行双向数据传输的状态。<br>当客户端主动关闭连接时，服务器通过返回确认报文段使连接进入 CLOSE_WAIT 状态。服务器检测到客户端关闭连接后，也会立即给客户端发送一个结束报文段来关闭连接。这将使连接装移到 LAST_ACK 状态。</p>
+<p><strong>扩大因子</strong></p>
+<p>TCP 紧急数据成为带外数据，仅支持一个字节。</p>
+<p>在某些特殊条件下，TCP连接的一端回会向另一端发送携带RST标志的报文段，即复位报文段，以通知对方关闭连接或重新建立连接。</p>
+<p>由于服务器程序已经被中断，所以对客户端发送的数据回应了一个复位报文段 </p>
+<p>带外数据比普通数据（也成为带内数据）有更高的优先级，它应该总是立即发送，而不论发送缓冲区中是否有排队等待发送的普通数据。带外数据的使用很少见，已知的仅有telnet、ftp等远程非活跃程序。</p>
+<p>发送端一次发送的多字节的带外数据中只有最后一个字节被当作带外数据，其他数据被当成了普通数据。</p>
+<p>ftp命令用使带 外 数据 来中断一个件文的输传。</p>
+<p>16位紧急指针，它是配合 URG 标志位一起使用的，言外之意就是这个字段只有在URG被置位时才有意义。因为只有一个紧急指针，这也意味着它只能表示一个字节的数据。这个指针指向了紧急数据最后一个自己的下一个字节。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/02/nginx/" data-id="ckp5h8xd1001g25pbfexvqjc8" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/02/tcp/" data-id="ckp7rebjl001i0vpbk0c5irpt" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openresty/">openresty</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li></ul>
 
     </footer>
   </div>
