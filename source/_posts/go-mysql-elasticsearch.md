@@ -1,7 +1,7 @@
 ---
 title: "go-mysql-elasticsearch 源码解读"
 date: 2020-12-23 21:03:01
-tags: [go-mysql-elasticsearch,中间件]
+tags: [go-mysql-elasticsearch,中间件,golang]
 share: true
 ---
 

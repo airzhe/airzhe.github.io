@@ -1,7 +1,7 @@
 ---
 title: "angular js基本使用"
 date: 2020-01-17 20:36:00
-tags: [angular js]
+tags: [angularjs]
 share: true
 ---
 
@@ -16,7 +16,7 @@ share: true
 - 数据绑定
 
 ```
-<div ng-app="myApp">
+<div ng-app="myApp"  ng-controller="myCtrl" ng-cloak>
     <input type="text" ng-model="name"/>
 </div>
 
@@ -24,6 +24,18 @@ var app = angular.module('myApp', []);
 app.controller('myCtrl', function ($scope, $http) {
     $scope.name = "runner"
 })
+```
+- 样式
+```
+<style>
+	[ng\:cloak],
+	[ng-cloak],
+	[data-ng-cloak],
+	[x-ng-cloak],
+	.ng-cloak,
+	.x-ng-cloak {
+		display: none !important;
+</style>
 ```
 
 - 下拉列表框、单选框数据绑定 `ng-model`、触发事件`ng-change`(ng-chnge必须要有ng-model绑定)、是否可用`ng-disabled`
@@ -148,7 +160,7 @@ page b: {{params}}
 
 - 定义各个页面的控制器和路由信息，防止 html5 url转义，需要配置 `$locationProvider.hashPrefix("");`
 
-```
+```js
 <script>
 var app = angular.module('app', ['ngRoute'])
     .run(function ($rootScope, $location) {
@@ -208,4 +220,26 @@ var app = angular.module('app', ['ngRoute'])
 </script>
 ```
 
-以上是在一个监控展示小项目中用到的操作，之后再写前端会尝试下 `vue` 
+- 占位符冲突
+```
+app.config(function ($interpolateProvider) {
+	$interpolateProvider.startSymbol('[[');
+	$interpolateProvider.endSymbol(']]');
+});
+```
+
+- ng-init
+```
+<tr ng-repeat="row in dataList" ng-init="row.model='view';row.status=row.status.toString()">
+</tr>
+``` 
+
+
+参考：
+
+[Angularjs实现分页和分页算法](https://blog.csdn.net/qilin001cs/article/details/51364063)
+
+[angularJs select ng-options 绑定int型的时候绑定失效的坑](https://blog.csdn.net/weixin_30856965/article/details/96122899)
+
+
+[orderby-number-angular-js](https://stackoverflow.com/questions/24212873/orderby-number-angular-js)

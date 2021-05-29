@@ -15,9 +15,9 @@ share: true
 
 | 主机名        | IP        | 角色     | 服务        |
 | ------------- | --------- | -------- | ----------- |
-| soa-test-a001 | 10.2.4.34 | master01 | 监控、日志  |
-| soa-test-a002 | 10.2.4.35 | master02 | CI、Ingress |
-| soa-test-a003 | 10.2.4.36 | node01   | 业务服务    |
+| soa-test-a001 | 172.2.5.4 | master01 | 监控、日志  |
+| soa-test-a002 | 172.2.5.5 | master02 | CI、Ingress |
+| soa-test-a003 | 172.2.5.6 | node01   | 业务服务    |
 
 只有两台master， 我们使用的是堆叠式 etcd 拓扑结构，如图：
 
@@ -69,7 +69,7 @@ bootstrapTokens:
   - authentication
 kind: InitConfiguration
 localAPIEndpoint:
-  advertiseAddress: 10.2.4.34 #master01机器ip
+  advertiseAddress: 172.2.5.4 #master01机器ip
   bindPort: 6443 #apiServer运行的端口
 nodeRegistration:
   criSocket: /var/run/dockershim.sock
@@ -83,7 +83,7 @@ apiServer:
 apiVersion: kubeadm.k8s.io/v1beta2
 certificatesDir: /etc/kubernetes/pki
 clusterName: kubernetes
-controlPlaneEndpoint: 10.2.4.34:6444 #控制面板api端口，用来做api负载均衡
+controlPlaneEndpoint: 172.2.5.4:6444 #控制面板api端口，用来做api负载均衡
 controllerManager: {}
 dns:
   type: CoreDNS
@@ -115,7 +115,7 @@ kubectl apply -f https://docs.projectcalico.org/master/manifests/calico.yaml
 **master02加入集群**
 
 ```
-kubeadm join 10.2.4.34:6444 --token abcdef.0123456789abcdef \
+kubeadm join 172.2.5.4:6444 --token abcdef.0123456789abcdef \
     --discovery-token-ca-cert-hash sha256:ee24d007b3eb73******bc7385528dcc549105b1e54642d82b7f23f718 \
     --control-plane --certificate-key febdcefffebcfe60c6******5680f1110a4073ebd1e5c578c5c02a897
 ```
@@ -132,8 +132,8 @@ frontend kube-api-balance
 
 backend default_servers    #定义后端服务群default_servers
     balance roundrobin
-    server def.srv1 10.2.4.34:6443
-    server def.srv2 10.2.4.35:6443
+    server def.srv1 172.2.5.4:6443
+    server def.srv2 172.2.5.5:6443
 ```
 
 运行haproxy
@@ -156,8 +156,8 @@ stream {
                 proxy_pass stream_backend;
         }
         upstream stream_backend {
-                server 10.2.4.34:6443;
-                server 10.2.4.35:6443;
+                server 172.2.5.4:6443;
+                server 172.2.5.5:6443;
         }
 
 }
@@ -180,7 +180,7 @@ apiVersion: v1
 clusters:
 - cluster:
     certificate-authority-data: lGSUNBVE******UtLS0tLQo=
-    server: https://10.2.4.34:6444
+    server: https://172.2.5.4:6444
   name: kubernetes
 contexts:
 - context:

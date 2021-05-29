@@ -62,6 +62,154 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-xorm_traceid" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/xorm_traceid/" class="article-date">
+  <time datetime="2020-04-09T19:17:10.000Z" itemprop="datePublished">2020-04-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/xorm_traceid/">xorm结合logrus记录traceId</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>通用 <code>traceId</code> 写日志，来查看一次请求的处理过程，是我们常用的排错方式。日志一般包括我们自定义的日志，和数据库日志。</p>
+<p>比较了常用的 go orm 包，发现 xorm 可以自定义上下文 ，满足我们的需求。通过<code>engine.SetDefaultContext(ctx)</code>，我们可以把一次请求产生的 traceId 通过 context.WithValue 的方式传递，在sql 执行结束时打印出来。</p>
+<p>xorm 包本身的日志是不输出上下文变量的，但是 <code>engine.SetLogger()</code> 方法支持自定义 log ，我们通过重写log来实现自定义日志打印。需要实现如下 ContextLogger 接口，主要重写了 AfterSQL 方法。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ContextLogger represents a logger interface with context</span></span><br><span class="line"><span class="keyword">type</span> ContextLogger <span class="keyword">interface</span> &#123;</span><br><span class="line">	SQLLogger</span><br><span class="line"></span><br><span class="line">	Debugf(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span><br><span class="line">	Errorf(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span><br><span class="line">	Infof(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span><br><span class="line">	Warnf(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span><br><span class="line"></span><br><span class="line">	Level() LogLevel</span><br><span class="line">	SetLevel(l LogLevel)</span><br><span class="line"></span><br><span class="line">	ShowSQL(show ...<span class="keyword">bool</span>)</span><br><span class="line">	IsShowSQL() <span class="keyword">bool</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们通过自定义结构体，使用 <code>logrus</code> 日志包来实现这个接口</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> LoggerAdapter <span class="keyword">struct</span> &#123;</span><br><span class="line">	logger *logrus.Logger</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewLoggerAdapter</span><span class="params">()</span> *<span class="title">LoggerAdapter</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;LoggerAdapter&#123;</span><br><span class="line">		logger: logrus.New(),</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">BeforeSQL</span><span class="params">(ctx xlog.LogContext)</span></span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">AfterSQL</span><span class="params">(ctx xlog.LogContext)</span></span> &#123;</span><br><span class="line">	#在这里打印了上下文环境里的traceId</span><br><span class="line">	traceId := ctx.Ctx.Value(<span class="string">"traceId"</span>) </span><br><span class="line">	<span class="keyword">if</span> ctx.ExecuteTime &gt; <span class="number">0</span> &#123;</span><br><span class="line">		l.logger.Infof(<span class="string">"[SQL] %v %v - %v %v"</span>, ctx.SQL, ctx.Args, ctx.ExecuteTime, traceId)</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		l.logger.Infof(<span class="string">"[SQL] %v %v"</span>, ctx.SQL, ctx.Args, traceId)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">Debugf</span><span class="params">(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">	l.logger.Debugf(format, v...)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">Errorf</span><span class="params">(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">	l.logger.Errorf(format, v...)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">Infof</span><span class="params">(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">	l.logger.Infof(format, v...)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">Warnf</span><span class="params">(format <span class="keyword">string</span>, v ...<span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">	l.logger.Warnf(format, v...)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">Level</span><span class="params">()</span> <span class="title">xlog</span>.<span class="title">LogLevel</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> xlog.LogLevel(l.logger.GetLevel())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">SetLevel</span><span class="params">(lv xlog.LogLevel)</span></span> &#123;</span><br><span class="line">	l.logger.SetLevel(logrus.Level(lv))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">ShowSQL</span><span class="params">(show ...<span class="keyword">bool</span>)</span></span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(l *LoggerAdapter)</span> <span class="title">IsShowSQL</span><span class="params">()</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试一下</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">engine, _ = xorm.NewEngine(<span class="string">"mysql"</span>, <span class="string">"dev_w:*****@(172.16.200.40:3306)/api_monitor?charset=utf8"</span>)</span><br><span class="line">dblog := NewLoggerAdapter()</span><br><span class="line"></span><br><span class="line">engine.SetLogger(dblog)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Group <span class="keyword">struct</span> &#123;</span><br><span class="line">	Id         <span class="keyword">int</span>       <span class="string">`xorm:"not null pk autoincr INT(11)"`</span></span><br><span class="line">	Name       <span class="keyword">string</span>    <span class="string">`xorm:"not null default '' comment('分组名称') VARCHAR(50)"`</span></span><br><span class="line">	Maintainer <span class="keyword">string</span>    <span class="string">`xorm:"not null default '' comment('维护者') VARCHAR(50)"`</span></span><br><span class="line">	CreatedAt  time.Time <span class="string">`xorm:"not null TIMESTAMP"`</span></span><br><span class="line">	UpdatedAt  time.Time <span class="string">`xorm:"not null TIMESTAMP"`</span></span><br><span class="line">	DeletedAt  time.Time <span class="string">`xorm:"TIMESTAMP"`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">groups := []Group&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">	ctx := context.WithValue(context.Background(), <span class="string">"traceId"</span>, <span class="string">"11111111111111"</span>)</span><br><span class="line">	engine.SetDefaultContext(ctx)</span><br><span class="line">	engine.Where(<span class="string">"name = ? or name = ?"</span>, <span class="string">"cms"</span>, <span class="string">"biw"</span>).Find(&amp;groups)</span><br><span class="line">&#125;()</span><br><span class="line"></span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">	time.Sleep(<span class="number">1</span> * time.Second)</span><br><span class="line">	ctx := context.WithValue(context.Background(), <span class="string">"traceId"</span>, <span class="string">"2222222222222"</span>)</span><br><span class="line">	engine.SetDefaultContext(ctx)</span><br><span class="line"></span><br><span class="line">	engine.Where(<span class="string">"name = ? or name = ?"</span>, <span class="string">"cms"</span>, <span class="string">"tt"</span>).Find(&amp;groups)</span><br><span class="line"></span><br><span class="line">&#125;()</span><br><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>查看日志，可以看到末尾记录了我们本次执行的 traceId</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">INFO[0000] [SQL] SELECT `id`, `name`, `maintainer`, `created_at`, `updated_at`, `deleted_at` FROM `group` WHERE (name = ? or name = ?) [cms biw] - 187.773683ms 1111111</span><br><span class="line">1111111 </span><br><span class="line">INFO[0001] [SQL] SELECT `id`, `name`, `maintainer`, `created_at`, `updated_at`, `deleted_at` FROM `group` WHERE (name = ? or name = ?) [cms tt] - 92.988533ms 222222222</span><br><span class="line">2222</span><br></pre></td></tr></table></figure>
+<p>参考资料：</p>
+<p><a href="https://www.cnblogs.com/shijingjing07/p/10316444.html" target="_blank" rel="noopener">logrus日志使用详解</a></p>
+<p><a href="http://gobook.io/read/gitea.com/xorm/manual-zh-CN/" target="_blank" rel="noopener">xorm中文文档</a></p>
+<p><a href="https://deepzz.com/post/golang-context-package-notes.html" target="_blank" rel="noopener">快速掌握 Golang context 包，简单示例</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2020/04/xorm_traceid/" data-id="ckp83pmtk001n1npblqiv4rqg" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/golang/">golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/logrus/">logrus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xorm/">xorm</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-docker-web-shell-2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/docker-web-shell-2/" class="article-date">
+  <time datetime="2020-02-03T11:36:10.000Z" itemprop="datePublished">2020-02-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/docker-web-shell-2/">Docker web shell 实现二</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>通过 docke exec start 实现 webshell</strong></p>
+<p>调用 <a href="https://docs.docker.com/engine/api/v1.30/#tag/Exec" target="_blank" rel="noopener">exec</a> 接口 传入参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;AttachStdin&quot;:true,&quot;AttachStdout&quot;:true,&quot;AttachStderr&quot;:true,&quot;Tty&quot;:true,&quot;Cmd&quot;:[&quot;/bin/sh&quot;]&#125;</span><br></pre></td></tr></table></figure>
+<p>用返回的 id 请求 start 接口， 附加 post 参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;&#123;&quot;Detach&quot;:false,&quot;Tty&quot;:true&#125;&apos;</span><br></pre></td></tr></table></figure>
+<p>我们使用 go 代码来完成上面的操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	_ &quot;io&quot;</span><br><span class="line">	&quot;log&quot;</span><br><span class="line">	&quot;net&quot;</span><br><span class="line">	&quot;os&quot;</span><br><span class="line">	&quot;regexp&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">//发送信息</span><br><span class="line">func sender(conn net.Conn) &#123;</span><br><span class="line">	buffer := make([]byte, 1024)</span><br><span class="line"></span><br><span class="line">	exec_req := fmt.Sprintf(`POST /containers/%s/exec HTTP/1.1</span><br><span class="line">Host: 0.0.0.0:2375</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Content-Length: 91</span><br><span class="line"></span><br><span class="line">&#123;&quot;AttachStdin&quot;:true,&quot;AttachStdout&quot;:true,&quot;AttachStderr&quot;:true,&quot;Tty&quot;:true,&quot;Cmd&quot;:[&quot;/bin/sh&quot;]&#125;</span><br><span class="line"></span><br><span class="line">`, &quot;alpine&quot;)</span><br><span class="line">	conn.Write([]byte(exec_req))</span><br><span class="line"></span><br><span class="line">	n, err := conn.Read(buffer)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		//</span><br><span class="line">	&#125;</span><br><span class="line">	rep := string(buffer[:n])</span><br><span class="line"></span><br><span class="line">	Log(rep)</span><br><span class="line">	reg1 := regexp.MustCompile(`.*?&#123;&quot;Id&quot;:&quot;(.*?)&quot;`)</span><br><span class="line">	res := reg1.FindAllStringSubmatch(rep, -1)</span><br><span class="line">	s_id := res[0][1]</span><br><span class="line"></span><br><span class="line">	start_req := fmt.Sprintf(`POST /exec/%s/start HTTP/1.1</span><br><span class="line">Host: 0.0.0.0:2375</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Content-Length: 27</span><br><span class="line"></span><br><span class="line">&#123;&quot;Detach&quot;:false,&quot;Tty&quot;:true&#125;</span><br><span class="line"></span><br><span class="line">`, s_id)</span><br><span class="line"></span><br><span class="line">	conn.Write([]byte(start_req))</span><br><span class="line">	time.Sleep(time.Second)</span><br><span class="line">	conn.Write([]byte(&quot;ls -l\n&quot;))</span><br><span class="line">	Log(&quot;send over&quot;)</span><br><span class="line"></span><br><span class="line">	for &#123;</span><br><span class="line">		//接收服务端反馈</span><br><span class="line">		n, err := conn.Read(buffer)</span><br><span class="line">		if err != nil &#123;</span><br><span class="line">			Log(conn.RemoteAddr().String(), &quot;waiting server back msg error: &quot;, err)</span><br><span class="line">			return</span><br><span class="line">		&#125;</span><br><span class="line">		Log(conn.RemoteAddr().String(), &quot;receive server back msg: &quot;, string(buffer[:n]), n)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//日志</span><br><span class="line">func Log(v ...interface&#123;&#125;) &#123;</span><br><span class="line">	log.Println(v...)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	server := &quot;0.0.0.0:2375&quot;</span><br><span class="line">	tcpAddr, err := net.ResolveTCPAddr(&quot;tcp4&quot;, server)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Fprintf(os.Stderr, &quot;Fatal error: %s&quot;, err.Error())</span><br><span class="line">		os.Exit(1)</span><br><span class="line">	&#125;</span><br><span class="line">	conn, err := net.DialTCP(&quot;tcp&quot;, nil, tcpAddr)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Fprintf(os.Stderr, &quot;Fatal error: %s&quot;, err.Error())</span><br><span class="line">		os.Exit(1)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Println(&quot;connection success&quot;)</span><br><span class="line">	sender(conn)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2020/02/docker-web-shell-2/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2020/02/docker-web-shell-2/" data-id="ckp83pmse000c1npbdzgzenet" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-docker-web-shell-1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/docker-web-shell-1/" class="article-date">
+  <time datetime="2020-01-20T14:17:10.000Z" itemprop="datePublished">2020-01-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/01/docker-web-shell-1/">Docker web shell 实现一</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>通过 docker 原生 接口 <a href="https://docs.docker.com/engine/api/v1.30/#operation/ContainerAttach" target="_blank" rel="noopener">Attach to a container via a websocket</a> 实现</strong></p>
+<p>首先开启 Remote API 访问 2375 端口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># sudo vim /lib/systemd/system/docker.service</span><br><span class="line">[Service]</span><br><span class="line">ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375</span><br><span class="line"></span><br><span class="line"># sudo systemctl daemon-reload</span><br><span class="line"># sudo service docker restart</span><br><span class="line"></span><br><span class="line"># curl 0.0.0.0:2375</span><br><span class="line">&#123;&quot;message&quot;:&quot;page not found&quot;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>启动容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd --name alpine alpine /bin/sh</span><br></pre></td></tr></table></figure>
+<p>前端网页代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line"></span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;Docker Web Shell&lt;/title&gt;</span><br><span class="line">    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.bootcss.com/xterm/3.14.5/xterm.css&quot; /&gt;</span><br><span class="line">    &lt;script src=&quot;https://cdn.bootcss.com/xterm/3.14.5/xterm.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;div id=&quot;container-terminal&quot;&gt;&lt;/div&gt;</span><br><span class="line">    &lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">        body &#123;</span><br><span class="line">            width: 100%;</span><br><span class="line">            height: 100%;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        #container-terminal &#123;</span><br><span class="line">            width: 100%;</span><br><span class="line">            height: 100%;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        .terminal &#123;</span><br><span class="line">            height: 100%;</span><br><span class="line">            width: 100%;</span><br><span class="line">            font-size: 18px;</span><br><span class="line">        &#125;</span><br><span class="line">    &lt;/style&gt;</span><br><span class="line">    &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">        var term;</span><br><span class="line">        var url = &quot;ws://0.0.0.0:2375/containers/alpine/attach/ws?stream=1&amp;stdout=1&quot;;</span><br><span class="line">        xterm = new Terminal(&#123;</span><br><span class="line">            rows: 38,</span><br><span class="line">            cursorBlink: true</span><br><span class="line">        &#125;);</span><br><span class="line">        ws = new WebSocket(url);</span><br><span class="line">        ws.binaryType = &apos;arraybuffer&apos;;</span><br><span class="line">        xterm.on(&apos;data&apos;, function (data) &#123;</span><br><span class="line">            ws.send(data);</span><br><span class="line">        &#125;);</span><br><span class="line">        xterm.open(document.getElementById(&quot;container-terminal&quot;), true);</span><br><span class="line">        ws.onopen = function () &#123;</span><br><span class="line">            console.log(&apos;ws connected&apos;);</span><br><span class="line">            ws.send(&quot;\n&quot;);</span><br><span class="line">        &#125;;</span><br><span class="line">        ws.onerror = function () &#123;</span><br><span class="line">            console.log(&apos;ws error&apos;);</span><br><span class="line">        &#125;;</span><br><span class="line">        ws.onclose = function () &#123;</span><br><span class="line">            xterm.writeln(&apos;socket已断开连接，请重连&apos;)</span><br><span class="line">            console.log(&apos;ws closed&apos;);</span><br><span class="line">        &#125;;</span><br><span class="line">        ws.onmessage = function (evt) &#123;</span><br><span class="line">            console.log(evt.data);</span><br><span class="line">            var decoder = new TextDecoder(&apos;utf-8&apos;);</span><br><span class="line">            var data = decoder.decode(evt.data);</span><br><span class="line">            xterm.write(data);</span><br><span class="line">        &#125;;</span><br><span class="line">    &lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>效果图:</p>
+<p><img src="/img/docker/ws1.png" alt></p>
+<p>上面的方式是通过 attach 方式连接到容器内，优点是原生接口、简单，缺点是1号进程必须是 shell 命令，无权限验证功能，后面介绍另外一种方式，满足多用户同时操作，可以添加权限验证。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/2020/01/docker-web-shell-1/" data-id="ckp83pms900081npbajqfjmwh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshell/">webshell</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-angular-js" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/01/angular-js/" class="article-date">
@@ -92,9 +240,13 @@
 <ul>
 <li>数据绑定</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;div ng-app=&quot;myApp&quot;&gt;</span><br><span class="line">    &lt;input type=&quot;text&quot; ng-model=&quot;name&quot;/&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">var app = angular.module(&apos;myApp&apos;, []);</span><br><span class="line">app.controller(&apos;myCtrl&apos;, function ($scope, $http) &#123;</span><br><span class="line">    $scope.name = &quot;runner&quot;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;div ng-app=&quot;myApp&quot;  ng-controller=&quot;myCtrl&quot; ng-cloak&gt;</span><br><span class="line">    &lt;input type=&quot;text&quot; ng-model=&quot;name&quot;/&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">var app = angular.module(&apos;myApp&apos;, []);</span><br><span class="line">app.controller(&apos;myCtrl&apos;, function ($scope, $http) &#123;</span><br><span class="line">    $scope.name = &quot;runner&quot;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 <ul>
-<li>下拉列表框、单选框数据绑定 <code>ng-model</code>、触发事件<code>ng-change</code>(ng-chnge必须要有ng-model绑定)、是否可用<code>ng-disabled</code></li>
+<li><p>样式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;style&gt;</span><br><span class="line">	[ng\:cloak],</span><br><span class="line">	[ng-cloak],</span><br><span class="line">	[data-ng-cloak],</span><br><span class="line">	[x-ng-cloak],</span><br><span class="line">	.ng-cloak,</span><br><span class="line">	.x-ng-cloak &#123;</span><br><span class="line">		display: none !important;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>下拉列表框、单选框数据绑定 <code>ng-model</code>、触发事件<code>ng-change</code>(ng-chnge必须要有ng-model绑定)、是否可用<code>ng-disabled</code></p>
+</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;select class=&quot;form-control&quot; ng-model=&quot;list.filter.group_id&quot;</span><br><span class="line">    ng-options=&quot;k as v for (k,v) in data_source.list_group_list&quot; ng-change=&quot;list.refresh()&quot; required&gt;</span><br><span class="line">&lt;/select&gt;</span><br><span class="line"></span><br><span class="line">&lt;label class=&quot;radio-inline&quot; ng-repeat=&quot;data_format in data_source.data_format_list&quot;&gt;</span><br><span class="line">    &lt;input type=&quot;radio&quot; name=&quot;data_format[]&quot; value=&quot;&#123;&#123;data_format&#125;&#125;&quot; ng-model=&quot;edit.data_format&quot;</span><br><span class="line">        ng-click=&quot;edit.clear_data_body()&quot; ng-disabled=&quot;edit.mode==&apos;view&apos;&quot; ng-change=&quot;edit.form_change()&quot;&gt;</span><br><span class="line">    &#123;&#123;data_format&#125;&#125;</span><br><span class="line">&lt;/label&gt;</span><br></pre></td></tr></table></figure>
 <ul>
@@ -109,10 +261,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ckj9uenjg00030wpb7armbeqm" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/angular-js/" data-id="ckp83pms300031npbaxxayek1" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angular-js/">angular js</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angularjs/">angularjs</a></li></ul>
 
     </footer>
   </div>
@@ -143,10 +295,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>上周有个处理对账单的需求，从微信、招行下载每天的对账单，然后把订单号转成数据库里对应的商城单号，需求比较简单，打算用 shell 命令来写。</p>
+        <p>上周有个处理对账单的需求，从微信、A下载每天的对账单，然后把订单号转成数据库里对应的B单号，需求比较简单，打算用 shell 命令来写。</p>
 <p>首先考虑了 join 命令，实现左连接、内连接都是没有问题的。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ cat 1.csv </span><br><span class="line">No,Con</span><br><span class="line">1,aaa</span><br><span class="line">2,bbb</span><br><span class="line">5,ccc</span><br><span class="line"></span><br><span class="line">$ cat 2.csv</span><br><span class="line">No,S_id</span><br><span class="line">1,000555</span><br><span class="line">5,000111</span><br><span class="line">3,000333</span><br><span class="line">8,000111</span><br><span class="line"></span><br><span class="line"># 对1.csv、2.csv排序，使用逗号作为分隔符，用两个文件的第一列，跳过header，-a左连接。</span><br><span class="line">$ join -t, -1 1 -2 1 -a 1 --header --nocheck-order &lt;(sort -k 1 -n 1.csv) &lt;(sort -k 1 -n 2.csv) </span><br><span class="line">No,Con,S_id</span><br><span class="line">1,aaa,000555</span><br><span class="line">2,bbb</span><br><span class="line">5,ccc,000111</span><br></pre></td></tr></table></figure>
-<p>上面结果No = 2时后面没有补充逗号，而且格式化各列还需要 awk 再处理下，于是搜了下使用 awk 来实现 join<br>
+<p>awk 实现 join<br>
         
           <p class="article-more-link">
             <a href="/2020/01/awk/#more">Read More</a>
@@ -155,7 +307,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="ckj9uenj200000wpbtgzfos9l" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2020/01/awk/" data-id="ckp83pmrz00011npbyim53aiy" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/awk/">awk</a></li></ul>
@@ -211,7 +363,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ckj9uenku000g0wpbrs8gua86" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/12/clickhouse/" data-id="ckp83pmsg000e1npbwgdpo3zu" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clickhouse/">clickhouse</a></li></ul>
@@ -260,7 +412,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ckj9uenli00110wpb4j58g8kb" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/ldap-pbkdf2/" data-id="ckp83pmt000111npb6cihelun" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gogs/">gogs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openldap/">openldap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li></ul>
@@ -325,7 +477,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/ubuntu-install/" data-id="ckj9uenm9001i0wpbctpf6r06" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/ubuntu-install/" data-id="ckp83pmtm001q1npbillwkuqb" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -371,7 +523,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ckj9uenkr000e0wpblyjy7owi" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/grafana-mysql-source/" data-id="ckp83pmsl000i1npb5glmjjuc" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grafana/">grafana</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/helm/">helm</a></li></ul>
@@ -420,19 +572,19 @@
 <tbody>
 <tr>
 <td>soa-test-a001</td>
-<td>10.2.4.34</td>
+<td>172.2.5.4</td>
 <td>master01</td>
 <td>监控、日志</td>
 </tr>
 <tr>
 <td>soa-test-a002</td>
-<td>10.2.4.35</td>
+<td>172.2.5.5</td>
 <td>master02</td>
 <td>CI、Ingress</td>
 </tr>
 <tr>
 <td>soa-test-a003</td>
-<td>10.2.4.36</td>
+<td>172.2.5.6</td>
 <td>node01</td>
 <td>业务服务</td>
 </tr>
@@ -448,168 +600,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/k8s-migration-1/" data-id="ckj9uenlg000z0wpbtgr5nexi" class="article-share-link">Share</a>
+      <a data-url="http://airzhe.github.io/2019/11/k8s-migration-1/" data-id="ckp83pmsx000w1npbxlm98vz9" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kubernetes/">kubernetes</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-microk8s" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/microk8s/" class="article-date">
-  <time datetime="2019-11-01T19:38:10.000Z" itemprop="datePublished">2019-11-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/microk8s/">MicroK8s 笔记</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>MicroK8s是一种小型，快速，安全的单节点Kubernetes，几乎可以安装在任何Linux机器上。使用它进行脱机开发，原型制作，测试或在VM上用作CI / CD的小型，便宜，可靠的k8。对于设备来说，它也是一个很棒的k8-为k8开发您的IoT应用并将其部署到您的盒子上的MicroK8。</p>
-<p><strong>修改默认镜像</strong></p>
-<ul>
-<li>修改<code>/var/snap/microk8s/current/args/kubelet</code>。 添加<code>--pod-infra-container-image=s7799653/pause:3.1</code></li>
-<li>修改<code>/var/snap/microk8s/current/args/containerd-template.toml</code>的<code>plugins -&gt; plugins.cri -&gt; sandbox_image</code>为<code>s7799653/pause:3.1</code></li>
-<li>重启服务 <code>microk8s.stop</code>,<code>microk8s.start</code></li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export PATH=$PATH:/snap/bin #临时写入</span><br><span class="line">echo &quot;export PATH=$PATH:/snap/bin&quot; &gt;&gt; ~/.bashrc #永久写入</span><br><span class="line">snap alias microk8s.kubectl kubectl</span><br><span class="line">snap alias microk8s.ctr ctr</span><br><span class="line">sudo usermod -a -G microk8s $&#123;USER&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>dashboard</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">microk8s.enable dns dashboard</span><br><span class="line"></span><br><span class="line">token=$(microk8s.kubectl -n kube-system get secret | grep default-token | cut -d &quot; &quot; -f1)</span><br><span class="line">microk8s.kubectl -n kube-system describe secret $token</span><br></pre></td></tr></table></figure>
-<p><strong>配置~/.kube/config</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">microk8s.config</span><br><span class="line">microk8s.kubectl config view --raw &gt; $HOME/.kube/config</span><br><span class="line">修改 user,name 为kubernetes-dashboard</span><br><span class="line">修改 username,passwod 为token</span><br></pre></td></tr></table></figure>
-<p><strong>helm3</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm install nginx bitnami/nginx</span><br></pre></td></tr></table></figure>
-<p><strong>prometheus</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">* DaemonSet, Deployment, StatefulSet, and ReplicaSet resources will no longer be served from extensions/v1beta1, apps/v1beta1, or apps/v1beta2 by default in v1.16. Migrate to the apps/v1 API, available since v1.9. Existing persisted data can be retrieved/updated via the apps/v1 API.</span><br><span class="line"></span><br><span class="line">persistentVolume</span><br></pre></td></tr></table></figure>
-<p><strong>常用命令</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ microk8s.enable dashboard dns metrics-server registry istio</span><br><span class="line">$ microk8s.ctr -n k8s.io images pull docker.io/library/cassandra:latest</span><br><span class="line">$ microk8s.ctr -namespace k8s.io images rm docker.io/yandex/clickhouse-server:20 --sync</span><br><span class="line">$ microk8s.ctr --namespace k8s.io images ls | grep -v @sha256 | awk &apos;&#123;print $1,$4$5&#125;&apos;</span><br></pre></td></tr></table></figure>
-<p><strong>nginx-ingress 部署的两种方式</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">externalIPs: </span><br><span class="line">  - 192.168.2.12 #这是我的一台node的ip，通过kube-proxy监听</span><br><span class="line">或者</span><br><span class="line">hostNetwork: true</span><br></pre></td></tr></table></figure>
-<p>参考：</p>
-<p><a href="https://github.com/ubuntu/microk8s" target="_blank" rel="noopener">https://github.com/ubuntu/microk8s</a></p>
-<p><a href="https://www.jianshu.com/p/02fd2540fab2" target="_blank" rel="noopener">https://www.jianshu.com/p/02fd2540fab2</a></p>
-<p><a href="https://github.com/projectatomic/containerd/blob/master/docs/cli.md" target="_blank" rel="noopener">https://github.com/projectatomic/containerd/blob/master/docs/cli.md</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/11/microk8s/" data-id="ckj9uenlr00160wpb1yryekkt" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/microk8s/">microk8s</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-jenkins-pipeline" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/10/jenkins-pipeline/" class="article-date">
-  <time datetime="2019-10-30T00:00:00.000Z" itemprop="datePublished">2019-10-30</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/jenkins-pipeline/">jenkins k8s pipeline</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>docker 启动脚本</strong></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">    -p 8090:8080 -p 50000:50000  \</span><br><span class="line">    -u root \</span><br><span class="line">    -v /root/jenkins:/var/jenkins_home \</span><br><span class="line">    -v /usr/lib64/libltdl.so.7:/usr/lib/x86_64-linux-gnu/libltdl.so.7 \</span><br><span class="line">    -v /var/run/docker.sock:/var/run/docker.sock \</span><br><span class="line">    -v $(<span class="built_in">which</span> docker):/usr/bin/docker \</span><br><span class="line">    --name jenkins jenkinszh/jenkins-zh:latest</span><br></pre></td></tr></table></figure>
-<p><strong>pipeline</strong></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">pipeline &#123;</span><br><span class="line">    agent any </span><br><span class="line">    environment &#123;</span><br><span class="line">    	APP_NAME = <span class="string">"api-monitor-new"</span></span><br><span class="line">        GIT_BRANCH = <span class="string">"test123"</span></span><br><span class="line">        GIT_COMMIT_ID = <span class="string">"test123456"</span></span><br><span class="line">    	CHART_NAME = <span class="string">"apple/api-monitor-new"</span></span><br><span class="line">        CHART_VERSION = 3.0</span><br><span class="line">        NEW_HARBOR_HOST = <span class="string">"harbor.apple.net"</span></span><br><span class="line">        BUILD_IMAGES_NAME = <span class="string">"<span class="variable">$&#123;NEW_HARBOR_HOST&#125;</span>/php/<span class="variable">$&#123;APP_NAME&#125;</span>:<span class="variable">$&#123;GIT_BRANCH&#125;</span>"</span></span><br><span class="line">        KUBE_CONFIG = credentials(<span class="string">"156485be-dbb8-4f8c-b3a2-15f3535049ad"</span>)</span><br><span class="line">        NAMESPACE = <span class="string">"default"</span>   </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    stages &#123;</span><br><span class="line">        stage(<span class="string">'Build'</span>) &#123; </span><br><span class="line">            agent &#123;</span><br><span class="line">                docker &#123; image <span class="string">'harbor.apple.net/php/golang:latest'</span> &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            steps &#123; </span><br><span class="line">                sh <span class="string">'echo Build stage ...'</span> </span><br><span class="line">                git credentialsId: <span class="string">'1'</span>, url: <span class="string">'http://gitlaball.apple.net/apple/middle/soa/api-monitor-new.git'</span></span><br><span class="line">                sh <span class="string">'rm -rf ./output'</span></span><br><span class="line">                sh <span class="string">'export CGO_ENABLED=0 ;chmod +x ./build.sh ; ./build.sh'</span></span><br><span class="line">                sh <span class="string">'cd ./output &amp;&amp; mkdir ./app &amp;&amp; tar -zxvf *.gz -C ./app'</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(<span class="string">'Build Image'</span>) &#123; </span><br><span class="line">            agent &#123;</span><br><span class="line">                docker &#123; image <span class="string">'harbor.apple.net/php/docker:stable'</span> &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            steps &#123; </span><br><span class="line">                withCredentials([usernamePassword(credentialsId: <span class="string">'a00b4d01-c2e7-49af-9b1f-fcc382116911'</span>, usernameVariable: <span class="string">'HARBOR_USER'</span>, passwordVariable: <span class="string">'HARBOR_PWD'</span>)]) &#123;</span><br><span class="line">                    sh <span class="string">'docker login -u "$&#123;HARBOR_USER&#125;" -p "$&#123;HARBOR_PWD&#125;" "$&#123;NEW_HARBOR_HOST&#125;"'</span></span><br><span class="line">                &#125;</span><br><span class="line">                sh <span class="string">'cd ./output/app'</span></span><br><span class="line">                sh <span class="string">'echo Dockerfile01 &gt; .dockerignore'</span></span><br><span class="line">                sh <span class="string">'echo FROM harbor.apple.net/php/alpine &gt; Dockerfile01 &amp;&amp; echo COPY . /app &gt;&gt; Dockerfile01'</span></span><br><span class="line">                sh <span class="string">'docker build -t "$BUILD_IMAGES_NAME"  -f Dockerfile01 .'</span></span><br><span class="line">                sh <span class="string">'docker push "$BUILD_IMAGES_NAME"'</span></span><br><span class="line">                sh <span class="string">'docker images'</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage(<span class="string">'Deploy'</span>) &#123;</span><br><span class="line">             agent &#123;</span><br><span class="line">                docker &#123; image <span class="string">'harbor.apple.net/php/helm:3.0-rc2'</span> &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            steps &#123; </span><br><span class="line">                sh <span class="string">'mkdir -p ~/.kube &amp;&amp; cat $&#123;KUBE_CONFIG&#125; &gt; ~/.kube/config'</span></span><br><span class="line">                sh <span class="string">'helm repo add apple https://harbor.apple.net/chartrepo/php'</span></span><br><span class="line">                sh <span class="string">'helm repo update'</span></span><br><span class="line">                withCredentials([usernamePassword(credentialsId: <span class="string">'a00b4d01-c2e7-49af-9b1f-fcc382116911'</span>, usernameVariable: <span class="string">'HARBOR_USER'</span>, passwordVariable: <span class="string">'HARBOR_PWD'</span>)]) &#123;</span><br><span class="line">                    sh <span class="string">'helm upgrade $&#123;APP_NAME&#125; --install \</span></span><br><span class="line"><span class="string">                    --set image.tag=$&#123;APP_TAG&#125; \</span></span><br><span class="line"><span class="string">                    --set gitBranch=$&#123;GIT_BRANCH&#125; \</span></span><br><span class="line"><span class="string">                    --set commitId=$&#123;GIT_COMMIT_ID&#125; \</span></span><br><span class="line"><span class="string">                    --username $&#123;HARBOR_USER&#125; --password $&#123;HARBOR_PWD&#125; \</span></span><br><span class="line"><span class="string">                    --set nodeSelector.role="node" \</span></span><br><span class="line"><span class="string">                    --force --wait --atomic --debug \</span></span><br><span class="line"><span class="string">                    --namespace=$&#123;NAMESPACE&#125; \</span></span><br><span class="line"><span class="string">                    $&#123;CHART_NAME&#125; --version $&#123;CHART_VERSION&#125; '</span></span><br><span class="line">                    sh <span class="string">'echo "soa.cicd.$&#123;APP_NAME&#125;.status $? `date +%s`" | nc 10.2.4.35 32003'</span></span><br><span class="line">                &#125;</span><br><span class="line">                sh <span class="string">'helm list'</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-<p>参考：</p>
-<p><a href="http://blog.jboost.cn/k8s3-cd.html" target="_blank" rel="noopener">Gitlab+Jenkins Pipeline+Docker+k8s+Helm自动化部署实践</a></p>
-<p><a href="https://www.kubernetes.org.cn/6158.html" target="_blank" rel="noopener">Jenkins CI/CD 集成 Git Secrets</a></p>
-<p><a href="https://www.cnblogs.com/FLY_DREAM/p/13888423.html" target="_blank" rel="noopener">Jenkins 凭证管理 - 看这一篇就够了~</a></p>
-<p><a href="https://blog.csdn.net/catoop/article/details/100153791" target="_blank" rel="noopener">Jenkins pipeline 隐藏密码</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/jenkins-pipeline/" data-id="ckj9uenlc000u0wpbz5d741yz" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pipeline/">pipeline</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hexo" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/10/hexo/" class="article-date">
-  <time datetime="2019-10-23T16:09:10.000Z" itemprop="datePublished">2019-10-23</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/hexo/">使用hexo管理博客</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>下载 hexo 镜像<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull neofelhz/hexo-docker</span><br></pre></td></tr></table></figure></p>
-<p>启动镜像并映射本地目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd \</span><br><span class="line">    -v /home/runner/work/www/blog:/www/blog \</span><br><span class="line">    -w=&quot;/www/blog&quot; \</span><br><span class="line">    -p 4000:4000 \</span><br><span class="line">    --name hexo-test \</span><br><span class="line">    neofelhz/hexo-docker \</span><br><span class="line">    /bin/sh</span><br></pre></td></tr></table></figure>
-<p>进入容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it hexo-test /bin/sh</span><br></pre></td></tr></table></figure>
-<p>执行 <code>hexo init</code>，初始化时间较长，应该和网络有关</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">/www/blog # hexo init </span><br><span class="line">INFO  Cloning hexo-starter to /www/blog</span><br><span class="line">Cloning into &apos;/www/blog&apos;...</span><br><span class="line">remote: Enumerating objects: 8, done.</span><br><span class="line">remote: Counting objects: 100% (8/8), done.</span><br><span class="line">remote: Compressing objects: 100% (8/8), done.</span><br><span class="line">remote: Total 139 (delta 2), reused 2 (delta 0), pack-reused 131</span><br><span class="line">Receiving objects: 100% (139/139), 25.72 KiB | 21.00 KiB/s, done.</span><br><span class="line">Resolving deltas: 100% (64/64), done.</span><br><span class="line">Submodule &apos;themes/landscape&apos; (https://github.com/hexojs/hexo-theme-landscape.git) registered for path &apos;themes/landscape&apos;</span><br><span class="line">Cloning into &apos;/www/blog/themes/landscape&apos;...</span><br><span class="line">......</span><br><span class="line">[3/4] Linking dependencies...</span><br><span class="line">[4/4] Building fresh packages...</span><br><span class="line">success Saved lockfile.</span><br><span class="line">warning Your current version of Yarn is out of date. The latest version is &quot;1.19.1&quot; while you&apos;re on &quot;1.3.2&quot;.</span><br><span class="line">info To upgrade, run the following command:</span><br><span class="line">$ curl -o- -L https://yarnpkg.com/install.sh | bash</span><br><span class="line">Done in 112.25s.</span><br><span class="line">INFO  Start blogging with Hexo!</span><br></pre></td></tr></table></figure>
-        
-          <p class="article-more-link">
-            <a href="/2019/10/hexo/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://airzhe.github.io/2019/10/hexo/" data-id="ckj9uenl8000s0wpb29idws2o" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
 
     </footer>
   </div>
@@ -634,7 +628,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/angular-js/">angular js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse/">clickhouse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse-高可用/">clickhouse 高可用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/consul/">consul</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/containerd/">containerd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coredns/">coredns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gaea/">gaea</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-mysql-elasticsearch/">go-mysql-elasticsearch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gogs/">gogs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/">grafana</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/">helm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k3s/">k3s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ldap/">ldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logrus/">logrus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loki/">loki</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/microk8s/">microk8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openldap/">openldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openresty/">openresty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/promtal/">promtal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shazam/">shazam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vuejs/">vuejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webshell/">webshell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xorm/">xorm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/中间件/">中间件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/报警/">报警</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控/">监控</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/OLAP/">OLAP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/angularjs/">angularjs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/">awk</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/clickhouse/">clickhouse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/consul/">consul</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/containerd/">containerd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coredns/">coredns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gaea/">gaea</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitrunner/">gitrunner</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-mysql-elasticsearch/">go-mysql-elasticsearch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/goalng/">goalng</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gogs/">gogs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grafana/">grafana</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/helm/">helm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k3s/">k3s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kube-adm/">kube-adm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kubernetes/">kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ldap/">ldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logrus/">logrus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loki/">loki</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/machinery/">machinery</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/microk8s/">microk8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openldap/">openldap</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openresty/">openresty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pbkdf2/">pbkdf2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/prometheus/">prometheus</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/promtal/">promtal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shazam/">shazam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp-ip/">tcp/ip</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/victoriametrics/">victoriametrics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/">vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vuejs/">vuejs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webshell/">webshell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xorm/">xorm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/中间件/">中间件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/延迟队列/">延迟队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/报警/">报警</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日志/">日志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控/">监控</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/高可用/">高可用</a></li></ul>
     </div>
   </div>
 
@@ -644,7 +638,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/OLAP/" style="font-size: 10px;">OLAP</a> <a href="/tags/angular-js/" style="font-size: 10px;">angular js</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/clickhouse/" style="font-size: 12.5px;">clickhouse</a> <a href="/tags/clickhouse-高可用/" style="font-size: 10px;">clickhouse 高可用</a> <a href="/tags/consul/" style="font-size: 10px;">consul</a> <a href="/tags/containerd/" style="font-size: 10px;">containerd</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gaea/" style="font-size: 10px;">gaea</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/go-mysql-elasticsearch/" style="font-size: 10px;">go-mysql-elasticsearch</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 12.5px;">jenkins</a> <a href="/tags/k3s/" style="font-size: 10px;">k3s</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/ldap/" style="font-size: 10px;">ldap</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/logrus/" style="font-size: 10px;">logrus</a> <a href="/tags/loki/" style="font-size: 12.5px;">loki</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/pipeline/" style="font-size: 12.5px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 12.5px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/shazam/" style="font-size: 10px;">shazam</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/vuejs/" style="font-size: 10px;">vuejs</a> <a href="/tags/webshell/" style="font-size: 12.5px;">webshell</a> <a href="/tags/xorm/" style="font-size: 10px;">xorm</a> <a href="/tags/中间件/" style="font-size: 10px;">中间件</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a>
+      <a href="/tags/OLAP/" style="font-size: 10px;">OLAP</a> <a href="/tags/angularjs/" style="font-size: 10px;">angularjs</a> <a href="/tags/awk/" style="font-size: 10px;">awk</a> <a href="/tags/clickhouse/" style="font-size: 15px;">clickhouse</a> <a href="/tags/consul/" style="font-size: 10px;">consul</a> <a href="/tags/containerd/" style="font-size: 10px;">containerd</a> <a href="/tags/coredns/" style="font-size: 10px;">coredns</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/etcd/" style="font-size: 10px;">etcd</a> <a href="/tags/gaea/" style="font-size: 10px;">gaea</a> <a href="/tags/gitrunner/" style="font-size: 10px;">gitrunner</a> <a href="/tags/go-mysql-elasticsearch/" style="font-size: 10px;">go-mysql-elasticsearch</a> <a href="/tags/goalng/" style="font-size: 10px;">goalng</a> <a href="/tags/gogs/" style="font-size: 10px;">gogs</a> <a href="/tags/golang/" style="font-size: 12.5px;">golang</a> <a href="/tags/grafana/" style="font-size: 17.5px;">grafana</a> <a href="/tags/haproxy/" style="font-size: 10px;">haproxy</a> <a href="/tags/helm/" style="font-size: 15px;">helm</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/jenkins/" style="font-size: 12.5px;">jenkins</a> <a href="/tags/k3s/" style="font-size: 10px;">k3s</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kube-adm/" style="font-size: 10px;">kube-adm</a> <a href="/tags/kubernetes/" style="font-size: 15px;">kubernetes</a> <a href="/tags/ldap/" style="font-size: 10px;">ldap</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/logrus/" style="font-size: 10px;">logrus</a> <a href="/tags/loki/" style="font-size: 12.5px;">loki</a> <a href="/tags/machinery/" style="font-size: 10px;">machinery</a> <a href="/tags/microk8s/" style="font-size: 10px;">microk8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/openldap/" style="font-size: 10px;">openldap</a> <a href="/tags/openresty/" style="font-size: 10px;">openresty</a> <a href="/tags/pbkdf2/" style="font-size: 10px;">pbkdf2</a> <a href="/tags/pipeline/" style="font-size: 12.5px;">pipeline</a> <a href="/tags/prometheus/" style="font-size: 15px;">prometheus</a> <a href="/tags/promtal/" style="font-size: 12.5px;">promtal</a> <a href="/tags/shazam/" style="font-size: 10px;">shazam</a> <a href="/tags/tcp-ip/" style="font-size: 10px;">tcp/ip</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/victoriametrics/" style="font-size: 10px;">victoriametrics</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/vuejs/" style="font-size: 10px;">vuejs</a> <a href="/tags/webshell/" style="font-size: 12.5px;">webshell</a> <a href="/tags/xorm/" style="font-size: 10px;">xorm</a> <a href="/tags/中间件/" style="font-size: 10px;">中间件</a> <a href="/tags/延迟队列/" style="font-size: 10px;">延迟队列</a> <a href="/tags/报警/" style="font-size: 10px;">报警</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/监控/" style="font-size: 10px;">监控</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
     </div>
   </div>
 
@@ -653,7 +647,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li></ul>
     </div>
   </div>
 
@@ -666,23 +660,23 @@
       <ul>
         
           <li>
+            <a href="/2021/05/prometheus-ha/">高可用 prometheus 监控实施</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/golang-design-pattern/">Golang 设计模式</a>
+          </li>
+        
+          <li>
+            <a href="/2021/01/machinery/">machinery流程图与源码剖析</a>
+          </li>
+        
+          <li>
             <a href="/2020/12/go-mysql-elasticsearch/">go-mysql-elasticsearch 源码解读</a>
           </li>
         
           <li>
             <a href="/2020/10/ldap/">ldap 常用命令</a>
-          </li>
-        
-          <li>
-            <a href="/2020/10/k3s/">K3S</a>
-          </li>
-        
-          <li>
-            <a href="/2020/08/clickhouse-3shard/"> clickhouse 多分片集群搭建</a>
-          </li>
-        
-          <li>
-            <a href="/2020/08/vue/">vue 入门笔记</a>
           </li>
         
       </ul>
@@ -697,7 +691,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2020 air_zhe@163.com<br>
+      &copy; 2021 air_zhe@163.com<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

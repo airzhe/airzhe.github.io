@@ -1,7 +1,7 @@
 ---
 title: "clickhouse单分片三副本高可用搭建"
 date: 2020-06-30 12:06:00
-tags: [clickhouse 高可用]
+tags: [clickhouse]
 share: true
 ---
 
@@ -25,9 +25,9 @@ autopurge.purgeInterval=0
 maxClientCnxns=60
 standaloneEnabled=true
 admin.enableServer=true
-server.1=10.2.4.14:2888:3888;2181
-server.2=10.2.4.15:2888:3888;2181
-server.3=10.2.4.16:2888:3888;2181
+server.1=10.0.0.14:2888:3888;2181
+server.2=10.0.0.15:2888:3888;2181
+server.3=10.0.0.16:2888:3888;2181
 ```
 
 同时 data 目录下 myid 内容对应配置里的id编号
@@ -59,15 +59,15 @@ docker run -d \
 <yandex>
     <zookeeper-servers>
         <node index="1">
-            <host>10.2.4.14</host>
+            <host>10.0.0.14</host>
             <port>2181</port>
         </node>
         <node index="2">
-            <host>10.2.4.15</host>
+            <host>10.0.0.15</host>
             <port>2181</port>
         </node>
         <node index="3">
-            <host>10.2.4.16</host>
+            <host>10.0.0.16</host>
             <port>2181</port>
         </node>
     </zookeeper-servers>

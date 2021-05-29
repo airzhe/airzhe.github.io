@@ -277,12 +277,12 @@ ENGINE = MergeTree
 PARTITION BY toYYYYMMDD(created_date)
 ORDER BY id AS
 SELECT *
-FROM url('http://10.2.4.3:8123/?database=soa_behavior&query=select%20*%20from%20order_behavior_log', TabSeparated, '`id` Int64, `shop_order_id` Int64, `trade_no` Int64, `shop_id` Int32, `trace_id` String, `agg_platform` String, `deal_handler` String, `parameters` String, `total_fee` Int32, `state` Int8, `return_data` String, `execute_mic_time` String, `error_code` Int32, `error_msg` String, `created_at` Int32, `updated_at` Int32, `deleted_at` Nullable(Int32), `created_date` DateTime')
+FROM url('http://172.2.4.3:8123/?database=soa_behavior&query=select%20*%20from%20order_behavior_log', TabSeparated, '`id` Int64, `shop_order_id` Int64, `trade_no` Int64, `shop_id` Int32, `trace_id` String, `agg_platform` String, `deal_handler` String, `parameters` String, `total_fee` Int32, `state` Int8, `return_data` String, `execute_mic_time` String, `error_code` Int32, `error_msg` String, `created_at` Int32, `updated_at` Int32, `deleted_at` Nullable(Int32), `created_date` DateTime')
 LIMIT 3
 
 #方式二增量
 INSERT INTO order_behavior_log SELECT *
-FROM url('http://10.2.4.3:8123/?database=soa_behavior&query=select%20*%20from%20order_behavior_log', TabSeparated, '`id` Int64, `shop_order_id` Int64, `trade_no` Int64, `shop_id` Int32, `trace_id` String, `agg_platform` String, `deal_handler` String, `parameters` String, `total_fee` Int32, `state` Int8, `return_data` String, `execute_mic_time` String, `error_code` Int32, `error_msg` String, `created_at` Int32, `updated_at` Int32, `deleted_at` Nullable(Int32), `created_date` DateTime')
+FROM url('http://172.2.4.3:8123/?database=soa_behavior&query=select%20*%20from%20order_behavior_log', TabSeparated, '`id` Int64, `shop_order_id` Int64, `trade_no` Int64, `shop_id` Int32, `trace_id` String, `agg_platform` String, `deal_handler` String, `parameters` String, `total_fee` Int32, `state` Int8, `return_data` String, `execute_mic_time` String, `error_code` Int32, `error_msg` String, `created_at` Int32, `updated_at` Int32, `deleted_at` Nullable(Int32), `created_date` DateTime')
 LIMIT 3
 ```
 
@@ -291,7 +291,7 @@ LIMIT 3
 ```
 # 从api接口查询
 SELECT *
-FROM url('http://10.2.4.35:8123/?database=soa_behavior&query=select%20*%20from%20order_behavior_log&user=default&password=MXtqOeQcX', TabSeparated, '`id` Int64, `shop_order_id` Int64, `trade_no` Int64, `shop_id` Int32, `trace_id` String, `agg_platform` String, `deal_handler` String, `parameters` String, `total_fee` Int32, `state` Int8, `return_data` String, `execute_mic_time` String, `error_code` Int32, `error_msg` String, `created_at` Int32, `updated_at` Int32, `deleted_at` Nullable(Int32), `created_date` DateTime')
+FROM url('http://172.2.5.5:8123/?database=soa_behavior&query=select%20*%20from%20order_behavior_log&user=default&password=MXtqOeQcX', TabSeparated, '`id` Int64, `shop_order_id` Int64, `trade_no` Int64, `shop_id` Int32, `trace_id` String, `agg_platform` String, `deal_handler` String, `parameters` String, `total_fee` Int32, `state` Int8, `return_data` String, `execute_mic_time` String, `error_code` Int32, `error_msg` String, `created_at` Int32, `updated_at` Int32, `deleted_at` Nullable(Int32), `created_date` DateTime')
 LIMIT 3
 
 # 从远端mysql查询
@@ -320,7 +320,7 @@ SELECT (intDiv(toUInt32(created_at), 7200) * 7200) * 1000 as t, count(id) AS "id
 clickhouse-client --input_format_allow_errors_num=1 \
 --input_format_allow_errors_ratio=0.1 \
 --query="INSERT INTO bill SELECT *
-FROM url('http://payment-hotfix-duizhangdan.t1.apple.net/order/downloadbill?bill_date=20200106&agg_platform=wx', CSV, 'created_date DateTime, wx_app_id String , mch_id String, order_id String , shop_order_id String, trade_type String, trade_status String, total_fee Float64 , refund_id String, shop_refund_id String ,refund_fee  Float64, refund_status String, goods_name String, fees Float64, rates String , trade_no String , refund_no String')"
+FROM url('http://hotfix-duizhangdan.t1.apple.net/order/downloadbill?bill_date=20200106&agg_platform=wx', CSV, 'created_date DateTime, wx_app_id String , mch_id String, order_id String , shop_order_id String, trade_type String, trade_status String, total_fee Float64 , refund_id String, shop_refund_id String ,refund_fee  Float64, refund_status String, goods_name String, fees Float64, rates String , trade_no String , refund_no String')"
 ```
 
 **php 客户端**

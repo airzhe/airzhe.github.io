@@ -128,7 +128,7 @@ annotations:
       cache_ttl: 24h         # Can be increased for faster performance over longer query periods, uses more disk space
       shared_store: s3
     aws:
-      s3: http://***:***@10.2.4.3:9000/loki
+      s3: http://***:***@172.2.4.3:9000/loki
       s3forcepathstyle: true
 ```
 

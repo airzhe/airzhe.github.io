@@ -141,7 +141,7 @@ func ab64_encode(pwd_str []byte) string{
 体会：
 
 1. 新版 openldap 安装已经不需要 BerkeleyDB 数据库了，安装难度降到0，之前需要各种查资料，设置环境变量 :(
-2. ldap 用着真的很爽，可以关联一切系统
+2. ldap很好用，可以关联一切系统
 
 
 

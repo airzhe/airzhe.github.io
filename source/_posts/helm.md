@@ -29,10 +29,10 @@ helm status wintering-rodent
 
 helm plugin install https://github.com/chartmuseum/helm-push #安装push插件
 helm repo add mylibrary http://harbor.local.com:8082/chartrepo/library
-helm push --username=runner --password=745632Bn hello_test mylibrary
+helm push --username=runner --password=****** hello_test mylibrary
 
 helm fetch stable/redis
-helm push redis-8.1.2.tgz -urunner -p745632Bn  mylibrary  -v 0.2.0
+helm push redis-8.1.2.tgz -urunner -p******  mylibrary  -v 0.2.0
 
 
 docker run -ti --rm --entrypoint /bin/sh alpine/helm:2.9.0

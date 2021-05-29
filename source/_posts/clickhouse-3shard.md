@@ -88,15 +88,15 @@ ck分布式集群，采用`本地表`、`分布式表` 形式实现。本地表�
   </clickhouse_remote_servers>
   <zookeeper-servers>
     <node index="1">
-      <host>10.2.4.34</host>
+      <host>172.2.5.4</host>
       <port>2181</port>
     </node>
     <node index="2">
-      <host>10.2.4.35</host>
+      <host>172.2.5.5</host>
       <port>2181</port>
     </node>
     <node index="3">
-      <host>10.2.4.36</host>
+      <host>172.2.5.6</host>
       <port>2181</port>
     </node>
   </zookeeper-servers>
@@ -129,15 +129,15 @@ SELECT *
 FROM system.clusters
 
 ┌─cluster───────────────────────────┬─shard_num─┬─shard_weight─┬─replica_num─┬─host_name─┬─host_address─┬─port─┬─is_local─┬─user────┬─default_database─┐
-│ cluster_1shards_3replicas         │         1 │            1 │           1 │ a001      │ 10.2.4.34    │ 9000 │        1 │ default │                  │
-│ cluster_1shards_3replicas         │         1 │            1 │           2 │ a002      │ 10.2.4.35    │ 9000 │        1 │ default │                  │
-│ cluster_1shards_3replicas         │         1 │            1 │           3 │ a003      │ 10.2.4.36    │ 9000 │        1 │ default │                  │
-│ cluster_3shards_2replicas         │         1 │            1 │           1 │ a001      │ 10.2.4.34    │ 9000 │        1 │ default │                  │
-│ cluster_3shards_2replicas         │         1 │            1 │           2 │ a002      │ 10.2.4.35    │ 9001 │        1 │ default │                  │
-│ cluster_3shards_2replicas         │         2 │            1 │           1 │ a002      │ 10.2.4.35    │ 9000 │        0 │ default │                  │
-│ cluster_3shards_2replicas         │         2 │            1 │           2 │ a003      │ 10.2.4.36    │ 9001 │        0 │ default │                  │
-│ cluster_3shards_2replicas         │         3 │            1 │           1 │ a003      │ 10.2.4.36    │ 9000 │        0 │ default │                  │
-│ cluster_3shards_2replicas         │         3 │            1 │           2 │ a001      │ 10.2.4.34    │ 9001 │        0 │ default │                  │
+│ cluster_1shards_3replicas         │         1 │            1 │           1 │ a001      │ 172.2.5.4    │ 9000 │        1 │ default │                  │
+│ cluster_1shards_3replicas         │         1 │            1 │           2 │ a002      │ 172.2.5.5    │ 9000 │        1 │ default │                  │
+│ cluster_1shards_3replicas         │         1 │            1 │           3 │ a003      │ 172.2.5.6    │ 9000 │        1 │ default │                  │
+│ cluster_3shards_2replicas         │         1 │            1 │           1 │ a001      │ 172.2.5.4    │ 9000 │        1 │ default │                  │
+│ cluster_3shards_2replicas         │         1 │            1 │           2 │ a002      │ 172.2.5.5    │ 9001 │        1 │ default │                  │
+│ cluster_3shards_2replicas         │         2 │            1 │           1 │ a002      │ 172.2.5.5    │ 9000 │        0 │ default │                  │
+│ cluster_3shards_2replicas         │         2 │            1 │           2 │ a003      │ 172.2.5.6    │ 9001 │        0 │ default │                  │
+│ cluster_3shards_2replicas         │         3 │            1 │           1 │ a003      │ 172.2.5.6    │ 9000 │        0 │ default │                  │
+│ cluster_3shards_2replicas         │         3 │            1 │           2 │ a001      │ 172.2.5.4    │ 9001 │        0 │ default │                  │
 └───────────────────────────────────┴───────────┴──────────────┴─────────────┴───────────┴──────────────┴──────┴──────────┴─────────┴──────────────────┘
 ```
 
@@ -263,7 +263,7 @@ ENGINE = Distributed(cluster_3shards_2replicas, biw, stock_warehouse_receipt_loc
 
 --- 插入数据
 INSERT INTO biw.stock_warehouse_receipt_all SELECT *
-FROM url('http://10.0.10.16:8123/?database=default&query=select%20*%20from%20stock_warehouse_receipt&user=default&password=******', TabSeparated, '`op_receipt_id` Int64, `ware_trans_id` String, `ware_id` Nullable(Int64), `inventory_type` Nullable(String), `sku_id` Nullable(Int32), `sku_lot` Nullable(Int64), `op_type` Nullable(Int16), `origin_code` Nullable(String), `origin_receipt_type` Nullable(Int16), `ower_id` Nullable(Int16), `quantity` Nullable(Int32), `origin_num` Nullable(Int32), `left_num` Nullable(Int32), `src_system` Nullable(String), `product_date` Nullable(Int32), `shelf_life_days` Nullable(Int16), `expire_date` Nullable(Int32), `op_date` Nullable(Int32), `bill_id` Nullable(Int64), `bill_code` Nullable(String), `receipt_type` Nullable(Int32), `operator` Nullable(Int64), `operator_name` Nullable(String),`create_date` Int32, `frozen_flag` Nullable(Int8)')
+FROM url('http://10.0.0.16:8123/?database=default&query=select%20*%20from%20stock_warehouse_receipt&user=default&password=******', TabSeparated, '`op_receipt_id` Int64, `ware_trans_id` String, `ware_id` Nullable(Int64), `inventory_type` Nullable(String), `sku_id` Nullable(Int32), `sku_lot` Nullable(Int64), `op_type` Nullable(Int16), `origin_code` Nullable(String), `origin_receipt_type` Nullable(Int16), `ower_id` Nullable(Int16), `quantity` Nullable(Int32), `origin_num` Nullable(Int32), `left_num` Nullable(Int32), `src_system` Nullable(String), `product_date` Nullable(Int32), `shelf_life_days` Nullable(Int16), `expire_date` Nullable(Int32), `op_date` Nullable(Int32), `bill_id` Nullable(Int64), `bill_code` Nullable(String), `receipt_type` Nullable(Int32), `operator` Nullable(Int64), `operator_name` Nullable(String),`create_date` Int32, `frozen_flag` Nullable(Int8)')
 ```
 
 其中一台机器`stock_warehouse_receipt_local`数据，和`stock_warehouse_receipt_all`表数据

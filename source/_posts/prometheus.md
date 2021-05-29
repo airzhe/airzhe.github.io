@@ -320,25 +320,39 @@ label_replace(BIW_SHT_QUEUE_DELIVERY_ORDER_OUT, "attr", "$1", "attr",  ".*_(.*)"
 
 **consul 配置**
 ```yaml
-    - consul_sd_configs:
-      - server: consul.kube-public:8500
-        services: []
-      job_name: consul-prometheus
-      relabel_configs:
-      - action: labelmap
-        regex: __meta_consul_service_metadata_(.+)
-      - action: replace
-        regex: ^(.+)$
-        replacement: $1
-        source_labels:
-        - __meta_consul_service_metadata_metrics
-        target_label: __metrics_path__
+- job_name: consul-prometheus
+  honor_timestamps: true
+  scrape_interval: 1m
+  scrape_timeout: 10s
+  metrics_path: /metrics
+  scheme: http
+  consul_sd_configs:
+  - server: consul:8500
+    tag_separator: ','
+    scheme: http
+    allow_stale: true
+    refresh_interval: 30s
+  relabel_configs:
+  - separator: ;
+    regex: __meta_consul_service_metadata_(.+)
+    replacement: $1
+    action: labelmap
+  - source_labels: [__meta_consul_service_metadata_metrics]
+    separator: ;
+    regex: ^(.+)$
+    target_label: __metrics_path__
+    replacement: $1
+    action: replace
 ```
 
 **consul 注册服务**
 ```sh
-curl -X PUT -d '{"id":"minion-1","name":"minio","address":"10.2.4.1","port":9000,"meta":{"app":"minio","team":"soa","metrics":"/minio/prometheus/metrics"}}'  http://consul.t1.abc.net/v1/agent/service/register
+curl -X PUT -d '{"id":"minion-1","name":"minio","address":"172.2.4.1","port":9000,"meta":{"app":"minio","team":"soa","metrics":"/minio/prometheus/metrics"}}'  http://consul.t1.abc.net/v1/agent/service/register
+
+// 按id删除服务
+curl -X PUT http://10.0.**.251:8500/v1/agent/service/deregister/minion-1
 ```
+
 
 参考：
 

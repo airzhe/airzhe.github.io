@@ -84,7 +84,7 @@ pipeline {
                     --force --wait --atomic --debug \
                     --namespace=${NAMESPACE} \
                     ${CHART_NAME} --version ${CHART_VERSION} '
-                    sh 'echo "soa.cicd.${APP_NAME}.status $? `date +%s`" | nc 10.2.4.35 32003'
+                    sh 'echo "soa.cicd.${APP_NAME}.status $? `date +%s`" | nc 172.2.5.5 32003'
                 }
                 sh 'helm list'
             }
