@@ -3,15 +3,20 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>Tag: ldap | Runner的小站</title>
+  <title>微服务迁移K8S踩坑记录 | Runner的小站</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Runner的小站">
-<meta property="og:url" content="http://airzhe.github.io/tags/ldap/index.html">
+  <meta name="description" content="遇到问题  阿里云免密拉取 deployment 配置不能创建serviceAccount 使用default  数据库白名单问题：按网段添加所有白名单解决  jenkins 的构建队列 queueId 为短期数据，过期查询会404，要在构建发生时 使用 queueId 获取 buildNumber，后续api接口用 buildNumber 来调用  跨平台构建镜像，要使用docker build">
+<meta name="keywords" content="k8s,微服务">
+<meta property="og:type" content="website">
+<meta property="og:title" content="微服务迁移K8S踩坑记录">
+<meta property="og:url" content="http://airzhe.github.io/micro-k8s.html">
 <meta property="og:site_name" content="Runner的小站">
+<meta property="og:description" content="遇到问题  阿里云免密拉取 deployment 配置不能创建serviceAccount 使用default  数据库白名单问题：按网段添加所有白名单解决  jenkins 的构建队列 queueId 为短期数据，过期查询会404，要在构建发生时 使用 queueId 获取 buildNumber，后续api接口用 buildNumber 来调用  跨平台构建镜像，要使用docker build">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2023-01-29T10:04:54.589Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Runner的小站">
+<meta name="twitter:title" content="微服务迁移K8S踩坑记录">
+<meta name="twitter:description" content="遇到问题  阿里云免密拉取 deployment 配置不能创建serviceAccount 使用default  数据库白名单问题：按网段添加所有白名单解决  jenkins 的构建队列 queueId 为短期数据，过期查询会404，要在构建发生时 使用 queueId 获取 buildNumber，后续api接口用 buildNumber 来调用  跨平台构建镜像，要使用docker build">
   
     <link rel="alternate" href="/atom.xml" title="Runner的小站" type="application/atom+xml">
   
@@ -60,39 +65,82 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/10/ldap/" class="archive-article-date">
-  <time datetime="2020-10-14T14:17:00.000Z" itemprop="datePublished">Oct 14</time>
+        <section id="main"><article id="page-undefined" class="article article-type-page" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/micro-k8s.html" class="article-date">
+  <time datetime="2023-01-29T17:55:01.000Z" itemprop="datePublished">2023-01-29</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/10/ldap/">ldap 常用命令</a>
+    <h1 class="article-title" itemprop="name">
+      微服务迁移K8S踩坑记录
     </h1>
   
 
-    </header>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>遇到问题</strong></p>
+<ol>
+<li><p>阿里云免密拉取 deployment 配置不能创建serviceAccount 使用default</p>
+</li>
+<li><p>数据库白名单问题：按网段添加所有白名单解决</p>
+</li>
+<li><p>jenkins 的构建队列 queueId 为短期数据，过期查询会404，要在构建发生时 使用 queueId 获取 buildNumber，后续api接口用 buildNumber 来调用</p>
+</li>
+<li><p>跨平台构建镜像，要使用docker buildx</p>
+</li>
+<li><p>基础镜像 alpine 时区问题，构建时使用  apk add –no-cache 避免 apk update 生成缓存</p>
+</li>
+<li><p>有些服务依赖时区信息，需要安装 apk add tzdata </p>
+</li>
+<li><p>虚机通过 nacos 不能正常对 pod 发起 rpc 调用 </p>
+</li>
+<li><p>配置了多个域名解析 nslookup beta-cloud.<strong>**</strong>.com</p>
+</li>
+<li><p>老服务没有停，rpc 请求受到影响</p>
+</li>
+<li><p>阿里云slb 不支持挂ip、pod。新申请了内外网两个slb接域名请求,两个ecs部署nginx转发到 k8s</p>
+</li>
+<li><p>灰度服务也参与rpc请求，要及时清理</p>
+</li>
+<li><p>pod 需要平滑退出 增加 preStop: exec: command: [“sleep”, “3”]</p>
+</li>
+<li><p>accessModes有三种，ReadWriteOnce（被单个node读写）， ReadOnlyMany（被多个nodes读）， ReadWriteMany（被多个nodes读写）。之前阿里云 jenkins 报错存储冲突，应该和jenkins挂载配置的这个有关系  jenkins ReadWriteOnce模式的盘和 pod 里的 go-cache 发生了冲突。</p>
+</li>
+<li><p>部署多个Ingress Controller，限制内网nginx处理内网转发，外网处理外网 。通过 kubernetes.io/ingress.class 这个注释绑定</p>
+</li>
+<li><p>nfs 读取大量小文件时性能差，可以开启缓存，或者考虑hostpath方式存储</p>
+</li>
+<li><p>某python程序采集不到标准输出里的日志 ，配置的 tty stdin 后设置启动命令 /bin/sh -c /app/start.sh 后正常采集</p>
+</li>
+<li><p>踩坑 jenkins 重启后，jenkins pvc 被删除了，导致服务启不来。重启后配置的域名丢失导致调不通</p>
+</li>
+<li><p>数据库密码改了，服务一直重启，always 策略频繁拉镜像造成docker 拉镜像的并发被用尽了。</p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://airzhe.github.io/micro-k8s.html" data-id="cldh8a8uw00006lp2nrswgrkb" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/">undefined</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/">undefined</a></li></ul>
+
+    </footer>
   </div>
+  
+    
+  
 </article>
-  
-  
-    </div></section>
-  
 
 </section>
         
